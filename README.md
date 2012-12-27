@@ -44,4 +44,5 @@ $git clone git@github.com:filip26/VIATodoListApiExample.git
 
 ## Run
 
+$cd VIATodoListApiExample
 $mvn jetty:run
