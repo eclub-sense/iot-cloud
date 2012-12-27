@@ -1,60 +1,66 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cz.cvut.felk.rest</groupId>
-	<artifactId>todo</artifactId>
+	<artifactId>via-todo-api-example</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Simple TODO list - RESTful API</name>
+	<name>Simple TODO list - REST API Example</name>
   
   	<packaging>war</packaging>
   
-  		<build>
+	<build>
 		<!-- Generate compiled stuff in the folder used for development mode -->
 		<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
 
 		<plugins> 
+		    <!--  Compiler -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.4</version>
 				
 				<configuration>
+				    <!--  Java 6 -->
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>
-				
 			</plugin>
-<plugin>
-        <groupId>org.mortbay.jetty</groupId>
-        <artifactId>maven-jetty-plugin</artifactId>
-        <version>6.1.10</version>
-        <configuration>
-                <scanIntervalSeconds>10</scanIntervalSeconds>
-                <stopKey>foo</stopKey>
-                <stopPort>9999</stopPort>
-        </configuration>
-        <executions>
-                <execution>
+		    
+			<!-- Jetty -->
+			<plugin>
+        		<groupId>org.mortbay.jetty</groupId>
+        		<artifactId>maven-jetty-plugin</artifactId>
+        		<version>6.1.10</version>
+        		<configuration>
+                	<scanIntervalSeconds>10</scanIntervalSeconds>
+                	<stopKey>foo</stopKey>
+                	<stopPort>9999</stopPort>
+        		</configuration>
+        		<executions>
+                	<execution>
                         <id>start-jetty</id>
                         <phase>pre-integration-test</phase>
                         <goals>
-                                <goal>run</goal>
+                            <goal>run</goal>
                         </goals>
                         <configuration>
-                                <scanIntervalSeconds>0</scanIntervalSeconds>
-                                <daemon>true</daemon>
+                            <scanIntervalSeconds>0</scanIntervalSeconds>
+							<daemon>true</daemon>
+                             <webApp>
+      							<contextPath>/todo</contextPath>
+    						</webApp>    
                         </configuration>
-                </execution>
-                <execution>
+                	</execution>
+                	<execution>
                         <id>stop-jetty</id>
                         <phase>post-integration-test</phase>
                         <goals>
-                                <goal>stop</goal>
+							<goal>stop</goal>
                         </goals>
-                </execution>
-        </executions>
-</plugin>
-   
+                	</execution>
+        		</executions>
+			</plugin>
 		</plugins>
-
+	</build>
+  	
 	<repositories>
 		<repository>
 			<id>java.net2</id>
