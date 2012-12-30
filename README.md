@@ -40,9 +40,12 @@ Intended to be used as an example in VIA course (https://sites.google.com/a/via.
 
 ## Project Checkout
 
+```bash
 $git clone git@github.com:filip26/VIATodoListApiExample.git
+```
 
 ## Run
-
+```bash
 $cd VIATodoListApiExample
 $mvn jetty:run
+```
