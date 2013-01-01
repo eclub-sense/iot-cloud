@@ -85,6 +85,9 @@ public class HttpScanner {
 		if (isDigit(bytes[cursor])) {
 			types.add(LexType.DIGIT);
 		}
+		if (isHex(bytes[cursor])) {
+			types.add(LexType.HEX);
+		}
 		if (bytes[cursor] == 34) {
 			types.add(LexType.DQM);
 		}
@@ -99,7 +102,13 @@ public class HttpScanner {
 		if ((index - cursor) == 1) {
 			types.add(LexType.OCTET);
 		}
-		
+
+		/*
+		 *   TEXT           = <any OCTET except CTLs, but including LWS>
+		 */
+		if ((types.contains(LexType.OCTET) && !types.contains(LexType.CTL)) || types.contains(LexType.LWS)) {
+			types.add(LexType.TEXT);
+		}
 		cursor = index;
 		
 		return new LexUnit(value, types);
@@ -174,13 +183,6 @@ public class HttpScanner {
      * quoted-pair    = "\" CHAR
 	 */
 
-	/**
-     * TEXT           = &lt;any OCTET except CTLs, but including LWS&gt;
-	 */
-	public static boolean isText(byte value) {
-		return !isCtl(value) /*|| isLws(value)*/;	//FIXME
-	}
-
     /**
 	 * CR             = &lt;US-ASCII CR, carriage return (13)&gt;
 	 */
@@ -202,6 +204,14 @@ public class HttpScanner {
 		return ('0' <= value) && (value <= '9');
 	}
 
+	/**
+	 * HEX            = "A" | "B" | "C" | "D" | "E" | "F"
+     *                | "a" | "b" | "c" | "d" | "e" | "f" | DIGIT
+	 */
+	public static boolean isHex(byte value) {
+		return isDigit(value) || (('A' <= value) && (value <= 'F')) || (('a' <= value) && (value <= 'f'));
+	}
+	
 	/**
 	 * UPALPHA        = &lt;any US-ASCII uppercase letter "A".."Z"&gt; 
 	 */
