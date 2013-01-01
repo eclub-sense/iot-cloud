@@ -116,12 +116,15 @@ public class HttpScanner {
 			value[i] = bytes[byteCursor+i];
 		}
 		
+		/*
+		 * OCTET = <any 8-bit sequence of data>
+		 */
 		if ((index - byteCursor) == 1) {
 			types.add(LexType.OCTET);
 		}
 
 		/*
-		 *   TEXT           = <any OCTET except CTLs, but including LWS>
+		 * TEXT = <any OCTET except CTLs, but including LWS>
 		 */
 		if ((types.contains(LexType.OCTET) && !types.contains(LexType.CTL)) || types.contains(LexType.LWS)) {
 			types.add(LexType.TEXT);
