@@ -1,6 +1,7 @@
 package cz.cvut.felk.rest.todo.servlet;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Date;
 
@@ -8,19 +9,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
-import cz.cvut.felk.rest.todo.ContentDescriptor;
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
+import cz.cvut.felk.rest.todo.core.Response;
+import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
 import cz.cvut.felk.rest.todo.errors.ErrorException;
 
-public class HttpResponse<T> {
+public class HttpResponse {
 
 
+	
 	public static final void write(int code, ContentDescriptor<?> content, HttpServletResponse httpResponse) throws ErrorException {
 		
 		httpResponse.setStatus(code);
 
 		if ((HttpServletResponse.SC_CREATED == code)) {
-			httpResponse.setHeader(ContentDescriptor.META_LOCATION, content.getContextUrl() + content.getUrl());
+	//		httpResponse.setHeader(ContentDescriptor.META_LOCATION, content.getContext() + content.getUri());
 		} 
 		
 		for (String metaName : content.getMetaNames()) {
@@ -38,12 +40,12 @@ public class HttpResponse<T> {
 			return;
 		}
 		
-		if (content.getBody() instanceof TodoItemDto) {
-			httpResponse.setContentType(ContentDescriptor.CT_ITEM);
-			
-		} else if (content.getBody() instanceof TodoItemDto[]) {
-			httpResponse.setContentType(ContentDescriptor.CT_LIST);
-		}
+//		if (content.getBody() instanceof TodoItemDto) {
+//			httpResponse.setContentType(ContentDescriptor.CT_ITEM);
+//			
+//		} else if (content.getBody() instanceof TodoItemDto[]) {
+//			httpResponse.setContentType(ContentDescriptor.CT_LIST);
+//		}
 		
 		Writer writer  = null;
 		try {
@@ -67,5 +69,5 @@ public class HttpResponse<T> {
 				}
 			}
 		}
-	}    
+	}  
 }

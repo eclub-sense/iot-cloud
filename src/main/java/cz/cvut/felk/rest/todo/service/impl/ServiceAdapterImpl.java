@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cz.cvut.felk.rest.todo.ContentDescriptor;
+import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
 import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 import cz.cvut.felk.rest.todo.errors.ErrorException;
 import cz.cvut.felk.rest.todo.service.ServiceAdapter;
@@ -36,7 +36,7 @@ public class ServiceAdapterImpl implements ServiceAdapter {
 	
 	public void create(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ErrorException {
 
-		final String url = HttpRequest.getUrl(httpRequest);
+		final String url = HttpRequest.getUri(httpRequest);
 		 
 		ContentDescriptor<?> content = null;
 		
@@ -64,7 +64,7 @@ public class ServiceAdapterImpl implements ServiceAdapter {
 	
 	public void read(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ErrorException {
 		
-		final String url = HttpRequest.getUrl(httpRequest);
+		final String url = HttpRequest.getUri(httpRequest);
 		final HttpRequest<Void> request = HttpRequest.read(Void.class, httpRequest, url);
 
 		ContentDescriptor<?> content = null;
@@ -99,7 +99,7 @@ public class ServiceAdapterImpl implements ServiceAdapter {
 	
 	public void update(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ErrorException {
 		
-		final String url = HttpRequest.getUrl(httpRequest);
+		final String url = HttpRequest.getUri(httpRequest);
 		 
 		ContentDescriptor<?> content = null;
 		
@@ -127,7 +127,7 @@ public class ServiceAdapterImpl implements ServiceAdapter {
 	
 	public void delete(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ErrorException {
 		
-		final String url = HttpRequest.getUrl(httpRequest);
+		final String url = HttpRequest.getUri(httpRequest);
 		
 		ContentDescriptor<?> content = null;
 		

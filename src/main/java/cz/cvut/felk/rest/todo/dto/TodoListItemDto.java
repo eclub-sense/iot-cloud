@@ -2,15 +2,15 @@ package cz.cvut.felk.rest.todo.dto;
 
 public class TodoListItemDto extends TodoItemDto {
 
-	private String url;
+	private String uri;
 	private String lastModified;
 
-	public String getUrl() {
-		return url;
+	public String getUri() {
+		return uri;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setUri(String url) {
+		this.uri = url;
 	}
 
 	public String getLastModified() {

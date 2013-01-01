@@ -1,90 +1,206 @@
 package cz.cvut.felk.rest.todo.servlet;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
-import javax.servlet.ServletConfig;
+import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.CopyUtils;
+
+import cz.cvut.felk.rest.todo.core.RequestHolder;
+import cz.cvut.felk.rest.todo.core.ResourceDescriptor;
+import cz.cvut.felk.rest.todo.core.Response;
+import cz.cvut.felk.rest.todo.core.UrlResolver;
+import cz.cvut.felk.rest.todo.core.content.ContentAdapter;
+import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
+import cz.cvut.felk.rest.todo.core.method.Method;
+import cz.cvut.felk.rest.todo.core.method.MethodDescriptor;
 import cz.cvut.felk.rest.todo.errors.ErrorException;
-import cz.cvut.felk.rest.todo.service.ServiceAdapter;
-import cz.cvut.felk.rest.todo.service.impl.ServiceAdapterImpl;
+import cz.cvut.felk.rest.todo.http.HttpDate;
 
-public class TodoAppServlet extends HttpServlet {
+public class TodoAppServlet  extends GenericServlet {
 
-	private static final long serialVersionUID = 100538579687937474L;
-	
-	protected ServiceAdapter adapter;
+	private static final long serialVersionUID = 4650079506676226041L;
+
+	private UrlResolver resolver = null;
 	
 	@Override
-	public void init(ServletConfig arg0) throws ServletException {
-		super.init(arg0);
+	public void init() throws ServletException {
+		super.init();
+	}
+	
+	protected void doService(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ErrorException, IOException {
 		
-		this.adapter = new ServiceAdapterImpl();
-	}
-	
-	@Override
-	protected void doPost(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
-
-		try {
-			adapter.create(httpRequest, httpResponse);
-			
-		} catch (ErrorException ex) {
-			writeError(ex, httpResponse);
-			
-		} catch (Exception ex) {
-			writeError(new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex), httpResponse);
-		}
-	}
-	
-	@Override
-	protected void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+		final RequestHolder<Object> request = new RequestHolder<Object>(HttpRequest.getUri(httpRequest));
 		
-		try {
-			adapter.read(httpRequest, httpResponse);
-			
-		} catch (ErrorException ex) {
-			writeError(ex, httpResponse);
-			
-		} catch (Exception ex) {
-			writeError(new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex), httpResponse);
+		// Resolve incoming URL and get resource descriptor
+		final ResourceDescriptor resourceDsc = resolver.resolve(request.getUri());
+		
+		// Does the requested resource exist?
+		if (resourceDsc == null) {	
+			throw new ErrorException(HttpServletResponse.SC_NOT_FOUND);
 		}
-	}
-
-	@Override
-	protected void doPut(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException {
+		
+		// Is requested method supported?
+		if (httpRequest.getMethod() == null) {
+			throw new ErrorException(HttpServletResponse.SC_BAD_REQUEST);
+		}
+			
 		try {
-			adapter.update(httpRequest, httpResponse);
+			request.setMethod(Method.valueOf(httpRequest.getMethod().toUpperCase(Locale.US)));
 			
-		} catch (ErrorException ex) {
-			writeError(ex, httpResponse);
-			
-		} catch (Exception ex) {
-			writeError(new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex), httpResponse);
+		} catch (IllegalArgumentException ex) {
+			throw new ErrorException(HttpServletResponse.SC_NOT_IMPLEMENTED);			
+		}
+		
+		if (request.getMethod() == null) {
+			throw new ErrorException(HttpServletResponse.SC_NOT_IMPLEMENTED);
 		}
 
+		// Get supported methods for requested resource
+		Map<Method, MethodDescriptor<Object, Object>> methods = resourceDsc.methods();
+		
+		// Get requested method descriptors for the resource
+		MethodDescriptor<Object, Object> methodDsc = (methods != null) ? methods.get(httpRequest.getMethod()) : null;
+		
+		// Is requested method supported?
+		if ((methodDsc == null)) {
+
+			// Is it resource discovery request? (HTTP OPTIONS)
+			if (Method.OPTIONS.equals(httpRequest.getMethod()) && (methods != null)) {
+				// Set Allow header - no response content
+				setAllowHeader(methods.keySet(), httpResponse);
+				httpResponse.setStatus(HttpServletResponse.SC_OK);
+				return;
+			}
+			throw new ErrorException(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+		}
+
+		ContentAdapter<InputStream, ?> inputContentAdapter = null;
+		
+		// Is request body expected?
+		if (request.getMethod().isRequestBody()) {
+			String requestContentType = httpRequest.getContentType();
+			
+			inputContentAdapter = (methodDsc.consumes() != null) ? methodDsc.consumes().get(requestContentType) : null;
+			if (inputContentAdapter == null) {
+				throw new ErrorException(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);		
+			}
+			
+		} else if (httpRequest.getContentLength() > 0){
+			// Unexpected request body
+			throw new ErrorException(HttpServletResponse.SC_BAD_REQUEST);
+		}
+		
+		ContentAdapter<Object, InputStream> outputContentAdapter = null;
+
+		// Is response body expected?
+		if (request.getMethod().isResponseBody()) {
+			// Check Accept header
+			String acceptHeader = httpRequest.getHeader("Accept");
+			
+			throw new ErrorException(HttpServletResponse.SC_NOT_ACCEPTABLE);	
+		}
+		
+		if (inputContentAdapter != null) {
+			request.setBody(inputContentAdapter.transform(httpRequest.getInputStream()));
+		}
+		
+		// Invoke resource method
+		Response<?> response = methodDsc.invoke(request);
+		
+		if (response == null) {
+			throw new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+
+		// Write response status
+		httpResponse.setStatus((response.getStatus() > 0) ? response.getStatus() : HttpServletResponse.SC_OK);
+		
+		if (response.getContent() != null) {
+			return;
+		}
+		
+		// Write response headers
+		if (response.getContent().getMetaNames() != null) {
+			for (String metaName : response.getContent().getMetaNames()) {
+				Object metaValue = response.getContent().getMeta(metaName);
+				if (metaValue != null) {
+					if (metaValue instanceof Date) {
+						httpResponse.setHeader(metaName, HttpDate.RFC1123_FORMAT.format(((Date)metaValue)));	
+					} else {
+						httpResponse.setHeader(metaName, metaValue.toString());
+					}
+				}
+			}
+		}
+
+		if ((HttpServletResponse.SC_CREATED == httpResponse.getStatus())) {
+			httpResponse.setHeader(ContentDescriptor.META_LOCATION, response.getContext() + response.getUri());
+		} 
+
+		if ((response.getContent().getBody() == null) || (HttpServletResponse.SC_NOT_MODIFIED == httpResponse.getStatus())) {
+			return;
+		}
+		
+		// Write response body
+		if (outputContentAdapter != null) {
+			InputStream is =  outputContentAdapter.transform(response.getContent().getBody());
+			if (is != null) {
+				CopyUtils.copy(is, httpResponse.getOutputStream());
+			}
+		}
 	}
 	
 	@Override
-	protected void doDelete(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
-		
+	public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+
+		HttpServletRequest nativeHttpRequest = null;
+		HttpServletResponse nativeHttpResponse = null;
+        
 		try {
-			adapter.delete(httpRequest, httpResponse);
+			nativeHttpRequest = (HttpServletRequest) servletRequest;
+			nativeHttpResponse = (HttpServletResponse) servletResponse;
 			
-		} catch (ErrorException ex) {
-			writeError(ex, httpResponse);
+			doService(nativeHttpRequest, nativeHttpResponse);
 			
-		} catch (Exception ex) {
-			writeError(new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex), httpResponse);
+		} catch (ClassCastException e) {
+			throw new ServletException("non-HTTP request or response");
+			
+		} catch (ErrorException e) {
+			if (nativeHttpResponse != null) {
+				writeError(e, nativeHttpResponse);
+				return;
+			}
+			throw new ServletException(e);
+		}		
+	}
+
+	protected static void setAllowHeader(Set<Method> methods, HttpServletResponse response) {
+		
+		String allow = Method.OPTIONS.name();
+		
+		if (methods != null) {
+			for (Method method : methods) {
+				if (!Method.OPTIONS.equals(method)) {
+					allow += ", " + method.name();					
+				}
+			}
 		}
-	}	
+		response.setHeader("Allow", allow);
+	}
 	
 	protected void writeError(ErrorException ex, HttpServletResponse httpResponse) {
-		
 		httpResponse.setStatus(ex.getStatusCode());
 		
 		Writer writer = null;

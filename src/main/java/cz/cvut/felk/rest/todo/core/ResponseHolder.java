@@ -1,17 +1,17 @@
-package cz.cvut.felk.rest.todo.service.impl;
+package cz.cvut.felk.rest.todo.core;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import cz.cvut.felk.rest.todo.ContentDescriptor;
-
-public class LocalContentDescriptor<T> implements ContentDescriptor<T> {
+public class ResponseHolder<T> implements Response<T> {
 
 	private String url;
 	private String contextUrl;
 	
 	private T body;
 	private Map<String, Object> metas = new HashMap<String, Object>();
+	
+	
 	
 	public Object getMeta(String name) {
 		return metas.get(name);
@@ -33,19 +33,25 @@ public class LocalContentDescriptor<T> implements ContentDescriptor<T> {
 		return metas.keySet().toArray(new String[0]);
 	}
 
-	public String getUrl() {
+	public String getUri() {
 		return url;
 	}
 
-	public void setUrl(String url) {
+	public void setUri(String url) {
 		this.url = url;
 	}
 
-	public String getContextUrl() {
+	public String getContext() {
 		return contextUrl;
 	}
 
-	public void setContextUrl(String contextUrl) {
+	public void setContext(String contextUrl) {
 		this.contextUrl = contextUrl;
+	}
+
+	@Override
+	public int getStatus() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

@@ -1,40 +1,31 @@
 package cz.cvut.felk.rest.todo.servlet;
 
-import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
+import cz.cvut.felk.rest.todo.core.Request;
+import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
+import cz.cvut.felk.rest.todo.core.method.Method;
 
-import cz.cvut.felk.rest.todo.ContentDescriptor;
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
-import cz.cvut.felk.rest.todo.errors.ErrorException;
+public class HttpRequest {
 
-public class HttpRequest<T> implements ContentDescriptor<T> {
-
-	private HttpServletRequest httpRequest;
+	private HttpServletRequest nativeHttpRequest;
 	
-	private T body;
 	private String url;
+	private Method method;
 	
-	protected HttpRequest(String url, HttpServletRequest httpRequest) { 
-		this(url, null,  httpRequest);
-	}
-	
-	protected HttpRequest(String url, T body, HttpServletRequest httpRequest) {
+	protected HttpRequest(String url, Method method, HttpServletRequest nativeHttpRequest) { 
 		super();
-		this.httpRequest = httpRequest;
-		this.body = body;
 		this.url = url;
+		this.method = method;
+		this.nativeHttpRequest = nativeHttpRequest;
 	}
-	
-	public static String getUrl(final HttpServletRequest httpRequest) {
+		
+	public static String getUri(final HttpServletRequest httpRequest) {
 		final String context = httpRequest.getContextPath();
 		
 		return (context != null) 
@@ -42,46 +33,12 @@ public class HttpRequest<T> implements ContentDescriptor<T> {
 						: httpRequest.getRequestURI();		
 	}
 	
-	
-    public static <T> HttpRequest<T> read(final Class<? extends T> clazz, HttpServletRequest httpRequest, String url) throws ErrorException {
-    	
-    	final String contentType = (String) HttpRequest.getMeta(ContentDescriptor.META_CONTENT_TYPE, httpRequest);
-    	
-    	if ((contentType != null) && (clazz != null) && (!Void.class.equals(clazz))) {
-    		final Gson gson = new Gson();
-			try {
-				
-				if (contentType.startsWith(CT_ITEM)) {
-					if (TodoItemDto.class.equals(clazz)) {
-						return new HttpRequest<T>(
-									url,
-									gson.fromJson(httpRequest.getReader(), clazz),
-									httpRequest
-								);
-					}
-				}
-				throw new ErrorException(HttpServletResponse.SC_BAD_REQUEST);				
-				
-			} catch (JsonSyntaxException e) {
-				throw new ErrorException(HttpServletResponse.SC_BAD_REQUEST, e);
-				
-			} catch (JsonIOException e) {
-				throw new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
-				
-			} catch (IOException e) {
-				throw new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
-			}
-
-    	}
-		return new HttpRequest<T>(url, httpRequest);
-    }
-	
-	public String getUrl() {
+	public String getUri() {
 		return url;
 	}
 	
-	public T getBody() {
-		return body;
+	public InputStream getBody() {
+return null;
 	}
 
 	public static Object getMeta(final String name, final HttpServletRequest httpRequest) {
@@ -101,14 +58,14 @@ public class HttpRequest<T> implements ContentDescriptor<T> {
 	}
 	
 	public Object getMeta(String name) {
-		return getMeta(name, httpRequest);
+		return getMeta(name, nativeHttpRequest);
 	}
 	
 	public String[] getMetaNames() {
-		return Collections.list(httpRequest.getHeaderNames()).toArray(new String[0]);
+		return Collections.list(nativeHttpRequest.getHeaderNames()).toArray(new String[0]);
 	}
 
-	public String getContextUrl() {
-		return httpRequest.getContextPath();
+	public String getContext() {
+		return nativeHttpRequest.getContextPath();
 	}
 }
