@@ -68,6 +68,7 @@ public class HttpScanner {
 		for (int i=0; i < (index-cursor); i++) {
 			value[i] = bytes[cursor+i];
 		}
+		cursor = index;
 		
 		return new LexUnit(value, types);
 	}
