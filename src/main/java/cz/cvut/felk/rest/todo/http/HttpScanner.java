@@ -28,7 +28,7 @@ public class HttpScanner {
 		if ((bytes == null) || (cursor >= bytes.length)) {
 			return null;
 		}
-		
+		 
 		int index = cursor;
 		Set<LexType> types = new HashSet<HttpScanner.LexType>();
 		
