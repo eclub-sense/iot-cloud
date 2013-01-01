@@ -118,7 +118,15 @@ public class HttpScanner {
      *                | "{" | "}" | SP | HT
 	 */
 	public static boolean isSeparator(byte value) {
-		return isSp(value) || isHt(value); 
+		return isSp(value) || isHt(value)
+				|| ('(' == value) || (')' == value)
+				|| ('<' == value) || ('>' == value)
+				|| ('@' == value) || (',' == value) || (';' == value) || (':' == value)
+				|| ('\\' == value) || ('"' == value) || ('/' == value) 
+				|| ('[' == value) || (']' == value)
+				|| ('?' == value) || ('=' == value)
+				|| ('{' == value) || ('}' == value)
+				; 
 	}
 	
 	
