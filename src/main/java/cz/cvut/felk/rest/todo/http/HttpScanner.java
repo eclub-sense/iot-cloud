@@ -14,41 +14,58 @@ public class HttpScanner {
 	
 	private final String value;
 	private final byte[] bytes;
-	private int cursor;
+	private int byteCursor;
+	
+	private final LexUnit[] units;
+	private int unitCursor;
 	
 	
 	public HttpScanner(final String value) {
 		super();
 		this.value = value;
 		this.bytes = (value != null) ? value.getBytes(HttpLang.US_ASCII_CHARSET) : null;
-		this.cursor = 0;
+		this.units = (bytes != null) ? new LexUnit[bytes.length] : null;
+		this.byteCursor = 0;
+		this.unitCursor = 0;
 	}
 	
 	public LexUnit read() {
-		if ((bytes == null) || (cursor >= bytes.length)) {
+		if (units[unitCursor] != null) {
+			units[unitCursor] = scan();
+			if (units[unitCursor] == null) {
+				return null;
+			}
+		}
+
+		unitCursor += 1;
+		return units[unitCursor -1];
+	}
+
+	protected LexUnit scan() {
+		if ((bytes == null) || (byteCursor >= bytes.length)) {
 			return null;
 		}
-		 
-		int index = cursor;
+
+		int index = byteCursor;
 		Set<LexType> types = new HashSet<HttpScanner.LexType>();
 		
-		if (isChar(bytes[cursor])) {
+		if (isChar(bytes[byteCursor])) {
 			types.add(LexType.CHAR);
 		}
-		if (isCr(bytes[cursor])) {
+		if (isCr(bytes[byteCursor])) {
 			types.add(LexType.CR);
-			if (((cursor + 1) < bytes.length) && isLf(bytes[cursor+1])) {
+			if (((byteCursor + 1) < bytes.length) && isLf(bytes[byteCursor+1])) {
 				types.add(LexType.LF);
 				types.add(LexType.CRLF);
 				index += 1;
 
-				if ((cursor + 2) < bytes.length) {
-					if (isHt(bytes[cursor+2])) {
+				if ((byteCursor + 2) < bytes.length) {
+					if (isHt(bytes[byteCursor+2])) {
 						types.add(LexType.HT);
 						types.add(LexType.LWS);
 						index += 1;
 						
-					} else if (isSp(bytes[cursor+2])) {
+					} else if (isSp(bytes[byteCursor+2])) {
 						types.add(LexType.SP);
 						types.add(LexType.LWS);
 						index += 1;
@@ -56,50 +73,50 @@ public class HttpScanner {
 				}
 			}
 		}
-		if (isCtl(bytes[cursor])) {
+		if (isCtl(bytes[byteCursor])) {
 			types.add(LexType.CTL);
 		}
-		if (isHt(bytes[cursor])) {
+		if (isHt(bytes[byteCursor])) {
 			types.add(LexType.HT);
 			types.add(LexType.LWS);
 		}
-		if (isLf(bytes[cursor])) {
+		if (isLf(bytes[byteCursor])) {
 			types.add(LexType.LF);
 		}
-		if (isSeparator(bytes[cursor])) {
+		if (isSeparator(bytes[byteCursor])) {
 			types.add(LexType.SEPARATOR);
 		}
-		if (isSp(bytes[cursor])) {
+		if (isSp(bytes[byteCursor])) {
 			types.add(LexType.SP);
 			types.add(LexType.LWS);
 		}
-		if (isAlpha(bytes[cursor])) {
+		if (isAlpha(bytes[byteCursor])) {
 			types.add(LexType.ALPHA);
 		}
-		if (isUpAlpha(bytes[cursor])) {
+		if (isUpAlpha(bytes[byteCursor])) {
 			types.add(LexType.UPALPHA);
 		}		
-		if (isLoAlpha(bytes[cursor])) {
+		if (isLoAlpha(bytes[byteCursor])) {
 			types.add(LexType.LOALPHA);
 		}
-		if (isDigit(bytes[cursor])) {
+		if (isDigit(bytes[byteCursor])) {
 			types.add(LexType.DIGIT);
 		}
-		if (isHex(bytes[cursor])) {
+		if (isHex(bytes[byteCursor])) {
 			types.add(LexType.HEX);
 		}
-		if (bytes[cursor] == 34) {
+		if (bytes[byteCursor] == 34) {
 			types.add(LexType.DQM);
 		}
 		
 		index += 1;
 
-		byte[] value = new byte[index-cursor];
-		for (int i=0; i < (index-cursor); i++) {
-			value[i] = bytes[cursor+i];
+		byte[] value = new byte[index-byteCursor];
+		for (int i=0; i < (index-byteCursor); i++) {
+			value[i] = bytes[byteCursor+i];
 		}
 		
-		if ((index - cursor) == 1) {
+		if ((index - byteCursor) == 1) {
 			types.add(LexType.OCTET);
 		}
 
@@ -109,7 +126,7 @@ public class HttpScanner {
 		if ((types.contains(LexType.OCTET) && !types.contains(LexType.CTL)) || types.contains(LexType.LWS)) {
 			types.add(LexType.TEXT);
 		}
-		cursor = index;
+		byteCursor = index;
 		
 		return new LexUnit(value, types);
 	}
