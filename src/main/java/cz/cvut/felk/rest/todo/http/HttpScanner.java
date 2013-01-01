@@ -36,15 +36,24 @@ public class HttpScanner {
 			types.add(LexType.CHAR);
 		}
 		if (isCr(bytes[cursor])) {
-			if ((cursor + 1) < bytes.length) {
-				if (isLf(bytes[cursor+1])) {
-					types.add(LexType.CRLF);
-					index += 1;
-				} else {
-					types.add(LexType.CR);
+			types.add(LexType.CR);
+			if (((cursor + 1) < bytes.length) && isLf(bytes[cursor+1])) {
+				types.add(LexType.LF);
+				types.add(LexType.CRLF);
+				index += 1;
+
+				if ((cursor + 2) < bytes.length) {
+					if (isHt(bytes[cursor+2])) {
+						types.add(LexType.HT);
+						types.add(LexType.LWS);
+						index += 1;
+						
+					} else if (isSp(bytes[cursor+2])) {
+						types.add(LexType.SP);
+						types.add(LexType.LWS);
+						index += 1;
+					}	
 				}
-			} else {
-				types.add(LexType.CR);
 			}
 		}
 		if (isCtl(bytes[cursor])) {
@@ -52,6 +61,7 @@ public class HttpScanner {
 		}
 		if (isHt(bytes[cursor])) {
 			types.add(LexType.HT);
+			types.add(LexType.LWS);
 		}
 		if (isLf(bytes[cursor])) {
 			types.add(LexType.LF);
@@ -61,6 +71,7 @@ public class HttpScanner {
 		}
 		if (isSp(bytes[cursor])) {
 			types.add(LexType.SP);
+			types.add(LexType.LWS);
 		}
 		if (isAlpha(bytes[cursor])) {
 			types.add(LexType.ALPHA);
@@ -85,7 +96,7 @@ public class HttpScanner {
 			value[i] = bytes[cursor+i];
 		}
 		
-		if ((index - cursor == 1)) {
+		if ((index - cursor) == 1) {
 			types.add(LexType.OCTET);
 		}
 		
@@ -170,11 +181,6 @@ public class HttpScanner {
 		return !isCtl(value) /*|| isLws(value)*/;	//FIXME
 	}
 
-	/**
-     * LWS            = [CRLF] 1*( SP | HT )
-	 */
-
-	
     /**
 	 * CR             = &lt;US-ASCII CR, carriage return (13)&gt;
 	 */
@@ -220,13 +226,20 @@ public class HttpScanner {
 	public class LexUnit {
 		
 		private final byte[] value;
-		private Set<LexType> types;
+		private final Set<LexType> types;
 	
 		public LexUnit(byte[] value, Set<LexType> types) {
 			super();
 			this.value = value;
 			this.types = types;
 		}
-	}
-	
+
+		public byte[] getValue() {
+			return value;
+		}
+
+		public Set<LexType> getTypes() {
+			return types;
+		}
+	}	
 }

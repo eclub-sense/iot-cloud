@@ -39,6 +39,13 @@ public class HttpParameter {
 		}
 		return new HttpParameter(attribute.trim(), val.trim());
 	}
+	
+	public static HttpParameter parse(HttpScanner scanner) {
+		if (scanner == null) {
+			throw new IllegalArgumentException("The 'value' parameter cannot be a null.");
+		}
+		
+	}
 
 	@Override
 	public String toString() {
