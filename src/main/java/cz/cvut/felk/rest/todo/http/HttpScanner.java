@@ -37,7 +37,7 @@ public class HttpScanner {
 		}
 		if (isCr(bytes[cursor])) {
 			if ((cursor + 1) < bytes.length) {
-				if (isLf(bytes[cursor])) {
+				if (isLf(bytes[cursor+1])) {
 					types.add(LexType.CRLF);
 					index += 1;
 				} else {
@@ -62,12 +62,33 @@ public class HttpScanner {
 		if (isSp(bytes[cursor])) {
 			types.add(LexType.SP);
 		}
+		if (isAlpha(bytes[cursor])) {
+			types.add(LexType.ALPHA);
+		}
+		if (isUpAlpha(bytes[cursor])) {
+			types.add(LexType.UPALPHA);
+		}		
+		if (isLoAlpha(bytes[cursor])) {
+			types.add(LexType.LOALPHA);
+		}
+		if (isDigit(bytes[cursor])) {
+			types.add(LexType.DIGIT);
+		}
+		if (bytes[cursor] == 34) {
+			types.add(LexType.DQM);
+		}
+		
 		index += 1;
 
 		byte[] value = new byte[index-cursor];
 		for (int i=0; i < (index-cursor); i++) {
 			value[i] = bytes[cursor+i];
 		}
+		
+		if ((index - cursor == 1)) {
+			types.add(LexType.OCTET);
+		}
+		
 		cursor = index;
 		
 		return new LexUnit(value, types);
@@ -130,7 +151,6 @@ public class HttpScanner {
 				; 
 	}
 	
-	
 	/**
      * quoted-string  = ( &lt;"&gt; *(qdtext | quoted-pair ) &lt;"&gt; )
      */
@@ -146,6 +166,9 @@ public class HttpScanner {
 	/**
      * TEXT           = &lt;any OCTET except CTLs, but including LWS&gt;
 	 */
+	public static boolean isText(byte value) {
+		return !isCtl(value) /*|| isLws(value)*/;	//FIXME
+	}
 
 	/**
      * LWS            = [CRLF] 1*( SP | HT )
@@ -165,6 +188,34 @@ public class HttpScanner {
 	public static boolean isLf(byte value) {
 		return value == 10;
 	}	
+	
+	/**
+	 * DIGIT          = &lt;any US-ASCII digit "0".."9"&gt; 
+	 */
+	public static boolean isDigit(byte value) {
+		return ('0' <= value) && (value <= '9');
+	}
+
+	/**
+	 * UPALPHA        = &lt;any US-ASCII uppercase letter "A".."Z"&gt; 
+	 */
+	public static boolean isUpAlpha(byte value) {
+		return ('A' <= value) && (value <= 'Z');
+	}
+
+	/**
+	 * LOALPHA        = &lt;any US-ASCII lowercase letter "a".."z"&gt;
+	 */
+	public static boolean isLoAlpha(byte value) {
+		return ('a' <= value) && (value <= 'z');
+	}
+
+	/**
+	 * ALPHA          = UPALPHA | LOALPHA
+	 */
+	public static boolean isAlpha(byte value) {
+		return isLoAlpha(value) || isUpAlpha(value);
+	}
 	
 	public class LexUnit {
 		
