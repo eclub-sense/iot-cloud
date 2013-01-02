@@ -48,5 +48,19 @@ public class HttpScannerTest {
 		
 		LexUnit eof = scanner.read();
 		assertNull(eof);
-	}	
+	}
+	
+	@Test
+	public void testRollback() {
+		HttpScanner scanner = new HttpScanner("a\\c");
+
+		assertNotNull(scanner.read());	// read a
+		assertNotNull(scanner.read());	// read \\
+		
+		scanner.rollback(2);
+		assertNotNull(scanner.read());	// read a
+		assertNotNull(scanner.read());	// read \\
+		assertNotNull(scanner.read());	// read b
+		assertNull(scanner.read());
+	}
 }

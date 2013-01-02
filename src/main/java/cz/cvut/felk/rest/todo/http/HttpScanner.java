@@ -57,6 +57,17 @@ public class HttpScanner {
 		unitCursor += 1;
 		return units[unitCursor -1];
 	}
+	
+	public void rollback(int length) throws IllegalArgumentException {
+		if (length <= 0) {
+			throw new IllegalArgumentException("The 'length' (" + length + ") parameter must be greater than zero.");
+		}
+		if ((unitCursor - length) < 0) {
+			throw new IllegalArgumentException("The 'length' (" + length + ") parameter must be equal or less than " + unitCursor + ".");
+		}
+		unitCursor -= length;
+		byteCursor = units[unitCursor].index + units[unitCursor].length; 
+	}
 
 	protected LexUnit scan() {
 		if ((bytes == null) || (byteCursor >= bytes.length)) {
@@ -211,6 +222,6 @@ public class HttpScanner {
 		
 		public boolean isType(LexType type) {
 			return (types != null) && types.contains(type);
-		}
+		}		
 	}
 }
