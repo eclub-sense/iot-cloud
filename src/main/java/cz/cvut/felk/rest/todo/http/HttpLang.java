@@ -167,7 +167,9 @@ public class HttpLang {
 		
 		} while (unit != null && unit.isType(LexType.CHAR) && !unit.isType(LexType.CTL) && !unit.isType(LexType.SEPARATOR));
 					
-		scanner.rollback(1);
+		if (unit != null) {
+			scanner.rollback(1);
+		}
 		
 		if (units.isEmpty()) {
 			return null;
