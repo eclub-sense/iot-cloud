@@ -53,11 +53,13 @@ public class HttpScannerTest {
 	@Test
 	public void testRollback() {
 		HttpScanner scanner = new HttpScanner("a\\c");
-
+		scanner.tx();
+		
 		assertNotNull(scanner.read());	// read a
 		assertNotNull(scanner.read());	// read \\
 		
-		scanner.rollback(2);
+		scanner.rollback();
+		
 		assertNotNull(scanner.read());	// read a
 		assertNotNull(scanner.read());	// read \\
 		assertNotNull(scanner.read());	// read b

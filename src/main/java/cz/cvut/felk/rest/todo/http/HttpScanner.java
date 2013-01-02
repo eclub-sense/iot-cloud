@@ -57,16 +57,24 @@ public class HttpScanner {
 		unitCursor += 1;
 		return units[unitCursor -1];
 	}
+
+	public void tx() {
+		
+	}
 	
-	public void rollback(int length) throws IllegalArgumentException {
-		if (length <= 0) {
-			throw new IllegalArgumentException("The 'length' (" + length + ") parameter must be greater than zero.");
-		}
-		if ((unitCursor - length) < 0) {
-			throw new IllegalArgumentException("The 'length' (" + length + ") parameter must be equal or less than " + unitCursor + ".");
-		}
-		unitCursor -= length;
-		byteCursor = units[unitCursor].index + units[unitCursor].length; 
+	public void commit() {
+		
+	}
+	
+	public void rollback() {
+//		if (length <= 0) {
+//			throw new IllegalArgumentException("The 'length' (" + length + ") parameter must be greater than zero.");
+//		}
+//		if ((unitCursor - length) < 0) {
+//			throw new IllegalArgumentException("The 'length' (" + length + ") parameter must be equal or less than " + unitCursor + ".");
+//		}
+//		unitCursor -= length;
+//		byteCursor = units[unitCursor].index + units[unitCursor].length; 
 	}
 
 	protected LexUnit scan() {
@@ -189,9 +197,9 @@ public class HttpScanner {
 		return (char)bytes[unit.getIndex()];		
 	}
 	
-	public int lexUnits() {
-		return unitCursor;
-	}
+//	public int lexUnits() {
+//		return unitCursor;
+//	}
 	
 	/**
      * quoted-string  = ( &lt;"&gt; *(qdtext | quoted-pair ) &lt;"&gt; )

@@ -157,19 +157,21 @@ public class HttpLang {
 			throw new IllegalArgumentException("The 'scanner' parameter must not be a null.");
 		}
 
+		scanner.tx();
+		
 		List<LexUnit> units = new ArrayList<LexUnit>();
 		LexUnit unit = null;
 		do {
 			if (unit != null) {
 				units.add(unit);
+				scanner.commit();
 			}
+			scanner.tx();
 			unit = scanner.read();
 		
 		} while (unit != null && unit.isType(LexType.CHAR) && !unit.isType(LexType.CTL) && !unit.isType(LexType.SEPARATOR));
 					
-		if (scanner.lexUnits() > 0) {
-			scanner.rollback(1);
-		}
+		scanner.rollback();
 		
 		if (units.isEmpty()) {
 			return null;
@@ -189,16 +191,18 @@ public class HttpLang {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'scanner' parameter must not be a null.");
 		}
-
+		
+		scanner.tx();
+		
 		LexUnit unit = null;
 		do {
+			scanner.commit();
 			unit = scanner.read();
+			scanner.tx();
 		
 		} while (unit != null && unit.isType(LexType.SP));
 					
-		if (scanner.lexUnits() > 0) {
-			scanner.rollback(1);
-		}
+		scanner.rollback();
 	}
 	
 	public class ParserContext {
