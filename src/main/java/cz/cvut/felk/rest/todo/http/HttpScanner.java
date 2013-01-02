@@ -182,6 +182,10 @@ public class HttpScanner {
 		return new String(Arrays.copyOfRange(bytes, index, length), HttpLang.US_ASCII_CHARSET);
 	}	
 	
+	public int lexUnits() {
+		return unitCursor;
+	}
+	
 	/**
      * quoted-string  = ( &lt;"&gt; *(qdtext | quoted-pair ) &lt;"&gt; )
      */

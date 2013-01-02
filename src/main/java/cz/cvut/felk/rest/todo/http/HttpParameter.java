@@ -55,11 +55,16 @@ public class HttpParameter {
 		return new HttpParameter(attribute.trim(), val.trim());
 	}
 	
-	public static HttpParameter parse(HttpScanner scanner) {
+	public static HttpParameter readParamater(HttpScanner scanner) {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'value' parameter cannot be a null.");
 		}
 		
+		HttpLang.skipWs(scanner);
+		String atrribute = HttpLang.readToken(scanner);
+		HttpLang.skipWs(scanner);
+		
+		return null;
 	}
 
 	@Override

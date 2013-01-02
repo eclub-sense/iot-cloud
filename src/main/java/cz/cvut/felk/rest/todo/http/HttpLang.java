@@ -152,7 +152,7 @@ public class HttpLang {
 	/**
 	 * token          = 1*&lt;any CHAR except CTLs or separators&gt;
 	 */
-	public static String readToken(HttpScanner scanner) throws ParseException, IllegalArgumentException {
+	public static String readToken(HttpScanner scanner) throws IllegalArgumentException {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'scanner' parameter must not be a null.");
 		}
@@ -167,7 +167,7 @@ public class HttpLang {
 		
 		} while (unit != null && unit.isType(LexType.CHAR) && !unit.isType(LexType.CTL) && !unit.isType(LexType.SEPARATOR));
 					
-		if (unit != null) {
+		if (scanner.lexUnits() > 0) {
 			scanner.rollback(1);
 		}
 		
@@ -183,6 +183,22 @@ public class HttpLang {
 		}
 		
 		return scanner.getAsString(index, length);
+	}
+	
+	public static void skipWs(HttpScanner scanner) {
+		if (scanner == null) {
+			throw new IllegalArgumentException("The 'scanner' parameter must not be a null.");
+		}
+
+		LexUnit unit = null;
+		do {
+			unit = scanner.read();
+		
+		} while (unit != null && unit.isType(LexType.SP));
+					
+		if (scanner.lexUnits() > 0) {
+			scanner.rollback(1);
+		}
 	}
 	
 	public class ParserContext {
