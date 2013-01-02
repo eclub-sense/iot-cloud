@@ -41,10 +41,12 @@ public class HttpScannerTest {
 		assertTrue(crlf.getTypes().contains(LexType.CRLF));
 		
 		assertEquals(2, crlf.getLength());
-		assertArrayEquals("\r\n".getBytes(HttpScanner.US_ASCII_CHARSET), crlf.getValue());
+		assertEquals(0, crlf.getIndex());
+	
+		String value = scanner.getAsString(crlf.getIndex(), crlf.getLength());
+		assertEquals("\r\n", value);
 		
 		LexUnit eof = scanner.read();
 		assertNull(eof);
-	}
-	
+	}	
 }

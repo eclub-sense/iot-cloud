@@ -17,7 +17,12 @@ package cz.cvut.felk.rest.todo.http;
 
 import java.nio.charset.Charset;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
+
+import cz.cvut.felk.rest.todo.http.HttpScanner.LexType;
+import cz.cvut.felk.rest.todo.http.HttpScanner.LexUnit;
 
 /**
  * The following rules are used throughout HTTP/1.1 specification to
@@ -143,13 +148,29 @@ public class HttpLang {
 		}
 		return false;
 	}	
-	
-	public static String parseToken(ParserContext context) throws ParseException, IllegalArgumentException {
-		if (context == null) {
-			
+
+	/**
+	 * token          = 1*&lt;any CHAR except CTLs or separators&gt;
+	 */
+	public static String readToken(HttpScanner scanner) throws ParseException, IllegalArgumentException {
+		if (scanner == null) {
+			throw new IllegalArgumentException("The 'scanner' parameter must not be a null.");
 		}
-		if (context)
+
+		List<LexUnit> units = new ArrayList<LexUnit>();
+		LexUnit unit = null;
+		do {
+			if (unit != null) {
+				units.add(unit);
+			}
+			unit = scanner.read();
 		
+		} while (unit != null && unit.isType(LexType.CHAR) && !unit.isType(LexType.CTL) && !unit.isType(LexType.SEPARATOR));
+					
+		//TODO rollback
+		
+		
+		return null;
 	}
 	
 	public class ParserContext {

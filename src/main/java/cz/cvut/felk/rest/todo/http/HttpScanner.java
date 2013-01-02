@@ -15,15 +15,13 @@
  */
 package cz.cvut.felk.rest.todo.http;
 
-import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class HttpScanner {
 
-	public static final Charset US_ASCII_CHARSET = Charset.forName("US-ASCII");
-	
-	public enum LexType {
+ 	public enum LexType {
 		OCTET, CHAR, UPALPHA, LOALPHA, ALPHA, DIGIT, CTL, CR, LF, SP, HT, DQM, CRLF, LWS, TEXT, HEX, SEPARATOR
 	}
 	
@@ -45,7 +43,7 @@ public class HttpScanner {
 	}
 	
 	public LexUnit read() {
-		if (units == null) {
+		if ((units == null) || (unitCursor >= units.length)) {
 			return null;
 		}
 		
@@ -130,11 +128,6 @@ public class HttpScanner {
 		
 		index += 1;
 
-		byte[] value = new byte[index-byteCursor];
-		for (int i=0; i < (index-byteCursor); i++) {
-			value[i] = bytes[byteCursor+i];
-		}
-		
 		/*
 		 * OCTET = <any 8-bit sequence of data>
 		 */
@@ -148,9 +141,12 @@ public class HttpScanner {
 		if ((types.contains(LexType.OCTET) && !types.contains(LexType.CTL)) || types.contains(LexType.LWS)) {
 			types.add(LexType.TEXT);
 		}
+		
+		LexUnit unit = new LexUnit(byteCursor, index - byteCursor, types);
+		
 		byteCursor = index;
 		
-		return new LexUnit(value, types);
+		return unit;
 	}
 	
 //	public LexUnit lookAhead() {
@@ -164,6 +160,17 @@ public class HttpScanner {
 //		
 //	}
 //	
+	public String getAsString(int index, int length) throws IllegalArgumentException {
+		if (bytes == null) {
+			return null;
+		}
+		if ((index < 0) || ((index+length) > bytes.length)) {
+			throw new IllegalArgumentException();
+		}
+
+		return new String(Arrays.copyOfRange(bytes, index, length), HttpLang.US_ASCII_CHARSET);
+	}	
+	
 	/**
      * quoted-string  = ( &lt;"&gt; *(qdtext | quoted-pair ) &lt;"&gt; )
      */
@@ -179,17 +186,19 @@ public class HttpScanner {
 	
 	public class LexUnit {
 		
-		private final byte[] value;
+		private final int index;
+		private final int length;
 		private final Set<LexType> types;
 	
-		public LexUnit(byte[] value, Set<LexType> types) {
+		public LexUnit(int index,int length, Set<LexType> types) {
 			super();
-			this.value = value;
+			this.index = index;
+			this.length = length;
 			this.types = types;
 		}
 
-		public byte[] getValue() {
-			return value;
+		public int getIndex() {
+			return index;
 		}
 
 		public Set<LexType> getTypes() {
@@ -197,7 +206,11 @@ public class HttpScanner {
 		}
 		
 		public int getLength() {
-			return (value != null) ? value.length : 0;
+			return length;
 		}
-	}	
+		
+		public boolean isType(LexType type) {
+			return (types != null) && types.contains(type);
+		}
+	}
 }
