@@ -162,7 +162,7 @@ public class HttpLang {
 		List<LexUnit> units = new ArrayList<LexUnit>();
 		LexUnit unit = null;
 		do {
-			if (unit != null) {
+			if (unit != null && unit.isType(LexType.CHAR) && !unit.isType(LexType.CTL) && !unit.isType(LexType.SEPARATOR)) {
 				units.add(unit);
 				scanner.commit();
 			}
