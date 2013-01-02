@@ -169,8 +169,18 @@ public class HttpLang {
 					
 		//TODO rollback
 		
+		if (units.isEmpty()) {
+			return null;
+		}
 		
-		return null;
+		int index = units.iterator().next().getIndex();
+		int length = 0;
+		
+		for (LexUnit u : units) {
+			length += u.getLength();
+		}
+		
+		return scanner.getAsString(index, length);
 	}
 	
 	public class ParserContext {
