@@ -30,7 +30,11 @@ public class HttpScanner {
 	}
 	
 	public LexUnit read() {
-		if (units[unitCursor] != null) {
+		if (units == null) {
+			return null;
+		}
+		
+		if (units[unitCursor] == null) {
 			units[unitCursor] = scan();
 			if (units[unitCursor] == null) {
 				return null;
@@ -270,6 +274,10 @@ public class HttpScanner {
 
 		public Set<LexType> getTypes() {
 			return types;
+		}
+		
+		public int getLength() {
+			return (value != null) ? value.length : 0;
 		}
 	}	
 }
