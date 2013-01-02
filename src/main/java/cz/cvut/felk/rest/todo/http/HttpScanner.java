@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2012 sprintapi.org
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package cz.cvut.felk.rest.todo.http;
 
 import java.nio.charset.Charset;
@@ -53,23 +68,23 @@ public class HttpScanner {
 		int index = byteCursor;
 		Set<LexType> types = new HashSet<HttpScanner.LexType>();
 		
-		if (isChar(bytes[byteCursor])) {
+		if (HttpLang.isChar(bytes[byteCursor])) {
 			types.add(LexType.CHAR);
 		}
-		if (isCr(bytes[byteCursor])) {
+		if (HttpLang.isCr(bytes[byteCursor])) {
 			types.add(LexType.CR);
-			if (((byteCursor + 1) < bytes.length) && isLf(bytes[byteCursor+1])) {
+			if (((byteCursor + 1) < bytes.length) && HttpLang.isLf(bytes[byteCursor+1])) {
 				types.add(LexType.LF);
 				types.add(LexType.CRLF);
 				index += 1;
 
 				if ((byteCursor + 2) < bytes.length) {
-					if (isHt(bytes[byteCursor+2])) {
+					if (HttpLang.isHt(bytes[byteCursor+2])) {
 						types.add(LexType.HT);
 						types.add(LexType.LWS);
 						index += 1;
 						
-					} else if (isSp(bytes[byteCursor+2])) {
+					} else if (HttpLang.isSp(bytes[byteCursor+2])) {
 						types.add(LexType.SP);
 						types.add(LexType.LWS);
 						index += 1;
@@ -77,36 +92,36 @@ public class HttpScanner {
 				}
 			}
 		}
-		if (isCtl(bytes[byteCursor])) {
+		if (HttpLang.isCtl(bytes[byteCursor])) {
 			types.add(LexType.CTL);
 		}
-		if (isHt(bytes[byteCursor])) {
+		if (HttpLang.isHt(bytes[byteCursor])) {
 			types.add(LexType.HT);
 			types.add(LexType.LWS);
 		}
-		if (isLf(bytes[byteCursor])) {
+		if (HttpLang.isLf(bytes[byteCursor])) {
 			types.add(LexType.LF);
 		}
-		if (isSeparator(bytes[byteCursor])) {
+		if (HttpLang.isSeparator(bytes[byteCursor])) {
 			types.add(LexType.SEPARATOR);
 		}
-		if (isSp(bytes[byteCursor])) {
+		if (HttpLang.isSp(bytes[byteCursor])) {
 			types.add(LexType.SP);
 			types.add(LexType.LWS);
 		}
-		if (isAlpha(bytes[byteCursor])) {
+		if (HttpLang.isAlpha(bytes[byteCursor])) {
 			types.add(LexType.ALPHA);
 		}
-		if (isUpAlpha(bytes[byteCursor])) {
+		if (HttpLang.isUpAlpha(bytes[byteCursor])) {
 			types.add(LexType.UPALPHA);
 		}		
-		if (isLoAlpha(bytes[byteCursor])) {
+		if (HttpLang.isLoAlpha(bytes[byteCursor])) {
 			types.add(LexType.LOALPHA);
 		}
-		if (isDigit(bytes[byteCursor])) {
+		if (HttpLang.isDigit(bytes[byteCursor])) {
 			types.add(LexType.DIGIT);
 		}
-		if (isHex(bytes[byteCursor])) {
+		if (HttpLang.isHex(bytes[byteCursor])) {
 			types.add(LexType.HEX);
 		}
 		if (bytes[byteCursor] == 34) {
@@ -150,52 +165,6 @@ public class HttpScanner {
 //	}
 //	
 	/**
-     * CHAR           = &lt;any US-ASCII character (octets 0 - 127)&gt; 
-	 */	
-	public static boolean isChar(byte value) {
-		return (value >= 0) && (value <= 127);
-	}
-
-	/**
-	 * CTL            = &lt;any US-ASCII control character (octets 0 - 31) and DEL (127)&gt;
-	 */
-	public static boolean isCtl(byte value) {
-		return ((value >=0) && (value <= 31)) || (value == 127);
-	}
-
-	/**
-     * SP             = &lt;US-ASCII SP, space (32)&gt;
-	 */
-	public static boolean isSp(byte value) {
-		return value == 32;
-	}
-	
-	/**
-     * HT             = &lt;US-ASCII HT, horizontal-tab (9)&gt;
-	 */
-	public static boolean isHt(byte value) {
-		return value == 9;
-	}
-	
-	/**
-     * separators     = "(" | ")" | "<" | ">" | "@"
-     *                | "," | ";" | ":" | "\" | <">
-     *                | "/" | "[" | "]" | "?" | "="
-     *                | "{" | "}" | SP | HT
-	 */
-	public static boolean isSeparator(byte value) {
-		return isSp(value) || isHt(value)
-				|| ('(' == value) || (')' == value)
-				|| ('<' == value) || ('>' == value)
-				|| ('@' == value) || (',' == value) || (';' == value) || (':' == value)
-				|| ('\\' == value) || ('"' == value) || ('/' == value) 
-				|| ('[' == value) || (']' == value)
-				|| ('?' == value) || ('=' == value)
-				|| ('{' == value) || ('}' == value)
-				; 
-	}
-	
-	/**
      * quoted-string  = ( &lt;"&gt; *(qdtext | quoted-pair ) &lt;"&gt; )
      */
 
@@ -207,55 +176,6 @@ public class HttpScanner {
      * quoted-pair    = "\" CHAR
 	 */
 
-    /**
-	 * CR             = &lt;US-ASCII CR, carriage return (13)&gt;
-	 */
-	public static boolean isCr(byte value) {
-		return value == 13;
-	}
-	
-	/**
-     * LF             = &lt;US-ASCII LF, linefeed (10)&gt;
-	 */
-	public static boolean isLf(byte value) {
-		return value == 10;
-	}	
-	
-	/**
-	 * DIGIT          = &lt;any US-ASCII digit "0".."9"&gt; 
-	 */
-	public static boolean isDigit(byte value) {
-		return ('0' <= value) && (value <= '9');
-	}
-
-	/**
-	 * HEX            = "A" | "B" | "C" | "D" | "E" | "F"
-     *                | "a" | "b" | "c" | "d" | "e" | "f" | DIGIT
-	 */
-	public static boolean isHex(byte value) {
-		return isDigit(value) || (('A' <= value) && (value <= 'F')) || (('a' <= value) && (value <= 'f'));
-	}
-	
-	/**
-	 * UPALPHA        = &lt;any US-ASCII uppercase letter "A".."Z"&gt; 
-	 */
-	public static boolean isUpAlpha(byte value) {
-		return ('A' <= value) && (value <= 'Z');
-	}
-
-	/**
-	 * LOALPHA        = &lt;any US-ASCII lowercase letter "a".."z"&gt;
-	 */
-	public static boolean isLoAlpha(byte value) {
-		return ('a' <= value) && (value <= 'z');
-	}
-
-	/**
-	 * ALPHA          = UPALPHA | LOALPHA
-	 */
-	public static boolean isAlpha(byte value) {
-		return isLoAlpha(value) || isUpAlpha(value);
-	}
 	
 	public class LexUnit {
 		

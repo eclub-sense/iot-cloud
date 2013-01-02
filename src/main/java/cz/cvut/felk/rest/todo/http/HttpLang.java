@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2012 sprintapi.org
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package cz.cvut.felk.rest.todo.http;
 
 import java.nio.charset.Charset;
@@ -13,7 +28,7 @@ import java.util.Stack;
 public class HttpLang {
 
 	public static final Charset US_ASCII_CHARSET = Charset.forName("US-ASCII");
-	
+
 	/**
      * CHAR           = &lt;any US-ASCII character (octets 0 - 127)&gt; 
 	 */	
@@ -49,36 +64,15 @@ public class HttpLang {
      *                | "{" | "}" | SP | HT
 	 */
 	public static boolean isSeparator(byte value) {
-		return isSp(value) || isHt(value); 
-	}
-	
-	
-	/**
-     * quoted-string  = ( &lt;"&gt; *(qdtext | quoted-pair ) &lt;"&gt; )
-     */
-
-	/**
-     *  qdtext         = &lt;any TEXT except &lt;"&gt;&gt;
-	 */
-
-	/**
-     * quoted-pair    = "\" CHAR
-	 */
-
-	/**
-     * TEXT           = &lt;any OCTET except CTLs, but including LWS&gt;
-	 */
-
-	/**
-     * LWS            = [CRLF] 1*( SP | HT )
-	 */
-
-
-	/**
-     * CRLF           = CR LF
-	 */
-	public static boolean isCrLf(byte value) {
-		return isC;
+		return isSp(value) || isHt(value)
+				|| ('(' == value) || (')' == value)
+				|| ('<' == value) || ('>' == value)
+				|| ('@' == value) || (',' == value) || (';' == value) || (':' == value)
+				|| ('\\' == value) || ('"' == value) || ('/' == value) 
+				|| ('[' == value) || (']' == value)
+				|| ('?' == value) || ('=' == value)
+				|| ('{' == value) || ('}' == value)
+				; 
 	}
 	
     /**
@@ -94,6 +88,43 @@ public class HttpLang {
 	public static boolean isLf(byte value) {
 		return value == 10;
 	}	
+	
+	/**
+	 * DIGIT          = &lt;any US-ASCII digit "0".."9"&gt; 
+	 */
+	public static boolean isDigit(byte value) {
+		return ('0' <= value) && (value <= '9');
+	}
+
+	/**
+	 * HEX            = "A" | "B" | "C" | "D" | "E" | "F"
+     *                | "a" | "b" | "c" | "d" | "e" | "f" | DIGIT
+	 */
+	public static boolean isHex(byte value) {
+		return isDigit(value) || (('A' <= value) && (value <= 'F')) || (('a' <= value) && (value <= 'f'));
+	}
+	
+	/**
+	 * UPALPHA        = &lt;any US-ASCII uppercase letter "A".."Z"&gt; 
+	 */
+	public static boolean isUpAlpha(byte value) {
+		return ('A' <= value) && (value <= 'Z');
+	}
+
+	/**
+	 * LOALPHA        = &lt;any US-ASCII lowercase letter "a".."z"&gt;
+	 */
+	public static boolean isLoAlpha(byte value) {
+		return ('a' <= value) && (value <= 'z');
+	}
+
+	/**
+	 * ALPHA          = UPALPHA | LOALPHA
+	 */
+	public static boolean isAlpha(byte value) {
+		return isLoAlpha(value) || isUpAlpha(value);
+	}
+
 	
 	/**
 	 * token          = 1*&lt;any CHAR except CTLs or separators&gt;
