@@ -18,6 +18,7 @@ package cz.cvut.felk.rest.todo.http;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 public class HttpScanner {
 
@@ -31,6 +32,8 @@ public class HttpScanner {
 	
 	private final LexUnit[] units;
 	private int unitCursor;
+	
+	private Stack<Integer[]> tx = new Stack<Integer[]>();
 	
 	
 	public HttpScanner(final String value) {
@@ -59,22 +62,18 @@ public class HttpScanner {
 	}
 
 	public void tx() {
-		
+		tx.push(new Integer[]{unitCursor, byteCursor});
 	}
 	
 	public void commit() {
-		
+		tx.pop();
 	}
 	
 	public void rollback() {
-//		if (length <= 0) {
-//			throw new IllegalArgumentException("The 'length' (" + length + ") parameter must be greater than zero.");
-//		}
-//		if ((unitCursor - length) < 0) {
-//			throw new IllegalArgumentException("The 'length' (" + length + ") parameter must be equal or less than " + unitCursor + ".");
-//		}
-//		unitCursor -= length;
-//		byteCursor = units[unitCursor].index + units[unitCursor].length; 
+		Integer[] t = tx.pop();
+			
+		unitCursor = t[0];
+		byteCursor = t[1]; 
 	}
 
 	protected LexUnit scan() {
