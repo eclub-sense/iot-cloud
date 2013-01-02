@@ -39,19 +39,22 @@ public class HttpParameter {
 			throw new IllegalArgumentException("The 'value' parameter cannot be a null.");
 		}
 		
+		scanner.tx();
+		
 		String attribute = HttpLang.readToken(scanner);
 		if (attribute == null) {
-			//scanner.rollback(0);
+			scanner.rollback();
 			return null;
 		}
 		
 		if ((scanner.getAsChar(scanner.read()) != '=')) {
-			scanner.rollback(1);
+			scanner.rollback();
 			return null;
 		}
 
 		String value = HttpLang.readToken(scanner);
 		//TODO
+		scanner.commit();
 		
 		return null;
 	}
