@@ -182,6 +182,13 @@ public class HttpScanner {
 		return new String(Arrays.copyOfRange(bytes, index, length), HttpLang.US_ASCII_CHARSET);
 	}	
 	
+	public Character getAsChar(LexUnit unit) {
+		if (bytes == null) {
+			return null;
+		}
+		return (char)bytes[unit.getIndex()];		
+	}
+	
 	public int lexUnits() {
 		return unitCursor;
 	}

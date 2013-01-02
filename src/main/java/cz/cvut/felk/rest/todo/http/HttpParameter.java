@@ -15,7 +15,6 @@
  */
 package cz.cvut.felk.rest.todo.http;
 
-import java.text.ParseException;
 
 public class HttpParameter {
 
@@ -35,34 +34,24 @@ public class HttpParameter {
      *   <li>value                   = token | quoted-string</li>
      * </ul>
 	 */
-	public static HttpParameter valueOf(final String value) throws ParseException, IllegalArgumentException {
-		if (value == null) {
-			throw new IllegalArgumentException("The 'value' parameter cannot be a null.");
-		}
-		if (!value.contains("=")) {
-			throw new ParseException(value, 0);	
-		}
-		
-		String attribute = value.substring(0, value.indexOf("="));
-		if (!HttpLang.isToken(attribute)) {
-			throw new ParseException(value, 0);
-		}
-		
-		String val = value.substring(value.indexOf("=") + 1);
-		if (!HttpLang.isToken(val) && !HttpLang.isQuotedString(val)) {
-			throw new ParseException(value, attribute.length());
-		}
-		return new HttpParameter(attribute.trim(), val.trim());
-	}
-	
 	public static HttpParameter readParamater(HttpScanner scanner) {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'value' parameter cannot be a null.");
 		}
 		
-		HttpLang.skipWs(scanner);
-		String atrribute = HttpLang.readToken(scanner);
-		HttpLang.skipWs(scanner);
+		String attribute = HttpLang.readToken(scanner);
+		if (attribute == null) {
+			//scanner.rollback(0);
+			return null;
+		}
+		
+		if ((scanner.getAsChar(scanner.read()) != '=')) {
+			scanner.rollback(1);
+			return null;
+		}
+
+		String value = HttpLang.readToken(scanner);
+		//TODO
 		
 		return null;
 	}
