@@ -179,16 +179,4 @@ public class HttpScanner {
 		}
 		return (char)bytes[unit.getIndex()];		
 	}
-	
-	/**
-     * quoted-string  = ( &lt;"&gt; *(qdtext | quoted-pair ) &lt;"&gt; )
-     */
-
-	/**
-     *  qdtext         = &lt;any TEXT except &lt;"&gt;&gt;
-	 */
-
-	/**
-     * quoted-pair    = "\" CHAR
-	 */
 }

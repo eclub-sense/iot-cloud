@@ -53,8 +53,11 @@ public class HttpParameter {
 
 		String value = HttpLexUnit.readToken(scanner);
 		if (value == null) {
-			scanner.rollback();
-			return null;
+			value = HttpLexUnit.readQuotedString(scanner);
+			if (value == null) {
+				scanner.rollback();
+				return null;
+			}
 		}
 		
 		scanner.commit();

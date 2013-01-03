@@ -197,21 +197,85 @@ public class HttpLexUnit {
 		return scanner.getAsString(index, length);
 	}
 	
-	public static void skipWs(HttpScanner scanner) {
+	/**
+     * quoted-string  = ( &lt;"&gt; *(qdtext | quoted-pair ) &lt;"&gt; )
+     *  qdtext        = &lt;any TEXT except &lt;"&gt;&gt;
+     *  quoted-pair   = "\" CHAR
+     */
+	public static String readQuotedString(HttpScanner scanner) throws IllegalArgumentException {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'scanner' parameter must not be a null.");
 		}
-		
+
 		scanner.tx();
 		
-		HttpLexUnit unit = null;
-		do {
-			scanner.commit();
-			unit = scanner.read();
-			scanner.tx();
+		List<HttpLexUnit> units = new ArrayList<HttpLexUnit>();
 		
-		} while (unit != null && unit.isType(Type.SP));
+		HttpLexUnit unit = scanner.read();
+		if ((unit == null) || ('"' != scanner.getAsChar(unit))) {
+			scanner.rollback();
+			return null;
+		}
+
+		scanner.tx();
+		do {
+			units.add(unit);
+
+			scanner.commit();
+			scanner.tx();
+			unit = scanner.read();
+			
+			if ((unit != null) && ('\\' == scanner.getAsChar(unit))) {
+				scanner.tx();
+				HttpLexUnit tmpUnit = scanner.read();
+				if ((tmpUnit != null) && (tmpUnit.isType(HttpLexUnit.Type.CHAR))) {
+					units.add(unit);
+					units.add(tmpUnit);
+					scanner.commit();
 					
+					unit = scanner.read();
+					
+				} else {
+					scanner.rollback();
+				}
+			}
+			
+		} while (unit != null && unit.isType(Type.CHAR) && ('"' != scanner.getAsChar(unit)));
+
 		scanner.rollback();
-	}	
+		
+		if (('"' != scanner.getAsChar(unit))) {
+			scanner.rollback();
+			return null;
+		}
+		scanner.commit();
+		units.add(unit);
+		
+		int index = units.iterator().next().getIndex();
+		int length = 0;
+		
+		for (HttpLexUnit u : units) {
+			length += u.getLength();
+		}
+		
+		return scanner.getAsString(index, length);		
+	}
+
+//	public static void skipWs(HttpScanner scanner) {
+//		if (scanner == null) {
+//			throw new IllegalArgumentException("The 'scanner' parameter must not be a null.");
+//		}
+//		
+//		scanner.tx();
+//		
+//		HttpLexUnit unit = null;
+//		do {
+//			scanner.commit();
+//			unit = scanner.read();
+//			scanner.tx();
+//		
+//		} while (unit != null && unit.isType(Type.SP));
+//					
+//		scanner.rollback();
+//	}	
 }
