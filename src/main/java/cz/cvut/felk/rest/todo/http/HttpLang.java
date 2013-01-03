@@ -130,25 +130,6 @@ public class HttpLang {
 		return isLoAlpha(value) || isUpAlpha(value);
 	}
 
-	
-	/**
-	 * token          = 1*&lt;any CHAR except CTLs or separators&gt;
-	 */
-	public static boolean isToken(String value) {
-		if (value != null) {
-			byte[] bytes =  value.trim().getBytes(US_ASCII_CHARSET);
-			if (bytes != null) {
-				for (byte b : bytes) {
-					if (!isChar(b) || isCtl(b) || isSeparator(b)) {
-						return false;
-					}
-				}
-				return true;
-			}
-		}
-		return false;
-	}	
-
 	/**
 	 * token          = 1*&lt;any CHAR except CTLs or separators&gt;
 	 */
