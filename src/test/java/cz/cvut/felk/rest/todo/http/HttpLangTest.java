@@ -21,6 +21,9 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
+import cz.cvut.felk.rest.todo.http.HttpScanner.LexType;
+import cz.cvut.felk.rest.todo.http.HttpScanner.LexUnit;
+
 public class HttpLangTest {
 
 	@Test
@@ -42,5 +45,25 @@ public class HttpLangTest {
 		 assertNull(HttpLang.readToken(new HttpScanner(" abcd")));
 		 assertNull(HttpLang.readToken(new HttpScanner("")));
 		 assertNull(HttpLang.readToken(new HttpScanner("\t")));
+	}
+	
+	@Test
+	public void testReadParameter()  throws IllegalArgumentException, ParseException {
+		HttpScanner scanner = new HttpScanner("a=b");
+		
+		String a = HttpLang.readToken(scanner);
+		assertEquals("a", a);
+		
+		LexUnit e = scanner.read();
+		assertNotNull(e);
+		assertEquals(1, e.getIndex());
+		assertEquals(1, e.getLength());
+		assertTrue(e.isType(LexType.SEPARATOR));
+		
+		String b = HttpLang.readToken(scanner);
+		assertEquals("b", b);
+		
+		LexUnit eof = scanner.read();
+		assertNull(eof);
 	}
 }
