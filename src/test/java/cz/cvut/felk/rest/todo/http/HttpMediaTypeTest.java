@@ -30,7 +30,7 @@ public class HttpMediaTypeTest {
 	
 	@Test
 	public void testReadWithParams() {
-		HttpMediaType t = HttpMediaType.read(new HttpScanner("text/html;a=b;1234=\"\\\"5\"")); 
+		HttpMediaType t = HttpMediaType.read(new HttpScanner("text/html; a=b;1234=\"\\\"5\"")); 
 		assertNotNull(t);
 		assertEquals("text", t.getType());
 		assertEquals("html", t.getSubtype());

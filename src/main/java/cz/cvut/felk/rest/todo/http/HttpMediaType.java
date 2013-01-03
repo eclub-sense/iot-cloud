@@ -103,6 +103,15 @@ public class HttpMediaType {
 		
 		scanner.tx();
 		while (';' == scanner.getAsChar(scanner.read())) {
+			scanner.tx();
+			HttpLexUnit sp = scanner.read();
+			while (sp != null && sp.isType(HttpLexUnit.Type.SP)) {
+				scanner.commit();
+				scanner.tx();
+				sp = scanner.read();
+			}
+			scanner.rollback();
+			
 			HttpParameter param = HttpParameter.read(scanner);
 			if (param != null) {
 				params.add(param);
