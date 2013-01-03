@@ -15,20 +15,44 @@
  */
 package cz.cvut.felk.rest.todo.http;
 
-import java.text.ParseException;
 
 public class HttpAcceptHeader {
 
-	private HttpMediaRange[] mediaRange;
+	private final Item[] items;
 	
-	private Float[] qualityFactor;
+	public HttpAcceptHeader(Item[] items) {
+		super();
+		this.items = items;
+	}
 	
-//	private String[];
-	
-	public static final HttpAcceptHeader valueOf(String value) throws ParseException {
+	public static final HttpAcceptHeader read(HttpScanner scanner) throws IllegalArgumentException {
 		return null;
 	}
 	
-	
+	public class Item {
+		
+		private final HttpMediaRange range;
+		private final Float qualityFactor;
+		private final HttpAcceptExtension[] extensions;
+		
+		Item(HttpMediaRange range, Float qualityFactor, HttpAcceptExtension[] extensions) {
+			super();
+			this.range = range;
+			this.qualityFactor = qualityFactor;
+			this.extensions = extensions;
+		}
+
+		public HttpMediaRange getRange() {
+			return range;
+		}
+
+		public Float getQualityFactor() {
+			return qualityFactor;
+		}
+
+		public HttpAcceptExtension[] getExtensions() {
+			return extensions;
+		}
+	}
 	
 }
