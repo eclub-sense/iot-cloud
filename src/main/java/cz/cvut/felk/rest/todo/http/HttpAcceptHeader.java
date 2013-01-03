@@ -23,7 +23,7 @@ public class HttpAcceptHeader {
 	
 	private Float[] qualityFactor;
 	
-	private String[][] extensions;
+//	private String[];
 	
 	public static final HttpAcceptHeader valueOf(String value) throws ParseException {
 		return null;

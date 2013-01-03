@@ -34,7 +34,7 @@ public class HttpParameter {
      *   <li>value                   = token | quoted-string</li>
      * </ul>
 	 */
-	public static HttpParameter readParameter(HttpScanner scanner) {
+	public static HttpParameter read(HttpScanner scanner) {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'value' parameter cannot be a null.");
 		}

@@ -15,7 +15,6 @@
  */
 package cz.cvut.felk.rest.todo.http;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,53 +77,43 @@ public class HttpMediaType {
      *   <li>type           = token</li>
      *   <li>subtype        = token</li>
      * </ul>
-     *
-	 * @param mediaType
-	 * @return
-	 * @throws ParseException
-	 * @throws IllegalArgumentException
 	 */
-	public static HttpMediaType valueOf(String mediaType) throws ParseException, IllegalArgumentException {
-		if (mediaType == null) {
-			throw new IllegalArgumentException("The 'mediaType' parameter cannot be a null.");
+	public static HttpMediaType read(HttpScanner scanner) throws IllegalArgumentException {
+		if (scanner == null) {
+			throw new IllegalArgumentException("The 'scanner' parameter cannot be a null.");
 		}
-		if (!mediaType.contains("/")) {
-			throw new ParseException(mediaType, 0);
-		}
-		
-		String type = mediaType.substring(0, mediaType.indexOf('/')).trim();
-				
-//		if (!HttpLang.isToken(type)) {
-//			throw new ParseException(mediaType, 0);
-//		}
-		
-		String subtype = mediaType.substring(mediaType.indexOf('/') + 1).trim();
-		
-		
-		HttpParameter[] parameters = null;
 
-//		while ((subtype != null) && subtype.contains(";")) {
-//			List<HttpParameter> paramList = new ArrayList<HttpParameter>();
-//			
-//			subtype = subtype.substring(mediaType.indexOf(';') + 1).trim();
-//			
-//			for (String p : pair[1].substring(pair[1].indexOf(';') + 1).split(";")) {
-//				if ((p != null) && !p.trim().isEmpty()) {
-//					paramList.add(p.trim());
-//				}
-//			}
-//			if (!paramList.isEmpty()) {
-//				parameters = paramList.toArray(new String[paramList.size()]);
-//			}
-//			pair[1] = pair[1].substring(0, pair[1].indexOf(';'));		
-//		}
-//		
-//		if (!HttpLang.isToken(subtype)) {
-//			throw new ParseException(mediaType, mediaType.indexOf('/'));
-//		}
-//		
-//		return new HttpMediaType(pair[0].trim(), pair[1].trim(), parameters);
-		return null;
+		scanner.tx();
+		
+		String type = HttpLexUnit.readToken(scanner);
+		if ((type == null) || ('/' != scanner.getAsChar(scanner.read()))) {
+			scanner.rollback();
+			return null;
+		}
+		
+		String subtype = HttpLexUnit.readToken(scanner);
+		if  (subtype == null) {
+			scanner.rollback();
+			return null;			
+		}
+		
+		scanner.commit();
+		
+		List<HttpParameter> params = new ArrayList<HttpParameter>();
+		
+		scanner.tx();
+		while (';' == scanner.getAsChar(scanner.read())) {
+			HttpParameter param = HttpParameter.read(scanner);
+			if (param != null) {
+				params.add(param);
+				scanner.commit();
+				scanner.tx();
+			}
+		}
+		scanner.rollback();
+		
+		return new HttpMediaType(type, subtype,
+				params.isEmpty() ? null : params.toArray(new HttpParameter[params.size()]));
 	}
 	
 	public boolean isValid() {
