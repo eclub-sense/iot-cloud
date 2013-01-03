@@ -16,24 +16,54 @@
 package cz.cvut.felk.rest.todo.http;
 
 import java.nio.charset.Charset;
-import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Stack;
-
-import cz.cvut.felk.rest.todo.http.HttpScanner.LexType;
-import cz.cvut.felk.rest.todo.http.HttpScanner.LexUnit;
+import java.util.Set;
 
 /**
- * The following rules are used throughout HTTP/1.1 specification to
- * describe basic parsing constructs. The US-ASCII coded character set
- * is defined by ANSI X3.4-1986.
  *
  */
-public class HttpLang {
+public class HttpLexUnit {
 
 	public static final Charset US_ASCII_CHARSET = Charset.forName("US-ASCII");
 
+ 	public enum Type {
+		OCTET, CHAR, UPALPHA, LOALPHA, ALPHA, DIGIT, CTL, CR, LF, SP, HT, DQM, CRLF, LWS, TEXT, HEX, SEPARATOR
+	}
+	
+	private final int index;
+	private final int length;
+	private final Set<Type> types;
+
+	public HttpLexUnit(int index,int length, Set<Type> types) {
+		super();
+		this.index = index;
+		this.length = length;
+		this.types = types;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public Set<Type> getTypes() {
+		return types;
+	}
+	
+	public int getLength() {
+		return length;
+	}
+	
+	public boolean isType(Type type) {
+		return (types != null) && types.contains(type);
+	}		
+	
+	@Override
+	public String toString() {
+		return "[" + index + "," + length + ";" + ((types != null) ? Arrays.toString(types.toArray()) : "null") + "]";
+	}
+	
 	/**
      * CHAR           = &lt;any US-ASCII character (octets 0 - 127)&gt; 
 	 */	
@@ -140,8 +170,8 @@ public class HttpLang {
 
 		scanner.tx();
 		
-		List<LexUnit> units = new ArrayList<LexUnit>();
-		LexUnit unit = null;
+		List<HttpLexUnit> units = new ArrayList<HttpLexUnit>();
+		HttpLexUnit unit = null;
 		do {
 			if (unit != null) {
 				units.add(unit);
@@ -149,7 +179,7 @@ public class HttpLang {
 			scanner.commit();
 			scanner.tx();
 			unit = scanner.read();
-		} while (unit != null && unit.isType(LexType.CHAR) && !unit.isType(LexType.CTL) && !unit.isType(LexType.SEPARATOR));
+		} while (unit != null && unit.isType(Type.CHAR) && !unit.isType(Type.CTL) && !unit.isType(Type.SEPARATOR));
 					
 		scanner.rollback();
 		
@@ -160,7 +190,7 @@ public class HttpLang {
 		int index = units.iterator().next().getIndex();
 		int length = 0;
 		
-		for (LexUnit u : units) {
+		for (HttpLexUnit u : units) {
 			length += u.getLength();
 		}
 		
@@ -174,13 +204,13 @@ public class HttpLang {
 		
 		scanner.tx();
 		
-		LexUnit unit = null;
+		HttpLexUnit unit = null;
 		do {
 			scanner.commit();
 			unit = scanner.read();
 			scanner.tx();
 		
-		} while (unit != null && unit.isType(LexType.SP));
+		} while (unit != null && unit.isType(Type.SP));
 					
 		scanner.rollback();
 	}	

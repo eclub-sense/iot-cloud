@@ -40,7 +40,7 @@ public class HttpParameter {
 		}
 		scanner.tx();
 
-		String attribute = HttpLang.readToken(scanner);
+		String attribute = HttpLexUnit.readToken(scanner);
 		if (attribute == null) {
 			scanner.rollback();
 			return null;
@@ -51,7 +51,7 @@ public class HttpParameter {
 			return null;
 		}
 
-		String value = HttpLang.readToken(scanner);
+		String value = HttpLexUnit.readToken(scanner);
 		if (value == null) {
 			scanner.rollback();
 			return null;

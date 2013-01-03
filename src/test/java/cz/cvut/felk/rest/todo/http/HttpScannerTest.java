@@ -15,12 +15,14 @@
  */
 package cz.cvut.felk.rest.todo.http;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import cz.cvut.felk.rest.todo.http.HttpScanner.LexType;
-import cz.cvut.felk.rest.todo.http.HttpScanner.LexUnit;
+import cz.cvut.felk.rest.todo.http.HttpLexUnit.Type;
 
 public class HttpScannerTest {
 
@@ -33,12 +35,12 @@ public class HttpScannerTest {
 	@Test
 	public void testReadCRLF() {
 		HttpScanner scanner = new HttpScanner("\r\n");
-		LexUnit crlf = scanner.read();
+		HttpLexUnit crlf = scanner.read();
 		
 		assertNotNull(crlf);
-		assertTrue(crlf.getTypes().contains(LexType.CR));
-		assertTrue(crlf.getTypes().contains(LexType.LF));
-		assertTrue(crlf.getTypes().contains(LexType.CRLF));
+		assertTrue(crlf.getTypes().contains(Type.CR));
+		assertTrue(crlf.getTypes().contains(Type.LF));
+		assertTrue(crlf.getTypes().contains(Type.CRLF));
 		
 		assertEquals(2, crlf.getLength());
 		assertEquals(0, crlf.getIndex());
@@ -46,7 +48,7 @@ public class HttpScannerTest {
 		String value = scanner.getAsString(crlf.getIndex(), crlf.getLength());
 		assertEquals("\r\n", value);
 		
-		LexUnit eof = scanner.read();
+		HttpLexUnit eof = scanner.read();
 		assertNull(eof);
 	}
 	
@@ -69,16 +71,16 @@ public class HttpScannerTest {
 	@Test
 	public void testReadParameter() {
 		HttpScanner scanner = new HttpScanner("a=b");
-		LexUnit a = scanner.read();
+		HttpLexUnit a = scanner.read();
 		assertNotNull(a);
 		
-		LexUnit e = scanner.read();
+		HttpLexUnit e = scanner.read();
 		assertNotNull(e);
 		
-		LexUnit b = scanner.read();
+		HttpLexUnit b = scanner.read();
 		assertNotNull(b);
 		
-		LexUnit eof = scanner.read();
+		HttpLexUnit eof = scanner.read();
 		assertNull(eof);
 	}
 }

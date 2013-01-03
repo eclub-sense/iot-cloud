@@ -15,25 +15,27 @@
  */
 package cz.cvut.felk.rest.todo.http;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 
 import org.junit.Test;
 
-import cz.cvut.felk.rest.todo.http.HttpScanner.LexType;
-import cz.cvut.felk.rest.todo.http.HttpScanner.LexUnit;
+import cz.cvut.felk.rest.todo.http.HttpLexUnit.Type;
 
 public class HttpLangTest {
 
 	@Test
 	public void testReadNullToken() throws IllegalArgumentException, ParseException {
-		 assertNull(HttpLang.readToken(new HttpScanner(null)));
+		 assertNull(HttpLexUnit.readToken(new HttpScanner(null)));
 	}
 	
 	@Test
 	public void testReadToken() throws IllegalArgumentException, ParseException {
-		 String token = HttpLang.readToken(new HttpScanner("abcd"));
+		 String token = HttpLexUnit.readToken(new HttpScanner("abcd"));
 		 
 		 assertNotNull(token);
 		 assertEquals("abcd", token);
@@ -41,29 +43,29 @@ public class HttpLangTest {
 
 	@Test
 	public void testInvalidReadToken() throws IllegalArgumentException, ParseException {
-		 assertNull(HttpLang.readToken(new HttpScanner("/abcd")));
-		 assertNull(HttpLang.readToken(new HttpScanner(" abcd")));
-		 assertNull(HttpLang.readToken(new HttpScanner("")));
-		 assertNull(HttpLang.readToken(new HttpScanner("\t")));
+		 assertNull(HttpLexUnit.readToken(new HttpScanner("/abcd")));
+		 assertNull(HttpLexUnit.readToken(new HttpScanner(" abcd")));
+		 assertNull(HttpLexUnit.readToken(new HttpScanner("")));
+		 assertNull(HttpLexUnit.readToken(new HttpScanner("\t")));
 	}
 
 	@Test
 	public void testReadTokens()  throws IllegalArgumentException, ParseException {
 		HttpScanner scanner = new HttpScanner("a=b");
 		
-		String a = HttpLang.readToken(scanner);
+		String a = HttpLexUnit.readToken(scanner);
 		assertEquals("a", a);
 		
-		LexUnit e = scanner.read();
+		HttpLexUnit e = scanner.read();
 		assertNotNull(e);
 		assertEquals(1, e.getIndex());
 		assertEquals(1, e.getLength());
-		assertTrue(e.isType(LexType.SEPARATOR));
+		assertTrue(e.isType(Type.SEPARATOR));
 		
-		String b = HttpLang.readToken(scanner);
+		String b = HttpLexUnit.readToken(scanner);
 		assertEquals("b", b);
 		
-		LexUnit eof = scanner.read();
+		HttpLexUnit eof = scanner.read();
 		assertNull(eof);
 	}
 }

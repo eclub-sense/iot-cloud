@@ -20,17 +20,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-public class HttpScanner {
+import cz.cvut.felk.rest.todo.http.HttpLexUnit.Type;
 
- 	public enum LexType {
-		OCTET, CHAR, UPALPHA, LOALPHA, ALPHA, DIGIT, CTL, CR, LF, SP, HT, DQM, CRLF, LWS, TEXT, HEX, SEPARATOR
-	}
+public class HttpScanner {
 	
-	private final String value;
 	private final byte[] bytes;
 	private int byteCursor;
 	
-	private final LexUnit[] units;
+	private final HttpLexUnit[] units;
 	private int unitCursor;
 	
 	private Stack<Integer[]> tx = new Stack<Integer[]>();
@@ -38,14 +35,13 @@ public class HttpScanner {
 	
 	public HttpScanner(final String value) {
 		super();
-		this.value = value;
-		this.bytes = (value != null) ? value.getBytes(HttpLang.US_ASCII_CHARSET) : null;
-		this.units = (bytes != null) ? new LexUnit[bytes.length] : null;
+		this.bytes = (value != null) ? value.getBytes(HttpLexUnit.US_ASCII_CHARSET) : null;
+		this.units = (bytes != null) ? new HttpLexUnit[bytes.length] : null;
 		this.byteCursor = 0;
 		this.unitCursor = 0;
 	}
 	
-	public LexUnit read() {
+	public HttpLexUnit read() {
 		if ((units == null) || (unitCursor >= units.length)) {
 			return null;
 		}
@@ -75,72 +71,72 @@ public class HttpScanner {
 		unitCursor = t[0];
 	}
 
-	protected LexUnit scan() {
+	protected HttpLexUnit scan() {
 		if ((bytes == null) || (byteCursor >= bytes.length)) {
 			return null;
 		}
 
 		int index = byteCursor;
-		Set<LexType> types = new HashSet<HttpScanner.LexType>();
+		Set<Type> types = new HashSet<HttpLexUnit.Type>();
 		
-		if (HttpLang.isChar(bytes[byteCursor])) {
-			types.add(LexType.CHAR);
+		if (HttpLexUnit.isChar(bytes[byteCursor])) {
+			types.add(Type.CHAR);
 		}
-		if (HttpLang.isCr(bytes[byteCursor])) {
-			types.add(LexType.CR);
-			if (((byteCursor + 1) < bytes.length) && HttpLang.isLf(bytes[byteCursor+1])) {
-				types.add(LexType.LF);
-				types.add(LexType.CRLF);
+		if (HttpLexUnit.isCr(bytes[byteCursor])) {
+			types.add(Type.CR);
+			if (((byteCursor + 1) < bytes.length) && HttpLexUnit.isLf(bytes[byteCursor+1])) {
+				types.add(Type.LF);
+				types.add(Type.CRLF);
 				index += 1;
 
 				if ((byteCursor + 2) < bytes.length) {
-					if (HttpLang.isHt(bytes[byteCursor+2])) {
-						types.add(LexType.HT);
-						types.add(LexType.LWS);
+					if (HttpLexUnit.isHt(bytes[byteCursor+2])) {
+						types.add(Type.HT);
+						types.add(Type.LWS);
 						index += 1;
 						
-					} else if (HttpLang.isSp(bytes[byteCursor+2])) {
-						types.add(LexType.SP);
-						types.add(LexType.LWS);
+					} else if (HttpLexUnit.isSp(bytes[byteCursor+2])) {
+						types.add(Type.SP);
+						types.add(Type.LWS);
 						index += 1;
 					}	
 				}
 			}
 		}
-		if (HttpLang.isCtl(bytes[byteCursor])) {
-			types.add(LexType.CTL);
+		if (HttpLexUnit.isCtl(bytes[byteCursor])) {
+			types.add(Type.CTL);
 		}
-		if (HttpLang.isHt(bytes[byteCursor])) {
-			types.add(LexType.HT);
-			types.add(LexType.LWS);
+		if (HttpLexUnit.isHt(bytes[byteCursor])) {
+			types.add(Type.HT);
+			types.add(Type.LWS);
 		}
-		if (HttpLang.isLf(bytes[byteCursor])) {
-			types.add(LexType.LF);
+		if (HttpLexUnit.isLf(bytes[byteCursor])) {
+			types.add(Type.LF);
 		}
-		if (HttpLang.isSeparator(bytes[byteCursor])) {
-			types.add(LexType.SEPARATOR);
+		if (HttpLexUnit.isSeparator(bytes[byteCursor])) {
+			types.add(Type.SEPARATOR);
 		}
-		if (HttpLang.isSp(bytes[byteCursor])) {
-			types.add(LexType.SP);
-			types.add(LexType.LWS);
+		if (HttpLexUnit.isSp(bytes[byteCursor])) {
+			types.add(Type.SP);
+			types.add(Type.LWS);
 		}
-		if (HttpLang.isAlpha(bytes[byteCursor])) {
-			types.add(LexType.ALPHA);
+		if (HttpLexUnit.isAlpha(bytes[byteCursor])) {
+			types.add(Type.ALPHA);
 		}
-		if (HttpLang.isUpAlpha(bytes[byteCursor])) {
-			types.add(LexType.UPALPHA);
+		if (HttpLexUnit.isUpAlpha(bytes[byteCursor])) {
+			types.add(Type.UPALPHA);
 		}		
-		if (HttpLang.isLoAlpha(bytes[byteCursor])) {
-			types.add(LexType.LOALPHA);
+		if (HttpLexUnit.isLoAlpha(bytes[byteCursor])) {
+			types.add(Type.LOALPHA);
 		}
-		if (HttpLang.isDigit(bytes[byteCursor])) {
-			types.add(LexType.DIGIT);
+		if (HttpLexUnit.isDigit(bytes[byteCursor])) {
+			types.add(Type.DIGIT);
 		}
-		if (HttpLang.isHex(bytes[byteCursor])) {
-			types.add(LexType.HEX);
+		if (HttpLexUnit.isHex(bytes[byteCursor])) {
+			types.add(Type.HEX);
 		}
 		if (bytes[byteCursor] == 34) {
-			types.add(LexType.DQM);
+			types.add(Type.DQM);
 		}
 		
 		index += 1;
@@ -149,34 +145,23 @@ public class HttpScanner {
 		 * OCTET = <any 8-bit sequence of data>
 		 */
 		if ((index - byteCursor) == 1) {
-			types.add(LexType.OCTET);
+			types.add(Type.OCTET);
 		}
 
 		/*
 		 * TEXT = <any OCTET except CTLs, but including LWS>
 		 */
-		if ((types.contains(LexType.OCTET) && !types.contains(LexType.CTL)) || types.contains(LexType.LWS)) {
-			types.add(LexType.TEXT);
+		if ((types.contains(Type.OCTET) && !types.contains(Type.CTL)) || types.contains(Type.LWS)) {
+			types.add(Type.TEXT);
 		}
 		
-		LexUnit unit = new LexUnit(byteCursor, index - byteCursor, types);
+		HttpLexUnit unit = new HttpLexUnit(byteCursor, index - byteCursor, types);
 		
 		byteCursor = index;
 		
 		return unit;
 	}
 	
-//	public LexUnit lookAhead() {
-//		
-//	}
-	
-//	public boolean isEnd() {
-//		
-//	}
-//	public int getOffset() {
-//		
-//	}
-//	
 	public String getAsString(int index, int length) throws IllegalArgumentException {
 		if (bytes == null) {
 			return null;
@@ -185,19 +170,15 @@ public class HttpScanner {
 			throw new IllegalArgumentException();
 		}
 
-		return new String(Arrays.copyOfRange(bytes, index, index+length), HttpLang.US_ASCII_CHARSET);
+		return new String(Arrays.copyOfRange(bytes, index, index+length), HttpLexUnit.US_ASCII_CHARSET);
 	}	
 	
-	public Character getAsChar(LexUnit unit) {
+	public Character getAsChar(HttpLexUnit unit) {
 		if (bytes == null) {
 			return null;
 		}
 		return (char)bytes[unit.getIndex()];		
 	}
-	
-//	public int lexUnits() {
-//		return unitCursor;
-//	}
 	
 	/**
      * quoted-string  = ( &lt;"&gt; *(qdtext | quoted-pair ) &lt;"&gt; )
@@ -210,40 +191,4 @@ public class HttpScanner {
 	/**
      * quoted-pair    = "\" CHAR
 	 */
-
-	
-	public class LexUnit {
-		
-		private final int index;
-		private final int length;
-		private final Set<LexType> types;
-	
-		public LexUnit(int index,int length, Set<LexType> types) {
-			super();
-			this.index = index;
-			this.length = length;
-			this.types = types;
-		}
-
-		public int getIndex() {
-			return index;
-		}
-
-		public Set<LexType> getTypes() {
-			return types;
-		}
-		
-		public int getLength() {
-			return length;
-		}
-		
-		public boolean isType(LexType type) {
-			return (types != null) && types.contains(type);
-		}		
-		
-		@Override
-		public String toString() {
-			return "[" + index + "," + length + ";" + ((types != null) ? Arrays.toString(types.toArray()) : "null") + "]";
-		}
-	}
 }
