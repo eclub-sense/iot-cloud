@@ -46,9 +46,9 @@ public class HttpLangTest {
 		 assertNull(HttpLang.readToken(new HttpScanner("")));
 		 assertNull(HttpLang.readToken(new HttpScanner("\t")));
 	}
-	
+
 	@Test
-	public void testReadParameter()  throws IllegalArgumentException, ParseException {
+	public void testReadTokens()  throws IllegalArgumentException, ParseException {
 		HttpScanner scanner = new HttpScanner("a=b");
 		
 		String a = HttpLang.readToken(scanner);
