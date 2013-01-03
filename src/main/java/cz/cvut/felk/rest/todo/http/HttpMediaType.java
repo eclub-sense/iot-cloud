@@ -128,7 +128,4 @@ public class HttpMediaType {
 	public boolean isValid() {
 		return (type != null) && (subtype != null);
 	}
-
-
-
 }

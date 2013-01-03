@@ -15,30 +15,82 @@
  */
 package cz.cvut.felk.rest.todo.http;
 
-import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class HttpMediaRange extends HttpMediaType {
 
 	public static final String ANY = "*";
 	
 	public static final HttpMediaRange ALL_MEDIA_TYPES = new HttpMediaRange(ANY, ANY, null); 
-		
+	
 	public HttpMediaRange(String type, String subtype, HttpParameter[] parameters) {
 		super(type, subtype, parameters);
 	}
+	
+	/**
+	 * media-range    = ( "*&#47;*"
+     *                  | ( type "/" "*" )
+     *                  | ( type "/" subtype )
+     *                  ) *( ";" parameter )
+	 */
+	public static HttpMediaRange read(HttpScanner scanner) throws IllegalArgumentException {
+		if (scanner == null) {
+			throw new IllegalArgumentException("The 'scanner' parameter cannot be a null.");
+		}
 
-	public static HttpMediaRange valueOf(String mediaRange) throws ParseException, IllegalArgumentException {
-		return null;
+		scanner.tx();
+		
+		String type = HttpLexUnit.readToken(scanner);
+		if ((type == null) || ('/' != scanner.getAsChar(scanner.read()))) {
+			scanner.rollback();
+			return null;
+		}
+		
+		String subtype = HttpLexUnit.readToken(scanner);
+		if  (subtype == null) {
+			scanner.rollback();
+			return null;			
+		}
+		
+		scanner.commit();
+		
+		List<HttpParameter> params = new ArrayList<HttpParameter>();
+		
+		scanner.tx();
+		while (';' == scanner.getAsChar(scanner.read())) {
+			scanner.tx();
+			HttpLexUnit sp = scanner.read();
+			while (sp != null && sp.isType(HttpLexUnit.Type.SP)) {
+				scanner.commit();
+				scanner.tx();
+				sp = scanner.read();
+			}
+			scanner.rollback();
+			
+			HttpParameter param = HttpParameter.read(scanner);
+			if (param != null) {
+				params.add(param);
+				scanner.commit();
+				scanner.tx();
+			}
+		}
+		scanner.rollback();
+		
+		return new HttpMediaRange(type, subtype,
+				params.isEmpty() ? null : params.toArray(new HttpParameter[params.size()]));
 	}
-
-	public boolean match(final HttpMediaType mediaType) {		
+	
+	public boolean match(final HttpMediaRange mediaType) {		
 		return isValid() 
 				&& (ANY.equals(type) 
 						|| (type.equals(mediaType.getType()) && (ANY.equals(subtype) || subtype.equals(mediaType.getSubtype()))));
 	}
 	
+
 	public boolean isValid() {
 		return super.isValid() && ((ANY.equals(type) && ANY.equals(subtype)) || !ANY.equals(type));
 	}
-	
+
 }
