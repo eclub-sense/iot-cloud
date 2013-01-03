@@ -43,11 +43,11 @@ public class DeleteTodoItem implements MethodDescriptor<Void, Void> {
 
 //		ContentDescriptor<TodoItemDto> item = memcache.get(content.getUri());
 		
-		if (item != null) {
-			if (memcache.remove(content.getUri(), item)) {
-				return item;
-			}
-		}
+//		if (item != null) {
+//			if (memcache.remove(content.getUri(), item)) {
+//				return item;
+//			}
+//		}
 
 		return null;
 	}

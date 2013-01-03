@@ -49,9 +49,10 @@ public class HttpScanner {
 		if ((units == null) || (unitCursor >= units.length)) {
 			return null;
 		}
-		
+		System.out.println("READ " + unitCursor + ", " + byteCursor);
 		if (units[unitCursor] == null) {
 			units[unitCursor] = scan();
+			System.out.println(" > " + units[unitCursor]);
 			if (units[unitCursor] == null) {
 				return null;
 			}
@@ -241,5 +242,10 @@ public class HttpScanner {
 		public boolean isType(LexType type) {
 			return (types != null) && types.contains(type);
 		}		
+		
+		@Override
+		public String toString() {
+			return "[" + index + "," + length + ";" + ((types != null) ? Arrays.toString(types.toArray()) : "null") + "]";
+		}
 	}
 }

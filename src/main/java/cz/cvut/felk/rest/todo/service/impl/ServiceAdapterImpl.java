@@ -57,13 +57,13 @@ public class ServiceAdapterImpl implements ServiceAdapter {
 		
 		if (URL_ITEM.equals(url)) {
 
-			content = todoListSvc.create(
-					HttpRequest.read(
-							TodoItemDto.class, 
-							httpRequest,
-							URL_ITEM + Long.toHexString((new Date()).getTime())
-						)
-					);
+//			content = todoListSvc.create(
+//					HttpRequest.read(
+//							TodoItemDto.class, 
+//							httpRequest,
+//							URL_ITEM + Long.toHexString((new Date()).getTime())
+//						)
+//					);
 		}
 
 		if (content != null) {
@@ -80,35 +80,35 @@ public class ServiceAdapterImpl implements ServiceAdapter {
 	public void read(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ErrorException {
 		
 		final String url = HttpRequest.getUri(httpRequest);
-		final HttpRequest<Void> request = HttpRequest.read(Void.class, httpRequest, url);
-
-		ContentDescriptor<?> content = null;
-		
-		if (URL_ITEM.equals(url)) {
-			
-			content = todoListSvc.list(request);
-
-		} else if ((url != null) && url.startsWith(URL_ITEM)) {
-
-			content = todoListSvc.read(request);
-
-		} else if (urls.contains(url)) {
-			httpResponse.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-			return;
-		}
-
-		if (content != null) {
-			Date ifModifiedSince = (Date) request.getMeta(ContentDescriptor.META_IF_MODIFIED_SINCE);
-			Date lastModified = (Date) content.getMeta(ContentDescriptor.META_LAST_MODIFIED);
-			
-			if ((ifModifiedSince != null) && (ifModifiedSince.equals(lastModified) || lastModified.before(ifModifiedSince))) {
-				HttpResponse.write(HttpServletResponse.SC_NOT_MODIFIED, content, httpResponse);
-				return;
-			}
-			
-			HttpResponse.write(HttpServletResponse.SC_OK, content, httpResponse);
-			return;
-		}	
+//		final HttpRequest<Void> request = HttpRequest.read(Void.class, httpRequest, url);
+//
+//		ContentDescriptor<?> content = null;
+//		
+//		if (URL_ITEM.equals(url)) {
+//			
+//			content = todoListSvc.list(request);
+//
+//		} else if ((url != null) && url.startsWith(URL_ITEM)) {
+//
+//			content = todoListSvc.read(request);
+//
+//		} else if (urls.contains(url)) {
+//			httpResponse.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+//			return;
+//		}
+//
+//		if (content != null) {
+//			Date ifModifiedSince = (Date) request.getMeta(ContentDescriptor.META_IF_MODIFIED_SINCE);
+//			Date lastModified = (Date) content.getMeta(ContentDescriptor.META_LAST_MODIFIED);
+//			
+//			if ((ifModifiedSince != null) && (ifModifiedSince.equals(lastModified) || lastModified.before(ifModifiedSince))) {
+//				HttpResponse.write(HttpServletResponse.SC_NOT_MODIFIED, content, httpResponse);
+//				return;
+//			}
+//			
+//			HttpResponse.write(HttpServletResponse.SC_OK, content, httpResponse);
+//			return;
+//		}	
 		throw new ErrorException(HttpServletResponse.SC_NOT_FOUND);
 	}
 	
@@ -120,13 +120,13 @@ public class ServiceAdapterImpl implements ServiceAdapter {
 		
 		if ((url != null) && url.startsWith(URL_ITEM)) {
 
-			content = todoListSvc.update(
-					HttpRequest.read(
-							TodoItemDto.class, 
-							httpRequest,
-							url
-						)
-					);
+//			content = todoListSvc.update(
+//					HttpRequest.read(
+//							TodoItemDto.class, 
+//							httpRequest,
+//							url
+//						)
+//					);
 		}
 
 		if (content != null) {
@@ -148,13 +148,13 @@ public class ServiceAdapterImpl implements ServiceAdapter {
 		
 		if ((url != null) && url.startsWith(URL_ITEM)) {
 
-			content = todoListSvc.delete(
-					HttpRequest.read(
-							Void.class, 
-							httpRequest,
-							url
-						)
-					);
+//			content = todoListSvc.delete(
+//					HttpRequest.read(
+//							Void.class, 
+//							httpRequest,
+//							url
+//						)
+//					);
 		}
 		
 		if (content != null) {

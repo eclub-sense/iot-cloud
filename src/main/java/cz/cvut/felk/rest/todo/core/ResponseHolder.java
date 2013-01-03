@@ -18,6 +18,8 @@ package cz.cvut.felk.rest.todo.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
+
 public class ResponseHolder<T> implements Response<T> {
 
 	private String url;
@@ -68,5 +70,11 @@ public class ResponseHolder<T> implements Response<T> {
 	public int getStatus() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public ContentDescriptor<T> getContent() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

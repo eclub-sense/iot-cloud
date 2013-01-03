@@ -41,8 +41,8 @@ public class TodoListServiceImpl implements TodoListService {
 		}
 		
 		ResponseHolder<TodoItemDto> item = new ResponseHolder<TodoItemDto>();
-		item.setUri(content.getUri());
-		item.setContext(content.getContext());
+//		item.setUri(content.getUri());
+//		item.setContext(content.getContext());
 		
 		Calendar cal = Calendar.getInstance();  
 		cal.setTime(new Date());  
@@ -51,19 +51,21 @@ public class TodoListServiceImpl implements TodoListService {
 		item.setMeta(ContentDescriptor.META_LAST_MODIFIED, cal.getTime());
 		item.setBody(content.getBody());
 		
-		memcache.put(item.getUri(), item);
-		
-		return item;
+//		memcache.put(item.getUri(), item);
+//		
+//		return item;
+		return null;
 	}
 
 	public ContentDescriptor<TodoItemDto> delete(ContentDescriptor<Void> content) {
-		ContentDescriptor<TodoItemDto> item = memcache.get(content.getUri());
-		if (item != null) {
-			if (memcache.remove(content.getUri(), item)) {
-				return item;
-			}
-		}
-		return item;
+//		ContentDescriptor<TodoItemDto> item = memcache.get(content.getUri());
+//		if (item != null) {
+//			if (memcache.remove(content.getUri(), item)) {
+//				return item;
+//			}
+//		}
+//		return item;
+		return null;
 	}
 
 	public ContentDescriptor<TodoListItemDto[]> list(ContentDescriptor<Void> content) {
@@ -74,20 +76,22 @@ public class TodoListServiceImpl implements TodoListService {
 			listItem.setDescription(item.getBody().getDescription());
 			listItem.setLastModified(((Date)item.getMeta(ContentDescriptor.META_LAST_MODIFIED)).toGMTString());
 			listItem.setState(item.getBody().getState());
-			listItem.setUri(content.getContext() + item.getUri());
+//			listItem.setUri(content.getContext() + item.getUri());
 			items.add(listItem);
 		}
 		
 		ResponseHolder<TodoListItemDto[]> list = new ResponseHolder<TodoListItemDto[]>();
-		list.setUri(content.getUri());
-		list.setContext(content.getContext());
-		list.setBody(items.toArray(new TodoListItemDto[0]));
-		return list;
+//		list.setUri(content.getUri());
+//		list.setContext(content.getContext());
+//		list.setBody(items.toArray(new TodoListItemDto[0]));
+//		return list;
+		return null;
 		
 	}
 
 	public ContentDescriptor<TodoItemDto> read(ContentDescriptor<Void> content) {
-		return memcache.get(content.getUri());
+//		return memcache.get(content.getUri());
+		return null;
 	}
 
 	public ContentDescriptor<TodoItemDto> update(ContentDescriptor<TodoItemDto> content) throws ErrorException {
@@ -96,21 +100,22 @@ public class TodoListServiceImpl implements TodoListService {
 			throw new ErrorException(HttpServletResponse.SC_BAD_REQUEST);
 		}
 		
-		ResponseHolder<TodoItemDto> item = (ResponseHolder<TodoItemDto>) memcache.get(content.getUri());
-		if (item == null) {
-			item = new ResponseHolder<TodoItemDto>();
-			item.setUri(content.getUri());
-		}
+//		ResponseHolder<TodoItemDto> item = (ResponseHolder<TodoItemDto>) memcache.get(content.getUri());
+//		if (item == null) {
+//			item = new ResponseHolder<TodoItemDto>();
+//			item.setUri(content.getUri());
+//		}
+//		
+//		Calendar cal = Calendar.getInstance();  
+//		cal.setTime(new Date());  
+//		cal.set(Calendar.MILLISECOND, 0);  
+//		
+//		item.setMeta(ContentDescriptor.META_LAST_MODIFIED, cal.getTime());
+//		item.setBody(content.getBody());
 		
-		Calendar cal = Calendar.getInstance();  
-		cal.setTime(new Date());  
-		cal.set(Calendar.MILLISECOND, 0);  
+//		memcache.put(item.getUri(), item);
 		
-		item.setMeta(ContentDescriptor.META_LAST_MODIFIED, cal.getTime());
-		item.setBody(content.getBody());
-		
-		memcache.put(item.getUri(), item);
-		
-		return item;
+//		return item;
+		return null;
 	}
 }

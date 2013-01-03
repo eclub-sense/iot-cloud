@@ -65,4 +65,20 @@ public class HttpScannerTest {
 		assertNotNull(scanner.read());	// read b
 		assertNull(scanner.read());
 	}
+	
+	@Test
+	public void testReadParameter() {
+		HttpScanner scanner = new HttpScanner("a=b");
+		LexUnit a = scanner.read();
+		assertNotNull(a);
+		
+		LexUnit e = scanner.read();
+		assertNotNull(e);
+		
+		LexUnit b = scanner.read();
+		assertNotNull(b);
+		
+		LexUnit eof = scanner.read();
+		assertNull(eof);
+	}
 }
