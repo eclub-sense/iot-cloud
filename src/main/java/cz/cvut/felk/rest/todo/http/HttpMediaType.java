@@ -94,9 +94,9 @@ public class HttpMediaType {
 		
 		String type = mediaType.substring(0, mediaType.indexOf('/')).trim();
 				
-		if (!HttpLang.isToken(type)) {
-			throw new ParseException(mediaType, 0);
-		}
+//		if (!HttpLang.isToken(type)) {
+//			throw new ParseException(mediaType, 0);
+//		}
 		
 		String subtype = mediaType.substring(mediaType.indexOf('/') + 1).trim();
 		

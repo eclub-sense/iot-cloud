@@ -49,15 +49,14 @@ public class HttpScanner {
 		if ((units == null) || (unitCursor >= units.length)) {
 			return null;
 		}
-		System.out.println("READ " + unitCursor + ", " + byteCursor);
+		
 		if (units[unitCursor] == null) {
 			units[unitCursor] = scan();
-			System.out.println(" > " + units[unitCursor]);
 			if (units[unitCursor] == null) {
 				return null;
 			}
 		}
-
+		
 		unitCursor += 1;
 		return units[unitCursor -1];
 	}
@@ -74,7 +73,6 @@ public class HttpScanner {
 		Integer[] t = tx.pop();
 			
 		unitCursor = t[0];
-		byteCursor = t[1]; 
 	}
 
 	protected LexUnit scan() {
@@ -187,7 +185,7 @@ public class HttpScanner {
 			throw new IllegalArgumentException();
 		}
 
-		return new String(Arrays.copyOfRange(bytes, index, length), HttpLang.US_ASCII_CHARSET);
+		return new String(Arrays.copyOfRange(bytes, index, index+length), HttpLang.US_ASCII_CHARSET);
 	}	
 	
 	public Character getAsChar(LexUnit unit) {

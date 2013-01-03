@@ -149,7 +149,6 @@ public class HttpLang {
 			scanner.commit();
 			scanner.tx();
 			unit = scanner.read();
-		System.out.println("unit " + unit);
 		} while (unit != null && unit.isType(LexType.CHAR) && !unit.isType(LexType.CTL) && !unit.isType(LexType.SEPARATOR));
 					
 		scanner.rollback();
