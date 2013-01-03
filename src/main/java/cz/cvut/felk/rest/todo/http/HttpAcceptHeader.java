@@ -24,8 +24,25 @@ public class HttpAcceptHeader {
 		super();
 		this.items = items;
 	}
-	
+
+	/**
+	 * Accept         = "#( media-range [ accept-params ] )
+     *    accept-params  = ";" "q" "=" qvalue *( accept-extension )
+     *    accept-extension = ";" token [ "=" ( token | quoted-string ) ] 
+	 */
 	public static final HttpAcceptHeader read(HttpScanner scanner) throws IllegalArgumentException {
+		if (scanner == null) {
+			throw new IllegalArgumentException("The 'scanner' parameter cannot be a null.");
+		}
+
+		scanner.tx();
+		
+		HttpMediaRange mediaRange = HttpMediaRange.read(scanner);
+		if (mediaRange == null) {
+			scanner.rollback();
+			return null;
+		}
+
 		return null;
 	}
 	
