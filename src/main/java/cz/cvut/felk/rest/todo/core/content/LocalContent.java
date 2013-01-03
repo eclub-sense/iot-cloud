@@ -15,7 +15,6 @@
  */
 package cz.cvut.felk.rest.todo.core.content;
 
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 
 
 public class LocalContent<T> implements ContentDescriptor<T> {

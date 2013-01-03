@@ -22,7 +22,6 @@ import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 
-import cz.cvut.felk.rest.todo.core.Request;
 import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
 import cz.cvut.felk.rest.todo.core.method.Method;
 

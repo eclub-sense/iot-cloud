@@ -15,11 +15,8 @@
  */
 package cz.cvut.felk.rest.todo.json;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Writer;
-import java.util.Date;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,8 +25,6 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
 import cz.cvut.felk.rest.todo.core.content.ContentAdapter;
-import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 import cz.cvut.felk.rest.todo.errors.ErrorException;
 
 public class JsonDeserializer<T> implements ContentAdapter<InputStream, T>{

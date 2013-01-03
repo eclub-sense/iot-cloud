@@ -173,9 +173,9 @@ public class HttpScanner {
 		return new String(Arrays.copyOfRange(bytes, index, index+length), HttpLexUnit.US_ASCII_CHARSET);
 	}	
 	
-	public Character getAsChar(HttpLexUnit unit) {
-		if (bytes == null) {
-			return null;
+	public char getAsChar(HttpLexUnit unit) {
+		if ((bytes == null) || (unit == null)) {
+			return 0;
 		}
 		return (char)bytes[unit.getIndex()];		
 	}

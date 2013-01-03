@@ -17,7 +17,6 @@ package cz.cvut.felk.rest.todo.method;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +25,9 @@ import cz.cvut.felk.rest.todo.core.Request;
 import cz.cvut.felk.rest.todo.core.Response;
 import cz.cvut.felk.rest.todo.core.ResponseHolder;
 import cz.cvut.felk.rest.todo.core.content.ContentAdapter;
-import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
 import cz.cvut.felk.rest.todo.core.method.MethodDescriptor;
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 import cz.cvut.felk.rest.todo.dto.TodoListItemDto;
 import cz.cvut.felk.rest.todo.errors.ErrorException;
-import cz.cvut.felk.rest.todo.json.JsonDeserializer;
 import cz.cvut.felk.rest.todo.json.JsonMediaType;
 import cz.cvut.felk.rest.todo.json.JsonSerializer;
 
