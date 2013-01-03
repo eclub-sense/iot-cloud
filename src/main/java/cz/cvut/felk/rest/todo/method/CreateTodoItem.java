@@ -80,12 +80,12 @@ public class CreateTodoItem implements MethodDescriptor<TodoItemDto, TodoItemDto
 		content.setBody(request.getContent().getBody());
 		
 		ResponseHolder<TodoItemDto> response = new ResponseHolder<TodoItemDto>();
-		response.setStatus(HttpServletResponse.SC_CREATED);
-		response.setUri(request.getUri() + Long.toHexString((new Date()).getTime()));	//FIXME append timestamp!
-		response.setContext(request.getContext());
-		response.setContent(content);
-
-		memcache.put(response.getUri(), content);
+//		response.setStatus(HttpServletResponse.SC_CREATED);
+//		response.setUri(request.getUri() + Long.toHexString((new Date()).getTime()));	//FIXME append timestamp!
+//		response.setContext(request.getContext());
+//		response.setContent(content);
+//
+//		memcache.put(response.getUri(), content);
 		return response;
 	}
 }

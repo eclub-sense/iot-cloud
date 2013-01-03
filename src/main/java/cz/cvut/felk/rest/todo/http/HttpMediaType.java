@@ -103,27 +103,28 @@ public class HttpMediaType {
 		
 		HttpParameter[] parameters = null;
 
-		while ((subtype != null) && subtype.contains(";")) {
-			List<HttpParameter> paramList = new ArrayList<HttpParameter>();
-			
-			subtype = subtype.substring(mediaType.indexOf(';') + 1).trim();
-			
-			for (String p : pair[1].substring(pair[1].indexOf(';') + 1).split(";")) {
-				if ((p != null) && !p.trim().isEmpty()) {
-					paramList.add(p.trim());
-				}
-			}
-			if (!paramList.isEmpty()) {
-				parameters = paramList.toArray(new String[paramList.size()]);
-			}
-			pair[1] = pair[1].substring(0, pair[1].indexOf(';'));		
-		}
-		
-		if (!HttpLang.isToken(subtype)) {
-			throw new ParseException(mediaType, mediaType.indexOf('/'));
-		}
-		
-		return new HttpMediaType(pair[0].trim(), pair[1].trim(), parameters);
+//		while ((subtype != null) && subtype.contains(";")) {
+//			List<HttpParameter> paramList = new ArrayList<HttpParameter>();
+//			
+//			subtype = subtype.substring(mediaType.indexOf(';') + 1).trim();
+//			
+//			for (String p : pair[1].substring(pair[1].indexOf(';') + 1).split(";")) {
+//				if ((p != null) && !p.trim().isEmpty()) {
+//					paramList.add(p.trim());
+//				}
+//			}
+//			if (!paramList.isEmpty()) {
+//				parameters = paramList.toArray(new String[paramList.size()]);
+//			}
+//			pair[1] = pair[1].substring(0, pair[1].indexOf(';'));		
+//		}
+//		
+//		if (!HttpLang.isToken(subtype)) {
+//			throw new ParseException(mediaType, mediaType.indexOf('/'));
+//		}
+//		
+//		return new HttpMediaType(pair[0].trim(), pair[1].trim(), parameters);
+		return null;
 	}
 	
 	public boolean isValid() {

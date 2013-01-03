@@ -44,7 +44,7 @@ public class ListTodoItems implements MethodDescriptor<Void, TodoListItemDto[]> 
 		
 		JsonSerializer<TodoListItemDto[]> serializer = new JsonSerializer<TodoListItemDto[]>();
 		
-		produces.put(JsonMediaType.ITEMS, serializer);
+	//	produces.put(JsonMediaType.ITEMS, serializer);
 		produces.put(JsonMediaType.COMMON, serializer);
 	}
 
@@ -63,19 +63,19 @@ public class ListTodoItems implements MethodDescriptor<Void, TodoListItemDto[]> 
 		
 		List<TodoListItemDto> items = new ArrayList<TodoListItemDto>();
 		
-		for (ContentDescriptor<TodoItemDto> item : memcache.values()) {
-			TodoListItemDto listItem = new TodoListItemDto();
-			listItem.setDescription(item.getBody().getDescription());
-			listItem.setLastModified(((Date)item.getMeta(ContentDescriptor.META_LAST_MODIFIED)).toGMTString());
-			listItem.setState(item.getBody().getState());
-			listItem.setUri(content.getContext() + item.getUri());
-			items.add(listItem);
-		}
+//		for (ContentDescriptor<TodoItemDto> item : memcache.values()) {
+//			TodoListItemDto listItem = new TodoListItemDto();
+//			listItem.setDescription(item.getBody().getDescription());
+//			listItem.setLastModified(((Date)item.getMeta(ContentDescriptor.META_LAST_MODIFIED)).toGMTString());
+//			listItem.setState(item.getBody().getState());
+//			listItem.setUri(content.getContext() + item.getUri());
+//			items.add(listItem);
+//		}
 		
 		ResponseHolder<TodoListItemDto[]> list = new ResponseHolder<TodoListItemDto[]>();
-		list.setUri(content.getUri());
-		list.setContext(content.getContext());
-		list.setBody(items.toArray(new TodoListItemDto[0]));
+//		list.setUri(content.getUri());
+//		list.setContext(content.getContext());
+//		list.setBody(items.toArray(new TodoListItemDto[0]));
 		return list;
 	}
 }
