@@ -70,7 +70,7 @@ public class HttpMediaRange extends HttpMediaType {
 			scanner.rollback();
 			
 			HttpParameter param = HttpParameter.read(scanner);
-			if (param != null) {
+			if ((param != null) && (!"q".equalsIgnoreCase(param.getAttribute()))) {
 				params.add(param);
 				scanner.commit();
 				scanner.tx();
