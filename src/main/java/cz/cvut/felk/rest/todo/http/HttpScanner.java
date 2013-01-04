@@ -70,6 +70,10 @@ public class HttpScanner {
 			
 		unitCursor = t[0];
 	}
+	
+	public boolean isEof() {
+		return ((units == null) || (unitCursor >= units.length) || ((units[unitCursor] == null) && (byteCursor >= bytes.length)));
+	}
 
 	protected HttpLexUnit scan() {
 		if ((bytes == null) || (byteCursor >= bytes.length)) {

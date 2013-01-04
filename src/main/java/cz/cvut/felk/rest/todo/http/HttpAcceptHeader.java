@@ -38,11 +38,15 @@ public class HttpAcceptHeader {
 		scanner.tx();
 		
 		HttpMediaRange mediaRange = HttpMediaRange.read(scanner);
-		if (mediaRange == null) {
-			scanner.rollback();
-			return null;
+		if (mediaRange != null) {
+			HttpParameter qParam = HttpParameter.read(scanner);
+			if (qParam != null) {
+				//HttpAcceptExtension 
+//				return new HttpAcceptHeader()
+			}
 		}
-
+		
+		scanner.rollback();
 		return null;
 	}
 	

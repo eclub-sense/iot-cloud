@@ -30,6 +30,7 @@ public class HttpScannerTest {
 	public void testReadNullInput() {
 		HttpScanner scanner = new HttpScanner(null);
 		assertNull(scanner.read());
+		assertTrue(scanner.isEof());
 	}
 	
 	@Test
@@ -50,6 +51,7 @@ public class HttpScannerTest {
 		
 		HttpLexUnit eof = scanner.read();
 		assertNull(eof);
+		assertTrue(scanner.isEof());
 	}
 	
 	@Test
@@ -66,6 +68,7 @@ public class HttpScannerTest {
 		assertNotNull(scanner.read());	// read \\
 		assertNotNull(scanner.read());	// read b
 		assertNull(scanner.read());
+		assertTrue(scanner.isEof());
 	}
 	
 	@Test
@@ -82,5 +85,6 @@ public class HttpScannerTest {
 		
 		HttpLexUnit eof = scanner.read();
 		assertNull(eof);
+		assertTrue(scanner.isEof());
 	}
 }
