@@ -30,7 +30,7 @@ public class HttpScanner {
 	private final HttpLexUnit[] units;
 	private int unitCursor;
 	
-	private Stack<Integer[]> tx = new Stack<Integer[]>();
+	private Stack<Integer> tx = new Stack<Integer>();
 	
 	
 	public HttpScanner(final String value) {
@@ -58,7 +58,7 @@ public class HttpScanner {
 	}
 
 	public void tx() {
-		tx.push(new Integer[]{unitCursor, byteCursor});
+		tx.push(unitCursor);
 	}
 	
 	public void commit() {
@@ -66,9 +66,7 @@ public class HttpScanner {
 	}
 	
 	public void rollback() {
-		Integer[] t = tx.pop();
-			
-		unitCursor = t[0];
+		unitCursor = tx.pop();
 	}
 	
 	public boolean isEof() {
