@@ -60,6 +60,8 @@
                 	<scanIntervalSeconds>10</scanIntervalSeconds>
                 	<stopKey>foo</stopKey>
                 	<stopPort>9999</stopPort>
+                	<!-- Configure the webapp -->
+                	<contextPath>/todo</contextPath>
         		</configuration>
         		<executions>
                 	<execution>

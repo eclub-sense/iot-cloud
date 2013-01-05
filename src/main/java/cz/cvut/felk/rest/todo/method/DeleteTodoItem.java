@@ -20,9 +20,9 @@ import java.util.Map;
 
 import cz.cvut.felk.rest.todo.core.Request;
 import cz.cvut.felk.rest.todo.core.Response;
-import cz.cvut.felk.rest.todo.core.content.ContentAdapter;
-import cz.cvut.felk.rest.todo.core.method.MethodDescriptor;
-import cz.cvut.felk.rest.todo.errors.ErrorException;
+import cz.cvut.felk.rest.todo.http.ErrorException;
+import cz.cvut.felk.rest.todo.http.content.ContentAdapter;
+import cz.cvut.felk.rest.todo.http.method.MethodDescriptor;
 
 public class DeleteTodoItem implements MethodDescriptor<Void, Void> {
 

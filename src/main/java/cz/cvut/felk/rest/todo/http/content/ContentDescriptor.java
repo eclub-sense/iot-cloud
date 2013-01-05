@@ -13,31 +13,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.core.method;
+package cz.cvut.felk.rest.todo.http.content;
 
 
-public enum Method {
 
-	GET(false, true),
-	POST(true, true),
-	PUT(true, true),
-	DELETE(false, false),
-	HEAD(false, false),
-	OPTIONS(false, false);
+public interface ContentDescriptor<T> {
+
+	static final String CT_ITEM = "application/vnd.todo.item+json";
+	static final String CT_LIST = "application/vnd.todo.list+json";
+	static final String CT_JSON = "application/json";
 	
-	private final boolean requestBody;
-	private final boolean responseBody;
-	
-	Method(boolean requestBody, boolean responseBody) {
-		this.requestBody = requestBody;
-		this.responseBody = responseBody;
-	}
-	
-	public boolean isRequestBody() {
-		return requestBody;
-	}
+	final static String META_CONTENT_TYPE = "Content-Type";
+	final static String META_LOCATION = "Location";
+	final static String META_LAST_MODIFIED = "Last-Modified";
+	final static String META_IF_MODIFIED_SINCE = "If-Modified-Since";
 
-	public boolean isResponseBody() {
-		return responseBody;
-	}
+	Object getMeta(String name);
+	
+	T getBody();
+	
+	String[] getMetaNames();
+
 }

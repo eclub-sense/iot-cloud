@@ -15,7 +15,7 @@
  */
 package cz.cvut.felk.rest.todo.core;
 
-import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
+import cz.cvut.felk.rest.todo.http.content.ContentDescriptor;
 
 
 public interface Response<T> {

@@ -13,15 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.core.method;
+package cz.cvut.felk.rest.todo.http.method;
 
 import java.io.InputStream;
 import java.util.Map;
 
 import cz.cvut.felk.rest.todo.core.Request;
 import cz.cvut.felk.rest.todo.core.Response;
-import cz.cvut.felk.rest.todo.core.content.ContentAdapter;
-import cz.cvut.felk.rest.todo.errors.ErrorException;
+import cz.cvut.felk.rest.todo.http.ErrorException;
+import cz.cvut.felk.rest.todo.http.content.ContentAdapter;
 
 public interface MethodDescriptor<I, O> {
 

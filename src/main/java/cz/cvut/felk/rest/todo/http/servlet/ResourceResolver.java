@@ -13,11 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.core.content;
+package cz.cvut.felk.rest.todo.http.servlet;
 
-import cz.cvut.felk.rest.todo.errors.ErrorException;
+import cz.cvut.felk.rest.todo.core.ResourceDescriptor;
 
-public interface ContentAdapter<A, B> {
 
-	B transform(A in) throws ErrorException;
+
+public interface ResourceResolver {
+
+	ResourceDescriptor resolve(String uri);
+	
 }

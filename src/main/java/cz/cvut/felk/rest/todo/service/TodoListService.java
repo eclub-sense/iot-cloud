@@ -15,10 +15,10 @@
  */
 package cz.cvut.felk.rest.todo.service;
 
-import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
 import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 import cz.cvut.felk.rest.todo.dto.TodoListItemDto;
-import cz.cvut.felk.rest.todo.errors.ErrorException;
+import cz.cvut.felk.rest.todo.http.ErrorException;
+import cz.cvut.felk.rest.todo.http.content.ContentDescriptor;
 
 public interface TodoListService {
 

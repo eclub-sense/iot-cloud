@@ -13,12 +13,31 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.core;
+package cz.cvut.felk.rest.todo.http.method;
 
 
+public enum Method {
 
-public interface UrlResolver {
-
-	ResourceDescriptor resolve(String uri);
+	GET(false, true),
+	POST(true, true),
+	PUT(true, true),
+	DELETE(false, false),
+	HEAD(false, false),
+	OPTIONS(false, false);
 	
+	private final boolean requestBody;
+	private final boolean responseBody;
+	
+	Method(boolean requestBody, boolean responseBody) {
+		this.requestBody = requestBody;
+		this.responseBody = responseBody;
+	}
+	
+	public boolean isRequestBody() {
+		return requestBody;
+	}
+
+	public boolean isResponseBody() {
+		return responseBody;
+	}
 }

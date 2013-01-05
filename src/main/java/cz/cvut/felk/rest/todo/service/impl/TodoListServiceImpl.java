@@ -24,10 +24,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletResponse;
 
 import cz.cvut.felk.rest.todo.core.ResponseHolder;
-import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
 import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 import cz.cvut.felk.rest.todo.dto.TodoListItemDto;
-import cz.cvut.felk.rest.todo.errors.ErrorException;
+import cz.cvut.felk.rest.todo.http.ErrorException;
+import cz.cvut.felk.rest.todo.http.content.ContentDescriptor;
 import cz.cvut.felk.rest.todo.service.TodoListService;
 
 public class TodoListServiceImpl implements TodoListService {

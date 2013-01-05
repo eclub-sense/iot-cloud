@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.servlet;
+package cz.cvut.felk.rest.todo.http.servlet;
 
 import java.io.InputStream;
 import java.text.ParseException;
@@ -22,8 +22,8 @@ import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 
-import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
-import cz.cvut.felk.rest.todo.core.method.Method;
+import cz.cvut.felk.rest.todo.http.content.ContentDescriptor;
+import cz.cvut.felk.rest.todo.http.method.Method;
 
 public class HttpRequest {
 

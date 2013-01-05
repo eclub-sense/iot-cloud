@@ -24,8 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
-import cz.cvut.felk.rest.todo.core.content.ContentAdapter;
-import cz.cvut.felk.rest.todo.errors.ErrorException;
+import cz.cvut.felk.rest.todo.http.ErrorException;
+import cz.cvut.felk.rest.todo.http.content.ContentAdapter;
 
 public class JsonDeserializer<T> implements ContentAdapter<InputStream, T>{
 

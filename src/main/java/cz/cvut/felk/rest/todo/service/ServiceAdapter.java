@@ -18,7 +18,7 @@ package cz.cvut.felk.rest.todo.service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cz.cvut.felk.rest.todo.errors.ErrorException;
+import cz.cvut.felk.rest.todo.http.ErrorException;
 
 public interface ServiceAdapter {
 

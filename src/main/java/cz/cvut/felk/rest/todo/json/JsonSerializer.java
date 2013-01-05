@@ -20,8 +20,8 @@ import java.io.InputStream;
 
 import com.google.gson.Gson;
 
-import cz.cvut.felk.rest.todo.core.content.ContentAdapter;
-import cz.cvut.felk.rest.todo.errors.ErrorException;
+import cz.cvut.felk.rest.todo.http.ErrorException;
+import cz.cvut.felk.rest.todo.http.content.ContentAdapter;
 
 public class JsonSerializer<T> implements ContentAdapter<T, InputStream>{
 

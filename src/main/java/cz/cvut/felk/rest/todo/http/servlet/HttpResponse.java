@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.servlet;
+package cz.cvut.felk.rest.todo.http.servlet;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
-import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
-import cz.cvut.felk.rest.todo.errors.ErrorException;
+import cz.cvut.felk.rest.todo.http.ErrorException;
+import cz.cvut.felk.rest.todo.http.content.ContentDescriptor;
 
 public class HttpResponse {
 

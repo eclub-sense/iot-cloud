@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.servlet;
+package cz.cvut.felk.rest.todo.http.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,24 +33,23 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.CopyUtils;
 
+import cz.cvut.felk.rest.todo.core.Request;
 import cz.cvut.felk.rest.todo.core.RequestHolder;
 import cz.cvut.felk.rest.todo.core.ResourceDescriptor;
 import cz.cvut.felk.rest.todo.core.Response;
-import cz.cvut.felk.rest.todo.core.UrlResolver;
-import cz.cvut.felk.rest.todo.core.content.ContentAdapter;
-import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
-import cz.cvut.felk.rest.todo.core.method.Method;
-import cz.cvut.felk.rest.todo.core.method.MethodDescriptor;
-import cz.cvut.felk.rest.todo.errors.ErrorException;
+import cz.cvut.felk.rest.todo.http.ErrorException;
+import cz.cvut.felk.rest.todo.http.content.ContentAdapter;
+import cz.cvut.felk.rest.todo.http.content.ContentDescriptor;
 import cz.cvut.felk.rest.todo.http.headers.HttpAcceptHeader;
 import cz.cvut.felk.rest.todo.http.headers.HttpDate;
-import cz.cvut.felk.rest.todo.http.headers.HttpMediaType;
+import cz.cvut.felk.rest.todo.http.method.Method;
+import cz.cvut.felk.rest.todo.http.method.MethodDescriptor;
 
 public class TodoAppServlet  extends GenericServlet {
 
 	private static final long serialVersionUID = 4650079506676226041L;
 
-	private UrlResolver resolver = null;
+	private ResourceResolver resolver = null;
 	
 	@Override
 	public void init() throws ServletException {
@@ -60,7 +59,7 @@ public class TodoAppServlet  extends GenericServlet {
 	protected void doService(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ErrorException, IOException {
 		
 		final RequestHolder<Object> request = new RequestHolder<Object>(HttpRequest.getUri(httpRequest));
-		
+		System.out.println(">>>>>>>>>> " + resolver);
 		// Resolve incoming URL and get resource descriptor
 		final ResourceDescriptor resourceDsc = resolver.resolve(request.getUri());
 		
@@ -86,10 +85,10 @@ public class TodoAppServlet  extends GenericServlet {
 		}
 
 		// Get supported methods for requested resource
-		Map<Method, MethodDescriptor<Object, Object>> methods = resourceDsc.methods();
+		Map<Method, MethodDescriptor<?, ?>> methods = resourceDsc.methods();
 		
 		// Get requested method descriptors for the resource
-		MethodDescriptor<Object, Object> methodDsc = (methods != null) ? methods.get(httpRequest.getMethod()) : null;
+		MethodDescriptor<?, ?> methodDsc = (methods != null) ? methods.get(httpRequest.getMethod()) : null;
 		
 		// Is requested method supported?
 		if ((methodDsc == null)) {
@@ -120,7 +119,7 @@ public class TodoAppServlet  extends GenericServlet {
 			throw new ErrorException(HttpServletResponse.SC_BAD_REQUEST);
 		}
 		
-		ContentAdapter<Object, InputStream> outputContentAdapter = null;
+		ContentAdapter<?, InputStream> outputContentAdapter = null;
 
 		// Is response body expected?
 		if (request.getMethod().isResponseBody()) {
@@ -128,8 +127,9 @@ public class TodoAppServlet  extends GenericServlet {
 			HttpAcceptHeader acceptHeader = HttpAcceptHeader.read(httpRequest.getHeader("Accept"));
 			if (acceptHeader != null) {
 				
-				Map<String, ContentAdapter<Object, InputStream>> produces = methodDsc.produces();
+				Map<String, ?> produces = methodDsc.produces();
 
+				// Response content negotiation 
 				if (produces != null) {
 					int weight = 0;
 					
@@ -137,7 +137,7 @@ public class TodoAppServlet  extends GenericServlet {
 						int tw = acceptHeader.accept(ct); 
 						if (tw > weight) {
 							weight = tw;
-							outputContentAdapter = produces.get(ct);
+							outputContentAdapter = (ContentAdapter<?, InputStream>) produces.get(ct);
 						}
 					}
 				}
@@ -152,7 +152,7 @@ public class TodoAppServlet  extends GenericServlet {
 		}
 		
 		// Invoke resource method
-		Response<?> response = methodDsc.invoke(request);
+		Response response = methodDsc.invoke((Request) request);
 		
 		if (response == null) {
 			throw new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -189,7 +189,7 @@ public class TodoAppServlet  extends GenericServlet {
 		
 		// Write response body
 		if (outputContentAdapter != null) {
-			InputStream is =  outputContentAdapter.transform(response.getContent().getBody());
+			InputStream is =  ((ContentAdapter<Object, InputStream>)outputContentAdapter).transform(response.getContent().getBody());
 			if (is != null) {
 				CopyUtils.copy(is, httpResponse.getOutputStream());
 			}
@@ -215,9 +215,15 @@ public class TodoAppServlet  extends GenericServlet {
 			if (nativeHttpResponse != null) {
 				writeError(e, nativeHttpResponse);
 				return;
-			}
+			} 
 			throw new ServletException(e);
-		}		
+		} catch (Exception e) {
+			if (nativeHttpResponse != null) {
+				writeError(new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e), nativeHttpResponse);
+				return;
+			} 
+			throw new ServletException(e);			
+		}
 	}
 
 	protected static void setAllowHeader(Set<Method> methods, HttpServletResponse response) {

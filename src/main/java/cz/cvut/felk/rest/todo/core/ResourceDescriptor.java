@@ -17,12 +17,12 @@ package cz.cvut.felk.rest.todo.core;
 
 import java.util.Map;
 
-import cz.cvut.felk.rest.todo.core.method.Method;
-import cz.cvut.felk.rest.todo.core.method.MethodDescriptor;
+import cz.cvut.felk.rest.todo.http.method.Method;
+import cz.cvut.felk.rest.todo.http.method.MethodDescriptor;
 
 
 public interface ResourceDescriptor {
 
-	Map<Method, MethodDescriptor<Object, Object>> methods();
+	Map<Method, MethodDescriptor<?, ?>> methods();
 
 }

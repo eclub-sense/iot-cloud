@@ -18,7 +18,7 @@ package cz.cvut.felk.rest.todo.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
+import cz.cvut.felk.rest.todo.http.content.ContentDescriptor;
 
 public class ResponseHolder<T> implements Response<T> {
 
