@@ -46,7 +46,15 @@ public class HttpMediaRangeTest {
 		assertEquals("text", range.getType());
 		assertEquals("*", range.getSubtype());
 		assertNull(range.getParameters());
-
 	}	
+	
+	@Test
+	public void testMatch() {
+		HttpMediaRange range = HttpMediaRange.read(new HttpLexScanner("application/*"));
+		assertNotNull(range);
+		assertTrue(range.match("application/vnd.x+json; level=3"));
+		assertTrue(range.match("application/json; charset=utf-8"));
+		assertFalse(range.match("text/plain"));
+	}
 
 }

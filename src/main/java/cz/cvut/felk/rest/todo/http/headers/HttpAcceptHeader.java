@@ -79,7 +79,7 @@ public class HttpAcceptHeader {
 		Collections.sort(items, new Comparator<HttpAcceptHeaderItem>() {
 			@Override
 			public int compare(HttpAcceptHeaderItem o1, HttpAcceptHeaderItem o2) {
-				return (int) ((o1.getQualityFactor() - o2.getQualityFactor()) * 1000f);
+				return (int) ((o2.getQualityFactor() - o1.getQualityFactor()) * 1000f);
 			}
 		});
 		
@@ -91,7 +91,7 @@ public class HttpAcceptHeader {
 		if (items != null) {
 			int i = items.length;
 			for (HttpAcceptHeaderItem item : items) {
-				if (item.getRange().match(mediaType)) {
+				if ((i > weight) && item.getRange().match(mediaType)) {
 					weight = i;
 				}
 				i -= 1;

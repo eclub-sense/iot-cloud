@@ -149,5 +149,15 @@ public class HttpAcceptHeaderTest {
 		assertEquals(2, a.getItems().length);
 	}
 
+	@Test 
+	public void testAccept() {
+		HttpAcceptHeader a = HttpAcceptHeader.read(new HttpLexScanner("application/vnd.x+json, application/xml; q=0.5, application/json"));
+		assertNotNull(a);
+		
+		assertEquals(3, a.accept("application/vnd.x+json"));
+		assertEquals(2, a.accept("application/json"));
+		assertEquals(1, a.accept("application/xml"));
+		assertEquals(0, a.accept("text/html"));
+	}
 
 }
