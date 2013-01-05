@@ -63,6 +63,8 @@ public class HttpAcceptHeaderItem {
 			scanner.commit();
 			scanner.tx();
 			
+			HttpLexUnit.skipWs(scanner);
+			
 			HttpLexUnit qdel = scanner.read();
 
 			if ((qdel != null) && (';' == scanner.getAsChar(qdel))) {

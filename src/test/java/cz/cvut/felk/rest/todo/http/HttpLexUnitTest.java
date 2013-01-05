@@ -28,13 +28,13 @@ import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
 import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit;
 import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit.Type;
 
-public class HttpLangTest {
+public class HttpLexUnitTest {
 
 	@Test
 	public void testReadNullToken() throws IllegalArgumentException, ParseException {
 		 assertNull(HttpLexUnit.readToken(new HttpLexScanner(null)));
 	}
-	
+	 
 	@Test
 	public void testReadToken() throws IllegalArgumentException, ParseException {
 		 String token = HttpLexUnit.readToken(new HttpLexScanner("abcd"));

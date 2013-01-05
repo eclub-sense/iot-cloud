@@ -18,6 +18,7 @@ package cz.cvut.felk.rest.todo.http.headers;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.cvut.felk.rest.todo.http.HttpLexScannerTest;
 import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
 import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit;
 
@@ -35,6 +36,10 @@ public class HttpAcceptHeader {
 		return items;
 	}
 
+	public static final HttpAcceptHeader read(String value) throws IllegalArgumentException {
+		return read(new HttpLexScanner(value));
+	}
+	
 	/**
 	 * Accept         = "#( media-range [ accept-params ] )
      *    accept-params  = ";" "q" "=" qvalue *( accept-extension )
@@ -58,6 +63,8 @@ public class HttpAcceptHeader {
 			if (item != null) {
 				items.add(item);
 			}
+			HttpLexUnit.skipWs(scanner);
+			
 			unit = scanner.read();
 			
 	    } while ((item != null) && (unit != null) && (',' == scanner.getAsChar(unit)));

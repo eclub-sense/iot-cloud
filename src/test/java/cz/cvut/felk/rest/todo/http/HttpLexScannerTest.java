@@ -26,7 +26,7 @@ import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
 import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit;
 import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit.Type;
 
-public class HttpScannerTest {
+public class HttpLexScannerTest {
 
 	@Test
 	public void testReadNullInput() {
