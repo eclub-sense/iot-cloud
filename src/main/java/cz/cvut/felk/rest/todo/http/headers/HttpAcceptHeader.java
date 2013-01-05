@@ -50,7 +50,6 @@ public class HttpAcceptHeader {
 		HttpLexUnit unit = null;
 		
 		scanner.tx();
-//		scanner.tx();
 		
 		do {
 			HttpLexUnit.skipWs(scanner);
@@ -58,12 +57,8 @@ public class HttpAcceptHeader {
 			item = HttpAcceptHeaderItem.read(scanner);
 			if (item != null) {
 				items.add(item);
-	//			scanner.tx();
-			} else {
-	//			scanner.rollback();
 			}
 			unit = scanner.read();
-			System.out.println("> " + unit + "`" + scanner.getAsChar(unit) + "`");
 			
 	    } while ((item != null) && (unit != null) && (',' == scanner.getAsChar(unit)));
 	
@@ -72,7 +67,6 @@ public class HttpAcceptHeader {
 			scanner.rollback();
 			return null;
 		}
-		System.out.println("5" + items.size());
 		scanner.commit();
 		return new HttpAcceptHeader(items.toArray(new HttpAcceptHeaderItem[0]));
 	}

@@ -21,12 +21,14 @@ public class HttpAcceptHeaderTest {
 		assertEquals("*", a.getItems()[0].getRange().getSubtype());
 		assertNull(a.getItems()[0].getRange().getParameters());
 		
+		assertEquals(0.2f, a.getItems()[0].getQualityFactor(), 0);
+		
 		assertNotNull(a.getItems()[1]);
 		assertNotNull(a.getItems()[1].getRange());
 		assertEquals("audio", a.getItems()[1].getRange().getType());
 		assertEquals("basic", a.getItems()[1].getRange().getSubtype());
 		assertNull(a.getItems()[1].getRange().getParameters());
-
+		assertEquals(1f, a.getItems()[1].getQualityFactor(), 0);
 	}
 
 	@Test

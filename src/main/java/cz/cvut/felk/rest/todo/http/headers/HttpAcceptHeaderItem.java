@@ -61,16 +61,16 @@ public class HttpAcceptHeaderItem {
 		scanner.tx();
 		
 		HttpMediaRange mediaRange = HttpMediaRange.read(scanner);
-		System.out.println("1 " + mediaRange);
+
 		if (mediaRange != null) {
 			HttpLexUnit qdel = scanner.read();
-			System.out.println("2 " + qdel);
+
 			if ((qdel != null) && (';' == scanner.getAsChar(qdel))) {
 				
 				HttpLexUnit.skipWs(scanner);
 				
 				HttpAcceptQValue qParam = HttpAcceptQValue.read(scanner);
-				System.out.println("3 " + qParam);
+
 				if (qParam != null) {
 					scanner.commit();
 					return new HttpAcceptHeaderItem(mediaRange, qParam.getValue(), null);

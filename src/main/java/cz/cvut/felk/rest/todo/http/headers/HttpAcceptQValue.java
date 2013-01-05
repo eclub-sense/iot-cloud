@@ -40,7 +40,6 @@ public class HttpAcceptQValue {
 		scanner.tx();
 
 		HttpLexUnit attribute = scanner.read();
-		System.out.println("Q " + attribute + " `" + scanner.getAsChar(attribute) + "`");
 		if ('q' == scanner.getAsChar(attribute)) {
 			if ((scanner.getAsChar(scanner.read()) == '=')) {
 				HttpLexUnit d1 = scanner.read();
