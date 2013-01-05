@@ -16,12 +16,12 @@
 package cz.cvut.felk.rest.todo.http.headers;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import cz.cvut.felk.rest.todo.http.HttpLexScannerTest;
 import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
 import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit;
-
 
 public class HttpAcceptHeader {
 
@@ -37,7 +37,7 @@ public class HttpAcceptHeader {
 	}
 
 	public static final HttpAcceptHeader read(String value) throws IllegalArgumentException {
-		return read(new HttpLexScanner(value));
+		return value != null ? read(new HttpLexScanner(value.trim())) : null;
 	}
 	
 	/**
@@ -75,6 +75,28 @@ public class HttpAcceptHeader {
 			return null;
 		}
 		scanner.commit();
+		
+		Collections.sort(items, new Comparator<HttpAcceptHeaderItem>() {
+			@Override
+			public int compare(HttpAcceptHeaderItem o1, HttpAcceptHeaderItem o2) {
+				return (int) ((o1.getQualityFactor() - o2.getQualityFactor()) * 1000f);
+			}
+		});
+		
 		return new HttpAcceptHeader(items.toArray(new HttpAcceptHeaderItem[0]));
+	}
+
+	public int accept(String mediaType) {
+		int weight = 0;
+		if (items != null) {
+			int i = items.length;
+			for (HttpAcceptHeaderItem item : items) {
+				if (item.getRange().match(mediaType)) {
+					weight = i;
+				}
+				i -= 1;
+			}
+		}
+		return weight;
 	}
 }

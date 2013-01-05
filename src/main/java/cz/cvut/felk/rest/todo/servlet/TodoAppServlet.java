@@ -42,7 +42,9 @@ import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
 import cz.cvut.felk.rest.todo.core.method.Method;
 import cz.cvut.felk.rest.todo.core.method.MethodDescriptor;
 import cz.cvut.felk.rest.todo.errors.ErrorException;
+import cz.cvut.felk.rest.todo.http.headers.HttpAcceptHeader;
 import cz.cvut.felk.rest.todo.http.headers.HttpDate;
+import cz.cvut.felk.rest.todo.http.headers.HttpMediaType;
 
 public class TodoAppServlet  extends GenericServlet {
 
@@ -123,9 +125,26 @@ public class TodoAppServlet  extends GenericServlet {
 		// Is response body expected?
 		if (request.getMethod().isResponseBody()) {
 			// Check Accept header
-			String acceptHeader = httpRequest.getHeader("Accept");
-			
-			throw new ErrorException(HttpServletResponse.SC_NOT_ACCEPTABLE);	
+			HttpAcceptHeader acceptHeader = HttpAcceptHeader.read(httpRequest.getHeader("Accept"));
+			if (acceptHeader != null) {
+				
+				Map<String, ContentAdapter<Object, InputStream>> produces = methodDsc.produces();
+
+				if (produces != null) {
+					int weight = 0;
+					
+					for (String ct : produces.keySet()) {
+						int tw = acceptHeader.accept(ct); 
+						if (tw > weight) {
+							weight = tw;
+							outputContentAdapter = produces.get(ct);
+						}
+					}
+				}
+				if (outputContentAdapter == null) {
+					throw new ErrorException(HttpServletResponse.SC_NOT_ACCEPTABLE);
+				}
+			}
 		}
 		
 		if (inputContentAdapter != null) {

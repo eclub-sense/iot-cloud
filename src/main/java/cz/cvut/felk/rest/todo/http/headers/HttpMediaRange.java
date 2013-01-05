@@ -85,7 +85,7 @@ public class HttpMediaRange extends HttpMediaType {
 				params.isEmpty() ? null : params.toArray(new HttpParameter[params.size()]));
 	}
 	
-	public boolean match(final HttpMediaRange mediaType) {		
+	public boolean match(final HttpMediaType mediaType) {		
 		return isValid() 
 				&& (ANY.equals(type) 
 						|| (type.equals(mediaType.getType()) && (ANY.equals(subtype) || subtype.equals(mediaType.getSubtype()))));
@@ -94,6 +94,15 @@ public class HttpMediaRange extends HttpMediaType {
 
 	public boolean isValid() {
 		return super.isValid() && ((ANY.equals(type) && ANY.equals(subtype)) || !ANY.equals(type));
+	}
+
+	public boolean match(String mediaType) {
+		HttpMediaType mt = HttpMediaType.read(new HttpLexScanner(mediaType));
+		if (mt != null) {
+			return match(mt);
+		}
+		
+		return false;
 	}
 
 }

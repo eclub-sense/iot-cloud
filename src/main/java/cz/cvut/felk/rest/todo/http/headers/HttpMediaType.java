@@ -27,7 +27,10 @@ public class HttpMediaType {
 	protected final String subtype;
 
 	private final HttpParameter[] parameters;
-	
+
+	public HttpMediaType(String type, String subtype) {
+		this(type, subtype, null);
+	}
 	public HttpMediaType(String type, String subtype, HttpParameter[] parameters) {
 		super();
 		this.type = type;
