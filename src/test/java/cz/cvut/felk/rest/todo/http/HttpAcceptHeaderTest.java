@@ -3,6 +3,9 @@ package cz.cvut.felk.rest.todo.http;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import cz.cvut.felk.rest.todo.http.headers.HttpAcceptHeader;
+import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
+
 public class HttpAcceptHeaderTest {
 
 	@Test
@@ -52,4 +55,18 @@ public class HttpAcceptHeaderTest {
 		HttpAcceptHeader a = HttpAcceptHeader.read(new HttpLexScanner("application/vnd.ms-xpsdocument, application/xaml+xml, application/x-ms-xbap, application/x-shockwave-flash, application/x-silverlight-2-b2, application/x-silverlight, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*"));
 		assertNotNull(a);
 	}
+	
+	@Test
+	public void testRead9() {
+		HttpAcceptHeader a = HttpAcceptHeader.read(new HttpLexScanner("text/plain"));
+		assertNotNull(a);
+	}
+
+	@Test
+	public void testRead10() {
+		HttpAcceptHeader a = HttpAcceptHeader.read(new HttpLexScanner("application/json, application/xml"));
+		assertNotNull(a);
+	}
+
+
 }

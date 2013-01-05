@@ -13,24 +13,31 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.http;
+package cz.cvut.felk.rest.todo.http.headers;
+
+import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
+import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit;
 
 
-public class HttpAcceptExtension {
+public class HttpParameter {
 
 	private final String attribute;
 	private final String value;
 	
-	public HttpAcceptExtension(final String attribute, final String value) {
+	public HttpParameter(final String attribute, final String value) {
 		super();
 		this.attribute = attribute;
 		this.value = value;
 	}
 	
 	/**
-	 * accept-extension =  token [ "=" ( token | quoted-string ) ]
+	 * <ul>
+	 *   <li>parameter               = attribute "=" value</li>
+     *   <li>attribute               = token</li>
+     *   <li>value                   = token | quoted-string</li>
+     * </ul>
 	 */
-	public static HttpAcceptExtension read(HttpLexScanner scanner) {
+	public static HttpParameter read(HttpLexScanner scanner) {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'value' parameter cannot be a null.");
 		}
@@ -41,12 +48,10 @@ public class HttpAcceptExtension {
 			scanner.rollback();
 			return null;
 		}
-		scanner.commit();
-		
-		scanner.tx();
+
 		if ((scanner.getAsChar(scanner.read()) != '=')) {
 			scanner.rollback();
-			return new HttpAcceptExtension(attribute, null);
+			return null;
 		}
 
 		String value = HttpLexUnit.readToken(scanner);
@@ -59,7 +64,7 @@ public class HttpAcceptExtension {
 		}
 		
 		scanner.commit();
-		return new HttpAcceptExtension(attribute, value);
+		return new HttpParameter(attribute, value);
 	}
 
 	@Override

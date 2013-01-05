@@ -21,6 +21,9 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
+import cz.cvut.felk.rest.todo.http.headers.HttpMediaType;
+import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
+
 public class HttpMediaTypeTest {
 
 	@Test

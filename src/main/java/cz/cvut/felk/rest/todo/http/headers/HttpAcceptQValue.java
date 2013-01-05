@@ -13,55 +13,55 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.http;
+package cz.cvut.felk.rest.todo.http.headers;
+
+import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
+import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit;
 
 
-public class HttpParameter {
+public class HttpAcceptQValue {
 
 	private final String attribute;
 	private final String value;
 	
-	public HttpParameter(final String attribute, final String value) {
+	public HttpAcceptQValue(final String attribute, final String value) {
 		super();
 		this.attribute = attribute;
 		this.value = value;
 	}
 	
 	/**
-	 * <ul>
-	 *   <li>parameter               = attribute "=" value</li>
-     *   <li>attribute               = token</li>
-     *   <li>value                   = token | quoted-string</li>
-     * </ul>
+	 * = "q" "=" qvalue
+     * qvalue         = ( "0" [ "." 0*3DIGIT ] )
+     *                | ( "1" [ "." 0*3("0") ] )
 	 */
-	public static HttpParameter read(HttpLexScanner scanner) {
+	public static HttpAcceptQValue read(HttpLexScanner scanner) {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'value' parameter cannot be a null.");
 		}
 		scanner.tx();
 
 		String attribute = HttpLexUnit.readToken(scanner);
-		if (attribute == null) {
-			scanner.rollback();
-			return null;
-		}
-
-		if ((scanner.getAsChar(scanner.read()) != '=')) {
-			scanner.rollback();
-			return null;
-		}
-
-		String value = HttpLexUnit.readToken(scanner);
-		if (value == null) {
-			value = HttpLexUnit.readQuotedString(scanner);
-			if (value == null) {
-				scanner.rollback();
-				return null;
+		if ("q".equalsIgnoreCase(attribute)) {
+			if ((scanner.getAsChar(scanner.read()) == '=')) {
+				HttpLexUnit d1 = scanner.read();
+				if (d1 != null) {
+					if ('0' == scanner.getAsChar(d1)) {
+						
+						
+					} else if ('1' == scanner.getAsChar(d1)) {
+						
+					}
+					
+//					scanner.commit();
+//					return new HttpAcceptQValue(attribute, value);
+				}
 			}
+
 		}
-		
-		scanner.commit();
-		return new HttpParameter(attribute, value);
+
+		scanner.rollback();
+		return null;		
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class HttpParameter {
 		return attribute;
 	}
 
-	public String getValue() {
-		return value;
+	public Float getValue() {
+		return 1f;	//TODO
 	}
 }

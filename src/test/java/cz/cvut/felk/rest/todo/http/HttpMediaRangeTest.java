@@ -19,6 +19,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import cz.cvut.felk.rest.todo.http.headers.HttpMediaRange;
+import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
+
 public class HttpMediaRangeTest {
 
 	@Test

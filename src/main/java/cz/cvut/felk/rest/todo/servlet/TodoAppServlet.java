@@ -42,7 +42,7 @@ import cz.cvut.felk.rest.todo.core.content.ContentDescriptor;
 import cz.cvut.felk.rest.todo.core.method.Method;
 import cz.cvut.felk.rest.todo.core.method.MethodDescriptor;
 import cz.cvut.felk.rest.todo.errors.ErrorException;
-import cz.cvut.felk.rest.todo.http.HttpDate;
+import cz.cvut.felk.rest.todo.http.headers.HttpDate;
 
 public class TodoAppServlet  extends GenericServlet {
 

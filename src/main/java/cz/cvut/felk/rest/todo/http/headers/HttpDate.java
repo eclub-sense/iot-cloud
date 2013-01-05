@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.http;
+package cz.cvut.felk.rest.todo.http.headers;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

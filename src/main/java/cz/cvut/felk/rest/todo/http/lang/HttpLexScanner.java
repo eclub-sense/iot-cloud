@@ -13,14 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.http;
+package cz.cvut.felk.rest.todo.http.lang;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-import cz.cvut.felk.rest.todo.http.HttpLexUnit.Type;
+import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit.Type;
 
 public class HttpLexScanner {
 	

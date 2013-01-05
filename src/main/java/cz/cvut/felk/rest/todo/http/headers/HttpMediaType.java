@@ -13,29 +13,75 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.http;
+package cz.cvut.felk.rest.todo.http.headers;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
+import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit;
 
-public class HttpMediaRange extends HttpMediaType {
+public class HttpMediaType {
 
-	public static final String ANY = "*";
+	protected final String type;
+	protected final String subtype;
+
+	private final HttpParameter[] parameters;
 	
-	public static final HttpMediaRange ALL_MEDIA_TYPES = new HttpMediaRange(ANY, ANY, null); 
+	public HttpMediaType(String type, String subtype, HttpParameter[] parameters) {
+		super();
+		this.type = type;
+		this.subtype = subtype;
+		this.parameters = parameters;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public String getSubtype() {
+		return subtype;
+	}
 	
-	public HttpMediaRange(String type, String subtype, HttpParameter[] parameters) {
-		super(type, subtype, parameters);
+	public HttpParameter[] getParameters() {
+		return parameters;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return (obj != null) && (obj instanceof HttpMediaType) && (toString().equals(obj.toString()));
+	}
+	
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(type);
+		builder.append('/');
+		builder.append(subtype);
+		
+		if (parameters != null) {
+			for (HttpParameter parameter : parameters) {
+				builder.append(';');
+				builder.append(parameter.toString());
+			}
+		}
+		return builder.toString();
 	}
 	
 	/**
-	 * media-range    = ( "*&#47;*"
-     *                  | ( type "/" "*" )
-     *                  | ( type "/" subtype )
-     *                  ) *( ";" parameter )
+	 * <ul>
+	 *   <li>media-type     = type "/" subtype *( ";" parameter )</li>
+     *   <li>type           = token</li>
+     *   <li>subtype        = token</li>
+     * </ul>
 	 */
-	public static HttpMediaRange read(HttpLexScanner scanner) throws IllegalArgumentException {
+	public static HttpMediaType read(HttpLexScanner scanner) throws IllegalArgumentException {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'scanner' parameter cannot be a null.");
 		}
@@ -70,7 +116,7 @@ public class HttpMediaRange extends HttpMediaType {
 			scanner.rollback();
 			
 			HttpParameter param = HttpParameter.read(scanner);
-			if ((param != null) && (!"q".equalsIgnoreCase(param.getAttribute()))) {
+			if (param != null) {
 				params.add(param);
 				scanner.commit();
 				scanner.tx();
@@ -78,19 +124,11 @@ public class HttpMediaRange extends HttpMediaType {
 		}
 		scanner.rollback();
 		
-		return new HttpMediaRange(type, subtype,
+		return new HttpMediaType(type, subtype,
 				params.isEmpty() ? null : params.toArray(new HttpParameter[params.size()]));
 	}
 	
-	public boolean match(final HttpMediaRange mediaType) {		
-		return isValid() 
-				&& (ANY.equals(type) 
-						|| (type.equals(mediaType.getType()) && (ANY.equals(subtype) || subtype.equals(mediaType.getSubtype()))));
-	}
-	
-
 	public boolean isValid() {
-		return super.isValid() && ((ANY.equals(type) && ANY.equals(subtype)) || !ANY.equals(type));
+		return (type != null) && (subtype != null);
 	}
-
 }
