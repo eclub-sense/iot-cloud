@@ -15,9 +15,6 @@
  */
 package cz.cvut.felk.rest.todo.http.headers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
 import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit;
 
@@ -63,6 +60,9 @@ public class HttpAcceptHeaderItem {
 		HttpMediaRange mediaRange = HttpMediaRange.read(scanner);
 
 		if (mediaRange != null) {
+			scanner.commit();
+			scanner.tx();
+			
 			HttpLexUnit qdel = scanner.read();
 
 			if ((qdel != null) && (';' == scanner.getAsChar(qdel))) {
@@ -74,16 +74,17 @@ public class HttpAcceptHeaderItem {
 				if (qParam != null) {
 					scanner.commit();
 					return new HttpAcceptHeaderItem(mediaRange, qParam.getValue(), null);
-				} else {
-					scanner.commit();
-					return new HttpAcceptHeaderItem(mediaRange, 1f, null);
 				}
-			} else {
-				scanner.commit();
-				return new HttpAcceptHeaderItem(mediaRange, 1f, null);
 			}
+			scanner.rollback();
+			return new HttpAcceptHeaderItem(mediaRange, 1f, null);			
 		}
 		scanner.rollback();
 		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return ((range != null) ? range.toString() + ";q=" + qualityFactor : super.toString());
 	}
 }
