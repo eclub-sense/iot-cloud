@@ -45,23 +45,17 @@ import cz.cvut.felk.rest.todo.http.headers.HttpDate;
 import cz.cvut.felk.rest.todo.http.method.Method;
 import cz.cvut.felk.rest.todo.http.method.MethodDescriptor;
 
-public class TodoAppServlet  extends GenericServlet {
+public abstract class HttpServlet extends GenericServlet {
 
-	private static final long serialVersionUID = 4650079506676226041L;
+	private static final long serialVersionUID = 5919203442935383094L;
 
-	private ResourceResolver resolver = null;
-	
-	@Override
-	public void init() throws ServletException {
-		super.init();
-	}
+	protected abstract ResourceDescriptor resolve(String uri);
 	
 	protected void doService(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ErrorException, IOException {
 		
 		final RequestHolder<Object> request = new RequestHolder<Object>(HttpRequest.getUri(httpRequest));
-		System.out.println(">>>>>>>>>> " + resolver);
 		// Resolve incoming URL and get resource descriptor
-		final ResourceDescriptor resourceDsc = resolver.resolve(request.getUri());
+		final ResourceDescriptor resourceDsc = resolve(request.getUri());
 		
 		// Does the requested resource exist?
 		if (resourceDsc == null) {	
@@ -88,8 +82,8 @@ public class TodoAppServlet  extends GenericServlet {
 		Map<Method, MethodDescriptor<?, ?>> methods = resourceDsc.methods();
 		
 		// Get requested method descriptors for the resource
-		MethodDescriptor<?, ?> methodDsc = (methods != null) ? methods.get(httpRequest.getMethod()) : null;
-		
+		MethodDescriptor<?, ?> methodDsc = (methods != null) ? methods.get(request.getMethod()) : null;
+
 		// Is requested method supported?
 		if ((methodDsc == null)) {
 
@@ -213,13 +207,13 @@ public class TodoAppServlet  extends GenericServlet {
 			
 		} catch (ErrorException e) {
 			if (nativeHttpResponse != null) {
-				writeError(e, nativeHttpResponse);
+				handleError(e, nativeHttpResponse);
 				return;
 			} 
 			throw new ServletException(e);
 		} catch (Exception e) {
 			if (nativeHttpResponse != null) {
-				writeError(new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e), nativeHttpResponse);
+				handleError(new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e), nativeHttpResponse);
 				return;
 			} 
 			throw new ServletException(e);			
@@ -239,28 +233,6 @@ public class TodoAppServlet  extends GenericServlet {
 		}
 		response.setHeader("Allow", allow);
 	}
-	
-	protected void writeError(ErrorException ex, HttpServletResponse httpResponse) {
-		httpResponse.setStatus(ex.getStatusCode());
-		
-		Writer writer = null;
-		try {
-			httpResponse.setContentType("text/plain");
-			
-			writer = httpResponse.getWriter();
-			ex.printStackTrace(new PrintWriter(writer));
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			
-		} finally {
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+
+	protected abstract void handleError(ErrorException ex, HttpServletResponse httpResponse);	
 }
