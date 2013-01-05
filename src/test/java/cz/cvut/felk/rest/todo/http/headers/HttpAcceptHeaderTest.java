@@ -29,20 +29,20 @@ public class HttpAcceptHeaderTest {
 		assertNotNull(a);
 		assertNotNull(a.getItems());
 		assertEquals(2, a.getItems().length);
-		
+
 		assertNotNull(a.getItems()[0]);
 		assertNotNull(a.getItems()[0].getRange());
 		assertEquals("audio", a.getItems()[0].getRange().getType());
-		assertEquals("*", a.getItems()[0].getRange().getSubtype());
-		assertNull(a.getItems()[0].getRange().getParameters());		
-		assertEquals(0.2f, a.getItems()[0].getQualityFactor(), 0);
-		
+		assertEquals("basic", a.getItems()[0].getRange().getSubtype());
+		assertNull(a.getItems()[1].getRange().getParameters());
+		assertEquals(1f, a.getItems()[0].getQualityFactor(), 0);
+
 		assertNotNull(a.getItems()[1]);
 		assertNotNull(a.getItems()[1].getRange());
 		assertEquals("audio", a.getItems()[1].getRange().getType());
-		assertEquals("basic", a.getItems()[1].getRange().getSubtype());
-		assertNull(a.getItems()[1].getRange().getParameters());
-		assertEquals(1f, a.getItems()[1].getQualityFactor(), 0);
+		assertEquals("*", a.getItems()[1].getRange().getSubtype());
+		assertNull(a.getItems()[1].getRange().getParameters());		
+		assertEquals(0.2f, a.getItems()[1].getQualityFactor(), 0);
 	}
 
 	@Test
@@ -51,34 +51,34 @@ public class HttpAcceptHeaderTest {
 		assertNotNull(a);
 		assertNotNull(a.getItems());
 		assertEquals(4, a.getItems().length);
-		
+				
 		assertNotNull(a.getItems()[0]);
 		assertNotNull(a.getItems()[0].getRange());
 		assertEquals("text", a.getItems()[0].getRange().getType());
-		assertEquals("plain", a.getItems()[0].getRange().getSubtype());
+		assertEquals("html", a.getItems()[0].getRange().getSubtype());
 		assertNull(a.getItems()[0].getRange().getParameters());		
-		assertEquals(0.5f, a.getItems()[0].getQualityFactor(), 0);
+		assertEquals(1f, a.getItems()[0].getQualityFactor(), 0);
 		
 		assertNotNull(a.getItems()[1]);
 		assertNotNull(a.getItems()[1].getRange());
 		assertEquals("text", a.getItems()[1].getRange().getType());
-		assertEquals("html", a.getItems()[1].getRange().getSubtype());
+		assertEquals("x-c", a.getItems()[1].getRange().getSubtype());
 		assertNull(a.getItems()[1].getRange().getParameters());		
 		assertEquals(1f, a.getItems()[1].getQualityFactor(), 0);
-		
+
 		assertNotNull(a.getItems()[2]);
 		assertNotNull(a.getItems()[2].getRange());
 		assertEquals("text", a.getItems()[2].getRange().getType());
 		assertEquals("x-dvi", a.getItems()[2].getRange().getSubtype());
 		assertNull(a.getItems()[2].getRange().getParameters());		
 		assertEquals(0.8f, a.getItems()[2].getQualityFactor(), 0);
-		
+
 		assertNotNull(a.getItems()[3]);
 		assertNotNull(a.getItems()[3].getRange());
 		assertEquals("text", a.getItems()[3].getRange().getType());
-		assertEquals("x-c", a.getItems()[3].getRange().getSubtype());
+		assertEquals("plain", a.getItems()[3].getRange().getSubtype());
 		assertNull(a.getItems()[3].getRange().getParameters());		
-		assertEquals(1f, a.getItems()[3].getQualityFactor(), 0);
+		assertEquals(0.5f, a.getItems()[3].getQualityFactor(), 0);
 	}
 	
 	@Test
