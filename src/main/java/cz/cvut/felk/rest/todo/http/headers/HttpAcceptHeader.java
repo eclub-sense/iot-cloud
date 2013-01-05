@@ -18,19 +18,21 @@ package cz.cvut.felk.rest.todo.http.headers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.xml.sax.ext.LexicalHandler;
-
 import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
 import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit;
 
 
 public class HttpAcceptHeader {
 
-	private final HttpAcceptHeaderItem[] HttpAcceptHeaderItems;
+	private final HttpAcceptHeaderItem[] items;
 	
-	public HttpAcceptHeader(HttpAcceptHeaderItem[] HttpAcceptHeaderItems) {
+	public HttpAcceptHeader(HttpAcceptHeaderItem[] items) {
 		super();
-		this.HttpAcceptHeaderItems = HttpAcceptHeaderItems;
+		this.items = items;
+	}
+	
+	public HttpAcceptHeaderItem[] getItems() {
+		return items;
 	}
 
 	/**
@@ -44,29 +46,33 @@ public class HttpAcceptHeader {
 		}
 
 		List<HttpAcceptHeaderItem> items = new ArrayList<HttpAcceptHeaderItem>();
+		HttpAcceptHeaderItem item = null;
+		HttpLexUnit unit = null;
+		
 		scanner.tx();
+//		scanner.tx();
+		
 		do {
-			HttpMediaRange mediaRange = HttpMediaRange.read(scanner);
-			if (mediaRange != null) {
-				HttpLexUnit qdel = scanner.read();
-				if ((qdel != null) && (';' == scanner.getAsChar(qdel))) {
-					
-					HttpAcceptQValue qParam = HttpAcceptQValue.read(scanner);
-					if (qParam != null) {
-						items.add(new HttpAcceptHeaderItem(mediaRange, qParam.getValue(), null));
-					}
-				}
+			HttpLexUnit.skipWs(scanner);
+			
+			item = HttpAcceptHeaderItem.read(scanner);
+			if (item != null) {
+				items.add(item);
+	//			scanner.tx();
 			} else {
-				scanner.rollback();
-				return null;
+	//			scanner.rollback();
 			}
-	    } while (scanner.isEof());
+			unit = scanner.read();
+			System.out.println("> " + unit + "`" + scanner.getAsChar(unit) + "`");
+			
+	    } while ((item != null) && (unit != null) && (',' == scanner.getAsChar(unit)));
+	
 		
 		if (items.isEmpty()) {
 			scanner.rollback();
 			return null;
 		}
-
+		System.out.println("5" + items.size());
 		scanner.commit();
 		return new HttpAcceptHeader(items.toArray(new HttpAcceptHeaderItem[0]));
 	}

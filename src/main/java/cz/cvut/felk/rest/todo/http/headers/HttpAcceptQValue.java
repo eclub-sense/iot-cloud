@@ -21,12 +21,10 @@ import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit;
 
 public class HttpAcceptQValue {
 
-	private final String attribute;
-	private final String value;
+	private final Float value;
 	
-	public HttpAcceptQValue(final String attribute, final String value) {
+	public HttpAcceptQValue(final Float value) {
 		super();
-		this.attribute = attribute;
 		this.value = value;
 	}
 	
@@ -41,20 +39,66 @@ public class HttpAcceptQValue {
 		}
 		scanner.tx();
 
-		String attribute = HttpLexUnit.readToken(scanner);
-		if ("q".equalsIgnoreCase(attribute)) {
+		HttpLexUnit attribute = scanner.read();
+		System.out.println("Q " + attribute + " `" + scanner.getAsChar(attribute) + "`");
+		if ('q' == scanner.getAsChar(attribute)) {
 			if ((scanner.getAsChar(scanner.read()) == '=')) {
 				HttpLexUnit d1 = scanner.read();
 				if (d1 != null) {
 					if ('0' == scanner.getAsChar(d1)) {
+						scanner.commit();
+						scanner.tx();
+
+						HttpLexUnit dl = scanner.read();
+						if ((dl == null) || ('.' != scanner.getAsChar(dl))) {
+							scanner.rollback();
+							return new HttpAcceptQValue(0f);
+						}
 						
+						scanner.commit();
+						scanner.tx();
+						
+						String dv = "";
+						
+						for (int i=0; i<3; i++) {
+							HttpLexUnit dx = scanner.read();
+							if ((dx == null) || !dx.isType(HttpLexUnit.Type.DIGIT)) {
+								scanner.rollback();
+								return new HttpAcceptQValue(dv.isEmpty() ? 0f : Float.parseFloat("0." + dv));
+							}
+							dv += scanner.getAsChar(dx);
+							scanner.tx();
+						}
+						
+						scanner.commit();
+						return new HttpAcceptQValue(dv.isEmpty() ? 0f : Float.parseFloat("0." + dv));
 						
 					} else if ('1' == scanner.getAsChar(d1)) {
 						
+						scanner.commit();
+						scanner.tx();
+
+						HttpLexUnit dl = scanner.read();
+						if ((dl == null) || ('.' != scanner.getAsChar(dl))) {
+							scanner.rollback();
+							return new HttpAcceptQValue(1f);
+						}
+						
+						scanner.commit();
+						scanner.tx();
+
+						for (int i=0; i<3; i++) {
+							HttpLexUnit dx = scanner.read();
+							if ((dx == null) || ('0' != scanner.getAsChar(dx))) {
+								scanner.rollback();
+								return new HttpAcceptQValue(1f);
+							}
+							scanner.tx();
+						}
+						
+						scanner.commit();
+						return new HttpAcceptQValue(1f); 
 					}
-					
-//					scanner.commit();
-//					return new HttpAcceptQValue(attribute, value);
 				}
 			}
 
@@ -67,17 +111,13 @@ public class HttpAcceptQValue {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(attribute);
+		builder.append('q');
 		builder.append('=');
 		builder.append(value);
 		return builder.toString();
 	}
-	
-	public String getAttribute() {
-		return attribute;
-	}
 
 	public Float getValue() {
-		return 1f;	//TODO
+		return value;
 	}
 }

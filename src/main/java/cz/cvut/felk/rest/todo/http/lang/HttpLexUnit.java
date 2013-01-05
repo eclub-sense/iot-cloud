@@ -261,21 +261,21 @@ public class HttpLexUnit {
 		return scanner.getAsString(index, length);		
 	}
 
-//	public static void skipWs(HttpScanner scanner) {
-//		if (scanner == null) {
-//			throw new IllegalArgumentException("The 'scanner' parameter must not be a null.");
-//		}
-//		
-//		scanner.tx();
-//		
-//		HttpLexUnit unit = null;
-//		do {
-//			scanner.commit();
-//			unit = scanner.read();
-//			scanner.tx();
-//		
-//		} while (unit != null && unit.isType(Type.SP));
-//					
-//		scanner.rollback();
-//	}	
+	public static void skipWs(HttpLexScanner scanner) {
+		if (scanner == null) {
+			throw new IllegalArgumentException("The 'scanner' parameter must not be a null.");
+		}
+		
+		scanner.tx();
+		
+		HttpLexUnit unit = null;
+		do {
+			scanner.commit();
+			scanner.tx();
+			unit = scanner.read();
+		
+		} while (unit != null && unit.isType(Type.SP));
+					
+		scanner.rollback();
+	}	
 }

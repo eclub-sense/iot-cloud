@@ -12,6 +12,21 @@ public class HttpAcceptHeaderTest {
 	public void testRead1() {
 		HttpAcceptHeader a = HttpAcceptHeader.read(new HttpLexScanner("audio/*; q=0.2, audio/basic"));
 		assertNotNull(a);
+		assertNotNull(a.getItems());
+		assertEquals(2, a.getItems().length);
+		
+		assertNotNull(a.getItems()[0]);
+		assertNotNull(a.getItems()[0].getRange());
+		assertEquals("audio", a.getItems()[0].getRange().getType());
+		assertEquals("*", a.getItems()[0].getRange().getSubtype());
+		assertNull(a.getItems()[0].getRange().getParameters());
+		
+		assertNotNull(a.getItems()[1]);
+		assertNotNull(a.getItems()[1].getRange());
+		assertEquals("audio", a.getItems()[1].getRange().getType());
+		assertEquals("basic", a.getItems()[1].getRange().getSubtype());
+		assertNull(a.getItems()[1].getRange().getParameters());
+
 	}
 
 	@Test

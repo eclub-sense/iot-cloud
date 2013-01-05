@@ -15,6 +15,12 @@
  */
 package cz.cvut.felk.rest.todo.http.headers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
+import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit;
+
 
 
 public class HttpAcceptHeaderItem {
@@ -40,5 +46,44 @@ public class HttpAcceptHeaderItem {
 
 	public HttpAcceptExtension[] getExtensions() {
 		return extensions;
+	}
+	
+	/**
+	 * Accept         =  media-range [ accept-params ] 
+     *    accept-params  = ";" "q" "=" qvalue *( accept-extension )
+     *    accept-extension = ";" token [ "=" ( token | quoted-string ) ] 
+	 */
+	public static final HttpAcceptHeaderItem read(HttpLexScanner scanner) throws IllegalArgumentException {
+		if (scanner == null) {
+			throw new IllegalArgumentException("The 'scanner' parameter cannot be a null.");
+		}
+
+		scanner.tx();
+		
+		HttpMediaRange mediaRange = HttpMediaRange.read(scanner);
+		System.out.println("1 " + mediaRange);
+		if (mediaRange != null) {
+			HttpLexUnit qdel = scanner.read();
+			System.out.println("2 " + qdel);
+			if ((qdel != null) && (';' == scanner.getAsChar(qdel))) {
+				
+				HttpLexUnit.skipWs(scanner);
+				
+				HttpAcceptQValue qParam = HttpAcceptQValue.read(scanner);
+				System.out.println("3 " + qParam);
+				if (qParam != null) {
+					scanner.commit();
+					return new HttpAcceptHeaderItem(mediaRange, qParam.getValue(), null);
+				} else {
+					scanner.commit();
+					return new HttpAcceptHeaderItem(mediaRange, 1f, null);
+				}
+			} else {
+				scanner.commit();
+				return new HttpAcceptHeaderItem(mediaRange, 1f, null);
+			}
+		}
+		scanner.rollback();
+		return null;
 	}
 }
