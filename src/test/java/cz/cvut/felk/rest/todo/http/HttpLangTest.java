@@ -30,12 +30,12 @@ public class HttpLangTest {
 
 	@Test
 	public void testReadNullToken() throws IllegalArgumentException, ParseException {
-		 assertNull(HttpLexUnit.readToken(new HttpScanner(null)));
+		 assertNull(HttpLexUnit.readToken(new HttpLexScanner(null)));
 	}
 	
 	@Test
 	public void testReadToken() throws IllegalArgumentException, ParseException {
-		 String token = HttpLexUnit.readToken(new HttpScanner("abcd"));
+		 String token = HttpLexUnit.readToken(new HttpLexScanner("abcd"));
 		 
 		 assertNotNull(token);
 		 assertEquals("abcd", token);
@@ -43,15 +43,15 @@ public class HttpLangTest {
 
 	@Test
 	public void testInvalidReadToken() throws IllegalArgumentException, ParseException {
-		 assertNull(HttpLexUnit.readToken(new HttpScanner("/abcd")));
-		 assertNull(HttpLexUnit.readToken(new HttpScanner(" abcd")));
-		 assertNull(HttpLexUnit.readToken(new HttpScanner("")));
-		 assertNull(HttpLexUnit.readToken(new HttpScanner("\t")));
+		 assertNull(HttpLexUnit.readToken(new HttpLexScanner("/abcd")));
+		 assertNull(HttpLexUnit.readToken(new HttpLexScanner(" abcd")));
+		 assertNull(HttpLexUnit.readToken(new HttpLexScanner("")));
+		 assertNull(HttpLexUnit.readToken(new HttpLexScanner("\t")));
 	}
 
 	@Test
 	public void testReadTokens()  throws IllegalArgumentException, ParseException {
-		HttpScanner scanner = new HttpScanner("a=b");
+		HttpLexScanner scanner = new HttpLexScanner("a=b");
 		
 		String a = HttpLexUnit.readToken(scanner);
 		assertEquals("a", a);

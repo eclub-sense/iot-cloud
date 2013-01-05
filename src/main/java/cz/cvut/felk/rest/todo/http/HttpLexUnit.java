@@ -163,7 +163,7 @@ public class HttpLexUnit {
 	/**
 	 * token          = 1*&lt;any CHAR except CTLs or separators&gt;
 	 */
-	public static String readToken(HttpScanner scanner) throws IllegalArgumentException {
+	public static String readToken(HttpLexScanner scanner) throws IllegalArgumentException {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'scanner' parameter must not be a null.");
 		}
@@ -202,7 +202,7 @@ public class HttpLexUnit {
      *  qdtext        = &lt;any TEXT except &lt;"&gt;&gt;
      *  quoted-pair   = "\" CHAR
      */
-	public static String readQuotedString(HttpScanner scanner) throws IllegalArgumentException {
+	public static String readQuotedString(HttpLexScanner scanner) throws IllegalArgumentException {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'scanner' parameter must not be a null.");
 		}

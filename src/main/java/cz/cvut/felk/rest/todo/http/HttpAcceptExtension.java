@@ -30,7 +30,7 @@ public class HttpAcceptExtension {
 	/**
 	 * accept-extension =  token [ "=" ( token | quoted-string ) ]
 	 */
-	public static HttpAcceptExtension read(HttpScanner scanner) {
+	public static HttpAcceptExtension read(HttpLexScanner scanner) {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'value' parameter cannot be a null.");
 		}

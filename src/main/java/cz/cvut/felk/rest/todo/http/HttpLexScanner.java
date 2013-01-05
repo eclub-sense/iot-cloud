@@ -22,7 +22,7 @@ import java.util.Stack;
 
 import cz.cvut.felk.rest.todo.http.HttpLexUnit.Type;
 
-public class HttpScanner {
+public class HttpLexScanner {
 	
 	private final byte[] bytes;
 	private int byteCursor;
@@ -33,7 +33,7 @@ public class HttpScanner {
 	private Stack<Integer> tx = new Stack<Integer>();
 	
 	
-	public HttpScanner(final String value) {
+	public HttpLexScanner(final String value) {
 		super();
 		this.bytes = (value != null) ? value.getBytes(HttpLexUnit.US_ASCII_CHARSET) : null;
 		this.units = (bytes != null) ? new HttpLexUnit[bytes.length] : null;

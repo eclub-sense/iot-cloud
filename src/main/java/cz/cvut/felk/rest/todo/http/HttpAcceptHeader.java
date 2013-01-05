@@ -30,7 +30,7 @@ public class HttpAcceptHeader {
      *    accept-params  = ";" "q" "=" qvalue *( accept-extension )
      *    accept-extension = ";" token [ "=" ( token | quoted-string ) ] 
 	 */
-	public static final HttpAcceptHeader read(HttpScanner scanner) throws IllegalArgumentException {
+	public static final HttpAcceptHeader read(HttpLexScanner scanner) throws IllegalArgumentException {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'scanner' parameter cannot be a null.");
 		}

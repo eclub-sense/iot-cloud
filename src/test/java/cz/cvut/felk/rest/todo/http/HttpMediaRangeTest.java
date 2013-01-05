@@ -23,12 +23,12 @@ public class HttpMediaRangeTest {
 
 	@Test
 	public void testReadNull() {
-		assertNull(HttpMediaRange.read(new HttpScanner(null)));
+		assertNull(HttpMediaRange.read(new HttpLexScanner(null)));
 	}
 		
 	@Test
 	public void testReadAnyAny() {
-	 	HttpMediaRange range = HttpMediaRange.read(new HttpScanner("*/*"));
+	 	HttpMediaRange range = HttpMediaRange.read(new HttpLexScanner("*/*"));
 	 	assertNotNull(range);
 		assertEquals("*", range.getType());
 		assertEquals("*", range.getSubtype());
@@ -38,7 +38,7 @@ public class HttpMediaRangeTest {
 	
 	@Test
 	public void testReadAny() {
-		HttpMediaRange range = HttpMediaRange.read(new HttpScanner("text/*"));
+		HttpMediaRange range = HttpMediaRange.read(new HttpLexScanner("text/*"));
 		assertNotNull(range);
 		assertEquals("text", range.getType());
 		assertEquals("*", range.getSubtype());

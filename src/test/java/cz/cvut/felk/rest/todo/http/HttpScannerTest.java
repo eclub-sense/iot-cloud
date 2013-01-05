@@ -28,14 +28,14 @@ public class HttpScannerTest {
 
 	@Test
 	public void testReadNullInput() {
-		HttpScanner scanner = new HttpScanner(null);
+		HttpLexScanner scanner = new HttpLexScanner(null);
 		assertNull(scanner.read());
 		assertTrue(scanner.isEof());
 	}
 	
 	@Test
 	public void testReadCRLF() {
-		HttpScanner scanner = new HttpScanner("\r\n");
+		HttpLexScanner scanner = new HttpLexScanner("\r\n");
 		HttpLexUnit crlf = scanner.read();
 		
 		assertNotNull(crlf);
@@ -56,7 +56,7 @@ public class HttpScannerTest {
 	
 	@Test
 	public void testRollback() {
-		HttpScanner scanner = new HttpScanner("a\\c");
+		HttpLexScanner scanner = new HttpLexScanner("a\\c");
 		scanner.tx();
 		
 		assertNotNull(scanner.read());	// read a
@@ -73,7 +73,7 @@ public class HttpScannerTest {
 	
 	@Test
 	public void testReadParameter() {
-		HttpScanner scanner = new HttpScanner("a=b");
+		HttpLexScanner scanner = new HttpLexScanner("a=b");
 		HttpLexUnit a = scanner.read();
 		assertNotNull(a);
 		

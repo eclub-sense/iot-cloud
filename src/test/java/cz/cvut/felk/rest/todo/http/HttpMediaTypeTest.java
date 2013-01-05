@@ -25,18 +25,18 @@ public class HttpMediaTypeTest {
 
 	@Test
 	public void testReadNull() {
-		assertNull(HttpMediaType.read(new HttpScanner(null)));
+		assertNull(HttpMediaType.read(new HttpLexScanner(null)));
 	}
 	
 	@Test
 	public void testRead() {
-		HttpMediaType t = HttpMediaType.read(new HttpScanner("application/json")); 
+		HttpMediaType t = HttpMediaType.read(new HttpLexScanner("application/json")); 
 		assertNotNull(t);
 		assertEquals("application", t.getType());
 		assertEquals("json", t.getSubtype());
 		assertNull(t.getParameters());
 		
-		HttpMediaType t2 = HttpMediaType.read(new HttpScanner("x/vnd.a.b.c+xml")); 
+		HttpMediaType t2 = HttpMediaType.read(new HttpLexScanner("x/vnd.a.b.c+xml")); 
 		assertNotNull(t2);
 		assertEquals("x", t2.getType());
 		assertEquals("vnd.a.b.c+xml", t2.getSubtype());
@@ -45,7 +45,7 @@ public class HttpMediaTypeTest {
 	
 	@Test
 	public void testReadWithParams() {
-		HttpMediaType t = HttpMediaType.read(new HttpScanner("text/html; a=b;1234=\"\\\"5\"")); 
+		HttpMediaType t = HttpMediaType.read(new HttpLexScanner("text/html; a=b;1234=\"\\\"5\"")); 
 		assertNotNull(t);
 		assertEquals("text", t.getType());
 		assertEquals("html", t.getSubtype());

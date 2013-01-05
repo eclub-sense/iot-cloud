@@ -35,7 +35,7 @@ public class HttpMediaRange extends HttpMediaType {
      *                  | ( type "/" subtype )
      *                  ) *( ";" parameter )
 	 */
-	public static HttpMediaRange read(HttpScanner scanner) throws IllegalArgumentException {
+	public static HttpMediaRange read(HttpLexScanner scanner) throws IllegalArgumentException {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'scanner' parameter cannot be a null.");
 		}

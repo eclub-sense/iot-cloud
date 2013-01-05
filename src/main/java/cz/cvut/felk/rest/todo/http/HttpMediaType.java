@@ -78,7 +78,7 @@ public class HttpMediaType {
      *   <li>subtype        = token</li>
      * </ul>
 	 */
-	public static HttpMediaType read(HttpScanner scanner) throws IllegalArgumentException {
+	public static HttpMediaType read(HttpLexScanner scanner) throws IllegalArgumentException {
 		if (scanner == null) {
 			throw new IllegalArgumentException("The 'scanner' parameter cannot be a null.");
 		}
