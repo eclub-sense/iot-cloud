@@ -13,20 +13,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.dao;
+package cz.cvut.felk.rest.todo.api;
 
-import java.util.Collection;
+import java.util.Map;
 
-import cz.cvut.felk.rest.todo.api.content.ContentDescriptor;
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
+import cz.cvut.felk.rest.todo.api.method.Method;
+import cz.cvut.felk.rest.todo.api.method.MethodDescriptor;
 
-public interface TodoListDao {
 
-	ContentDescriptor<TodoItemDto> persist(String uri, ContentDescriptor<TodoItemDto> content);
-	
-	ContentDescriptor<TodoItemDto> read(String uri);
-	
-	ContentDescriptor<TodoItemDto> delete(String uri);
-	
-	Collection<String> list();
+public interface ResourceDescriptor {
+
+	Map<Method, MethodDescriptor<?, ?>> methods();
+
 }

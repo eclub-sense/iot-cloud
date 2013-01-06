@@ -15,12 +15,16 @@
  */
 package cz.cvut.felk.rest.todo.http.headers;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import cz.cvut.felk.rest.todo.http.headers.HttpMediaRange;
-import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
+import cz.cvut.felk.rest.todo.api.http.headers.HttpMediaRange;
+import cz.cvut.felk.rest.todo.api.http.lang.HttpLexScanner;
 
 public class HttpMediaRangeTest {
 

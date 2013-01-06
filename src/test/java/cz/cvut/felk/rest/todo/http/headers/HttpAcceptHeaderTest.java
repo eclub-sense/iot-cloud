@@ -15,11 +15,14 @@
  */
 package cz.cvut.felk.rest.todo.http.headers;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
 
-import cz.cvut.felk.rest.todo.http.headers.HttpAcceptHeader;
-import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
+import cz.cvut.felk.rest.todo.api.http.headers.HttpAcceptHeader;
+import cz.cvut.felk.rest.todo.api.http.lang.HttpLexScanner;
 
 public class HttpAcceptHeaderTest {
 

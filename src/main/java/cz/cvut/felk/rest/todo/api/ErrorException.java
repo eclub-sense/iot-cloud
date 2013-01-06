@@ -13,20 +13,26 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.dao;
+package cz.cvut.felk.rest.todo.api;
 
-import java.util.Collection;
 
-import cz.cvut.felk.rest.todo.api.content.ContentDescriptor;
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
+public class ErrorException extends Exception {
 
-public interface TodoListDao {
-
-	ContentDescriptor<TodoItemDto> persist(String uri, ContentDescriptor<TodoItemDto> content);
+	private static final long serialVersionUID = 1531552972478130773L;
 	
-	ContentDescriptor<TodoItemDto> read(String uri);
+	private final int statusCode;
+
+	public ErrorException(int statusCode) {
+		super();
+		this.statusCode = statusCode;
+	}
 	
-	ContentDescriptor<TodoItemDto> delete(String uri);
+	public ErrorException(int statusCode, Throwable cause) {
+		super(cause);
+		this.statusCode = statusCode;
+	}
 	
-	Collection<String> list();
+	public int getStatusCode() {
+		return statusCode;
+	}
 }

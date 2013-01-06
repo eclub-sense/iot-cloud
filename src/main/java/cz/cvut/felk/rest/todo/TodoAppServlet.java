@@ -18,11 +18,11 @@ package cz.cvut.felk.rest.todo;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import cz.cvut.felk.rest.todo.core.ResourceDescriptor;
+import cz.cvut.felk.rest.todo.api.ErrorException;
+import cz.cvut.felk.rest.todo.api.ResourceDescriptor;
+import cz.cvut.felk.rest.todo.api.http.HttpServlet;
 import cz.cvut.felk.rest.todo.dao.TodoListDao;
 import cz.cvut.felk.rest.todo.dao.TodoListInMemoryDao;
-import cz.cvut.felk.rest.todo.http.ErrorException;
-import cz.cvut.felk.rest.todo.http.servlet.HttpServlet;
 import cz.cvut.felk.rest.todo.resource.TodoListResource;
 import cz.cvut.felk.rest.todo.resource.TodoResource;
 
@@ -45,7 +45,6 @@ public class TodoAppServlet extends HttpServlet {
 		if (uri == null) {
 			return null;
 		}
-		System.out.println(":: " + uri);
 		
 		if (URL_ITEM.equals(uri)) {
 			return new TodoListResource(todoListDao);	
@@ -59,28 +58,7 @@ public class TodoAppServlet extends HttpServlet {
 	@Override
 	protected void handleError(ErrorException ex, HttpServletResponse httpResponse) {
 		httpResponse.setStatus(ex.getStatusCode());
-		
-		log("error", ex.getCause());
-		
-//		Writer writer = null;
-//		try {
-//			httpResponse.setContentType("text/plain");
-//			
-//			writer = httpResponse.getWriter();
-//			ex.printStackTrace(new PrintWriter(writer));
-//			
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			
-//		} finally {
-//			if (writer != null) {
-//				try {
-//					writer.close();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
+		log(ex.getMessage(), ex.getCause());		
 	}
 
 }

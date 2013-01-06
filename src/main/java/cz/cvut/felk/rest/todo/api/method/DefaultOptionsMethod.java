@@ -13,30 +13,26 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.method;
+package cz.cvut.felk.rest.todo.api.method;
 
 import java.io.InputStream;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
-
 import cz.cvut.felk.rest.todo.api.ErrorException;
 import cz.cvut.felk.rest.todo.api.Request;
+import cz.cvut.felk.rest.todo.api.ResourceDescriptor;
 import cz.cvut.felk.rest.todo.api.Response;
 import cz.cvut.felk.rest.todo.api.ResponseHolder;
 import cz.cvut.felk.rest.todo.api.content.ContentAdapter;
 import cz.cvut.felk.rest.todo.api.content.ContentDescriptor;
-import cz.cvut.felk.rest.todo.api.method.MethodDescriptor;
-import cz.cvut.felk.rest.todo.dao.TodoListDao;
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 
-public class DeleteTodoItem implements MethodDescriptor<Void, Void> {
+public class DefaultOptionsMethod implements MethodDescriptor<Void, Void> {
 
-	private final TodoListDao dao;
+	private final ResourceDescriptor resource;
 	
-	public DeleteTodoItem(TodoListDao dao) {
+	public DefaultOptionsMethod(ResourceDescriptor resource) {
 		super();
-		this.dao = dao;
+		this.resource = resource;
 	}
 	
 	@Override
@@ -51,17 +47,20 @@ public class DeleteTodoItem implements MethodDescriptor<Void, Void> {
 
 	@Override
 	public Response<Void> invoke(Request<Void> request) throws ErrorException {
-
-
-		ContentDescriptor<TodoItemDto> item = dao.delete(request.getUri());
 		
-		if (item == null) {
-			throw new ErrorException(HttpServletResponse.SC_NOT_FOUND);
-		}
-
+		// Set Allow header - no response content
 		ResponseHolder<Void> response = new ResponseHolder<Void>();
-		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+
+		String allow = Method.OPTIONS.name();
+			
+		if (resource.methods().keySet() != null) {
+			for (Method method : resource.methods().keySet()) {
+				if (!Method.OPTIONS.equals(method)) {
+					allow += ", " + method.name();					
+				}
+			}
+		}
+		response.setMeta(ContentDescriptor.META_ALLOW, allow);
 		return response;
 	}
-
 }

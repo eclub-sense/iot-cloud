@@ -13,20 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.dao;
+package cz.cvut.felk.rest.todo.api.content;
 
-import java.util.Collection;
+import cz.cvut.felk.rest.todo.api.ErrorException;
 
-import cz.cvut.felk.rest.todo.api.content.ContentDescriptor;
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
+public interface ContentAdapter<A, B> {
 
-public interface TodoListDao {
-
-	ContentDescriptor<TodoItemDto> persist(String uri, ContentDescriptor<TodoItemDto> content);
-	
-	ContentDescriptor<TodoItemDto> read(String uri);
-	
-	ContentDescriptor<TodoItemDto> delete(String uri);
-	
-	Collection<String> list();
+	B transform(A in) throws ErrorException;
 }

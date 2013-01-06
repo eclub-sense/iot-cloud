@@ -15,9 +15,14 @@
  */
 package cz.cvut.felk.rest.todo.dto;
 
+import com.google.gson.annotations.SerializedName;
+
 public class TodoListItemDto extends TodoItemDto {
 
+	@SerializedName("@uri")
 	private String uri;
+	
+	@SerializedName("@last-modified")
 	private String lastModified;
 
 	public String getUri() {

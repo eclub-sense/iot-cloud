@@ -17,7 +17,6 @@ package cz.cvut.felk.rest.todo.method;
 
 import java.io.InputStream;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,14 +38,14 @@ import cz.cvut.felk.rest.todo.json.JsonDeserializer;
 import cz.cvut.felk.rest.todo.json.JsonMediaType;
 import cz.cvut.felk.rest.todo.json.JsonSerializer;
 
-public class CreateTodoItem implements MethodDescriptor<TodoItemDto, TodoItemDto> {
+public class UpdateTodoItem implements MethodDescriptor<TodoItemDto, TodoItemDto> {
 
 	private Map<String, ContentAdapter<InputStream, TodoItemDto>> consumes = new HashMap<String, ContentAdapter<InputStream,TodoItemDto>>();
 	private Map<String, ContentAdapter<TodoItemDto, InputStream>> produces = new HashMap<String, ContentAdapter<TodoItemDto,InputStream>>();
 	
 	private final TodoListDao dao;
 	
-	public CreateTodoItem(TodoListDao dao) {
+	public UpdateTodoItem(TodoListDao dao) {
 		super();
 		this.dao = dao;
 		
@@ -72,10 +71,16 @@ public class CreateTodoItem implements MethodDescriptor<TodoItemDto, TodoItemDto
 
 	@Override
 	public Response<TodoItemDto> invoke(Request<TodoItemDto> request) throws ErrorException {
+
+		if (dao.read(request.getUri()) == null) {
+			throw new ErrorException(HttpServletResponse.SC_NOT_FOUND);
+		}
 		
+
 		if ((request == null) || (request.getContent() == null) || (request.getContent().getBody() == null) || !request.getContent().getBody().validate()) {
 			throw new ErrorException(HttpServletResponse.SC_BAD_REQUEST);
-		}		
+		}
+
 		Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
 		cal.set(Calendar.MILLISECOND, 0);  
 	
@@ -84,8 +89,7 @@ public class CreateTodoItem implements MethodDescriptor<TodoItemDto, TodoItemDto
 		content.setBody(request.getContent().getBody());
 		
 		ResponseHolder<TodoItemDto> response = new ResponseHolder<TodoItemDto>();
-		response.setStatus(HttpServletResponse.SC_CREATED);
-		response.setUri(request.getUri() + Long.toHexString((new Date()).getTime()));
+		response.setUri(request.getUri());
 		response.setContext(request.getContext());
 		response.setContent(content);
 		

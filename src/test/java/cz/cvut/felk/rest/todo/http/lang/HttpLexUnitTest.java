@@ -24,9 +24,9 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
-import cz.cvut.felk.rest.todo.http.lang.HttpLexScanner;
-import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit;
-import cz.cvut.felk.rest.todo.http.lang.HttpLexUnit.Type;
+import cz.cvut.felk.rest.todo.api.http.lang.HttpLexScanner;
+import cz.cvut.felk.rest.todo.api.http.lang.HttpLexUnit;
+import cz.cvut.felk.rest.todo.api.http.lang.HttpLexUnit.Type;
 
 public class HttpLexUnitTest {
 

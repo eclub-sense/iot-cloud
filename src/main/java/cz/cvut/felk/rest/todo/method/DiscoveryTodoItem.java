@@ -22,21 +22,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import cz.cvut.felk.rest.todo.api.ErrorException;
 import cz.cvut.felk.rest.todo.api.Request;
+import cz.cvut.felk.rest.todo.api.ResourceDescriptor;
 import cz.cvut.felk.rest.todo.api.Response;
-import cz.cvut.felk.rest.todo.api.ResponseHolder;
 import cz.cvut.felk.rest.todo.api.content.ContentAdapter;
 import cz.cvut.felk.rest.todo.api.content.ContentDescriptor;
+import cz.cvut.felk.rest.todo.api.method.DefaultOptionsMethod;
 import cz.cvut.felk.rest.todo.api.method.MethodDescriptor;
 import cz.cvut.felk.rest.todo.dao.TodoListDao;
 import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 
-public class DeleteTodoItem implements MethodDescriptor<Void, Void> {
+public class DiscoveryTodoItem extends DefaultOptionsMethod implements MethodDescriptor<Void, Void> {
 
 	private final TodoListDao dao;
 	
-	public DeleteTodoItem(TodoListDao dao) {
-		super();
-		this.dao = dao;
+	public DiscoveryTodoItem(TodoListDao dao, ResourceDescriptor resource) {
+		super(resource);
+		this.dao = dao;		
 	}
 	
 	@Override
@@ -51,17 +52,11 @@ public class DeleteTodoItem implements MethodDescriptor<Void, Void> {
 
 	@Override
 	public Response<Void> invoke(Request<Void> request) throws ErrorException {
-
-
-		ContentDescriptor<TodoItemDto> item = dao.delete(request.getUri());
-		
-		if (item == null) {
-			throw new ErrorException(HttpServletResponse.SC_NOT_FOUND);
+				
+		ContentDescriptor<TodoItemDto> content = dao.read(request.getUri());
+		if (content != null) {
+			return super.invoke(request);
 		}
-
-		ResponseHolder<Void> response = new ResponseHolder<Void>();
-		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-		return response;
+		throw new ErrorException(HttpServletResponse.SC_NOT_FOUND);
 	}
-
 }
