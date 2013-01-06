@@ -24,6 +24,7 @@ import cz.cvut.felk.rest.todo.api.method.Method;
 import cz.cvut.felk.rest.todo.api.method.MethodDescriptor;
 import cz.cvut.felk.rest.todo.dao.TodoListDao;
 import cz.cvut.felk.rest.todo.method.DeleteTodoItem;
+import cz.cvut.felk.rest.todo.method.ReadMetaTodoItem;
 import cz.cvut.felk.rest.todo.method.ReadTodoItem;
 import cz.cvut.felk.rest.todo.method.UpdateTodoItem;
 
@@ -36,6 +37,7 @@ public class TodoResource implements ResourceDescriptor {
 		methods.put(Method.GET, new ReadTodoItem(dao));
 		methods.put(Method.DELETE, new DeleteTodoItem(dao));
 		methods.put(Method.PUT, new UpdateTodoItem(dao));
+		methods.put(Method.HEAD, new ReadMetaTodoItem(dao));
 		methods.put(Method.OPTIONS, new DefaultOptionsMethod(this));
 	}
 
