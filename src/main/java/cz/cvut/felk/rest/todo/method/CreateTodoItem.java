@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import cz.cvut.felk.rest.todo.core.Request;
 import cz.cvut.felk.rest.todo.core.Response;
 import cz.cvut.felk.rest.todo.core.ResponseHolder;
+import cz.cvut.felk.rest.todo.dao.TodoListDao;
 import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 import cz.cvut.felk.rest.todo.http.ErrorException;
 import cz.cvut.felk.rest.todo.http.content.ContentAdapter;
@@ -43,8 +44,11 @@ public class CreateTodoItem implements MethodDescriptor<TodoItemDto, TodoItemDto
 	private Map<String, ContentAdapter<InputStream, TodoItemDto>> consumes = new HashMap<String, ContentAdapter<InputStream,TodoItemDto>>();
 	private Map<String, ContentAdapter<TodoItemDto, InputStream>> produces = new HashMap<String, ContentAdapter<TodoItemDto,InputStream>>();
 	
-	public CreateTodoItem() {
+	private final TodoListDao dao;
+	
+	public CreateTodoItem(TodoListDao dao) {
 		super();
+		this.dao = dao;
 		
 		JsonDeserializer<TodoItemDto> deserializer = new JsonDeserializer<TodoItemDto>(TodoItemDto.class);
 		JsonSerializer<TodoItemDto> serializer = new JsonSerializer<TodoItemDto>();
@@ -84,8 +88,8 @@ public class CreateTodoItem implements MethodDescriptor<TodoItemDto, TodoItemDto
 		response.setUri(request.getUri() + Long.toHexString((new Date()).getTime()));
 		response.setContext(request.getContext());
 		response.setContent(content);
-//
-//		memcache.put(response.getUri(), content);
+		
+		dao.persist(response.getUri(), content);
 		return response;
 	}
 }

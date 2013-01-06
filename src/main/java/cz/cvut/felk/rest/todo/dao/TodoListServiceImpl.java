@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.service.impl;
+package cz.cvut.felk.rest.todo.dao;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,7 +28,6 @@ import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 import cz.cvut.felk.rest.todo.dto.TodoListItemDto;
 import cz.cvut.felk.rest.todo.http.ErrorException;
 import cz.cvut.felk.rest.todo.http.content.ContentDescriptor;
-import cz.cvut.felk.rest.todo.service.TodoListService;
 
 public class TodoListServiceImpl implements TodoListService {
 

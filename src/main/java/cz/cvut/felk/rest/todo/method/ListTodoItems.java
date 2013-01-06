@@ -24,6 +24,7 @@ import java.util.Map;
 import cz.cvut.felk.rest.todo.core.Request;
 import cz.cvut.felk.rest.todo.core.Response;
 import cz.cvut.felk.rest.todo.core.ResponseHolder;
+import cz.cvut.felk.rest.todo.dao.TodoListDao;
 import cz.cvut.felk.rest.todo.dto.TodoListItemDto;
 import cz.cvut.felk.rest.todo.http.ErrorException;
 import cz.cvut.felk.rest.todo.http.content.ContentAdapter;
@@ -35,12 +36,15 @@ public class ListTodoItems implements MethodDescriptor<Void, TodoListItemDto[]> 
 
 	private Map<String, ContentAdapter<TodoListItemDto[], InputStream>> produces = new HashMap<String, ContentAdapter<TodoListItemDto[],InputStream>>();
 	
-	public ListTodoItems() {
+	private final TodoListDao dao;
+	
+	public ListTodoItems(TodoListDao dao) {
 		super();
+		this.dao = dao;
 		
 		JsonSerializer<TodoListItemDto[]> serializer = new JsonSerializer<TodoListItemDto[]>();
 		
-	//	produces.put(JsonMediaType.ITEMS, serializer);
+		produces.put(JsonMediaType.LIST, serializer);
 		produces.put(JsonMediaType.COMMON, serializer);
 	}
 
@@ -59,7 +63,7 @@ public class ListTodoItems implements MethodDescriptor<Void, TodoListItemDto[]> 
 		
 		List<TodoListItemDto> items = new ArrayList<TodoListItemDto>();
 		
-//		for (ContentDescriptor<TodoItemDto> item : memcache.values()) {
+//		for (ContentDescriptor<TodoListItemDto> item : dao.list()) {
 //			TodoListItemDto listItem = new TodoListItemDto();
 //			listItem.setDescription(item.getBody().getDescription());
 //			listItem.setLastModified(((Date)item.getMeta(ContentDescriptor.META_LAST_MODIFIED)).toGMTString());

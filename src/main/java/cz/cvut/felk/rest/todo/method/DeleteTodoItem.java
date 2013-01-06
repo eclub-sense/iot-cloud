@@ -18,14 +18,29 @@ package cz.cvut.felk.rest.todo.method;
 import java.io.InputStream;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import cz.cvut.felk.rest.todo.core.Request;
 import cz.cvut.felk.rest.todo.core.Response;
+import cz.cvut.felk.rest.todo.core.ResponseHolder;
+import cz.cvut.felk.rest.todo.dao.TodoListDao;
+import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 import cz.cvut.felk.rest.todo.http.ErrorException;
 import cz.cvut.felk.rest.todo.http.content.ContentAdapter;
+import cz.cvut.felk.rest.todo.http.content.ContentDescriptor;
 import cz.cvut.felk.rest.todo.http.method.MethodDescriptor;
+import cz.cvut.felk.rest.todo.http.servlet.HttpRequest;
+import cz.cvut.felk.rest.todo.http.servlet.HttpResponse;
 
 public class DeleteTodoItem implements MethodDescriptor<Void, Void> {
 
+	private final TodoListDao dao;
+	
+	public DeleteTodoItem(TodoListDao dao) {
+		super();
+		this.dao = dao;
+	}
+	
 	@Override
 	public Map<String, ContentAdapter<InputStream, Void>> consumes() {
 		return null;
@@ -39,15 +54,16 @@ public class DeleteTodoItem implements MethodDescriptor<Void, Void> {
 	@Override
 	public Response<Void> invoke(Request<Void> request) throws ErrorException {
 
-//		ContentDescriptor<TodoItemDto> item = memcache.get(content.getUri());
-		
-//		if (item != null) {
-//			if (memcache.remove(content.getUri(), item)) {
-//				return item;
-//			}
-//		}
 
-		return null;
+		ContentDescriptor<TodoItemDto> item = dao.delete(request.getUri());
+		
+		if (item == null) {
+			throw new ErrorException(HttpServletResponse.SC_NOT_FOUND);
+		}
+
+		ResponseHolder<Void> response = new ResponseHolder<Void>();
+		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+		return response;
 	}
 
 }

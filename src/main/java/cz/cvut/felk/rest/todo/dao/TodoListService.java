@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.service;
+package cz.cvut.felk.rest.todo.dao;
 
 import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 import cz.cvut.felk.rest.todo.dto.TodoListItemDto;

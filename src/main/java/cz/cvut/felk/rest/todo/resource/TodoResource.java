@@ -7,21 +7,23 @@ import cz.cvut.felk.rest.todo.core.ResourceDescriptor;
 import cz.cvut.felk.rest.todo.dao.TodoListDao;
 import cz.cvut.felk.rest.todo.http.method.Method;
 import cz.cvut.felk.rest.todo.http.method.MethodDescriptor;
-import cz.cvut.felk.rest.todo.method.CreateTodoItem;
-import cz.cvut.felk.rest.todo.method.ListTodoItems;
+import cz.cvut.felk.rest.todo.method.DeleteTodoItem;
 
-public class TodoListResource implements ResourceDescriptor {
+public class TodoResource implements ResourceDescriptor {
 
 	private final Map<Method, MethodDescriptor<?, ?>> methods = new ConcurrentHashMap<Method, MethodDescriptor<?, ?>>();
-
-	public TodoListResource(TodoListDao dao) {
-		super();
-		methods.put(Method.POST, new CreateTodoItem(dao));
-		methods.put(Method.GET, new ListTodoItems(dao));
-	}
 	
+	private final TodoListDao dao;
+
+	public TodoResource(TodoListDao dao) {
+		super();
+		this.dao = dao;
+		methods.put(Method.DELETE, new DeleteTodoItem(dao));
+	}
+
 	@Override
 	public Map<Method, MethodDescriptor<?, ?>> methods() {
 		return methods;
 	}
+
 }

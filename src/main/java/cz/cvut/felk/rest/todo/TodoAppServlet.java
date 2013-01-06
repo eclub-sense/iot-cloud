@@ -15,20 +15,45 @@
  */
 package cz.cvut.felk.rest.todo;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import cz.cvut.felk.rest.todo.core.ResourceDescriptor;
+import cz.cvut.felk.rest.todo.dao.TodoListDao;
+import cz.cvut.felk.rest.todo.dao.TodoListInMemoryDao;
 import cz.cvut.felk.rest.todo.http.ErrorException;
 import cz.cvut.felk.rest.todo.http.servlet.HttpServlet;
 import cz.cvut.felk.rest.todo.resource.TodoListResource;
+import cz.cvut.felk.rest.todo.resource.TodoResource;
 
 public class TodoAppServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -5803664054963878143L;
 
+	protected static final String URL_ITEM = "/item/";
+	
+	private TodoListDao todoListDao;
+	
+	@Override
+	public void init() throws ServletException {
+		super.init();
+		this.todoListDao = new TodoListInMemoryDao();
+	}
+	
 	@Override
 	protected ResourceDescriptor resolve(String uri) {
-		return new TodoListResource();
+		if (uri == null) {
+			return null;
+		}
+		System.out.println(":: " + uri);
+		
+		if (URL_ITEM.equals(uri)) {
+			return new TodoListResource(todoListDao);	
+		}
+		if (uri.startsWith(URL_ITEM)) {
+			return new TodoResource(todoListDao);
+		}
+		return null;
 	}
 
 	@Override

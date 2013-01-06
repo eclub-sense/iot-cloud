@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cz.cvut.felk.rest</groupId>
 	<artifactId>via-todo-api-example</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>Simple TODO list - REST API Example</name>
   
   	<packaging>war</packaging>

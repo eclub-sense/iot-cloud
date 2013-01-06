@@ -22,12 +22,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cz.cvut.felk.rest.todo.dao.TodoListService;
+import cz.cvut.felk.rest.todo.dao.TodoListServiceImpl;
 import cz.cvut.felk.rest.todo.http.ErrorException;
 import cz.cvut.felk.rest.todo.http.content.ContentDescriptor;
 import cz.cvut.felk.rest.todo.http.servlet.HttpRequest;
 import cz.cvut.felk.rest.todo.http.servlet.HttpResponse;
 import cz.cvut.felk.rest.todo.service.ServiceAdapter;
-import cz.cvut.felk.rest.todo.service.TodoListService;
 
 public class ServiceAdapterImpl implements ServiceAdapter {
 	
