@@ -13,31 +13,28 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.method;
+package org.sprintapi.api.method;
 
 import java.io.InputStream;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.sprintapi.api.ErrorException;
 import org.sprintapi.api.Request;
+import org.sprintapi.api.ResourceDescriptor;
 import org.sprintapi.api.Response;
 import org.sprintapi.api.ResponseHolder;
 import org.sprintapi.api.content.ContentAdapter;
 import org.sprintapi.api.content.ContentDescriptor;
-import org.sprintapi.api.method.MethodDescriptor;
+import org.sprintapi.api.content.ContentHolder;
 
-import cz.cvut.felk.rest.todo.dao.TodoListDao;
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 
-public class DeleteTodoItem implements MethodDescriptor<Void, Void> {
+public class DefaultOptionsMethod implements MethodDescriptor<Void, Void> {
 
-	private final TodoListDao dao;
+	private final ResourceDescriptor resource;
 	
-	public DeleteTodoItem(TodoListDao dao) {
+	public DefaultOptionsMethod(ResourceDescriptor resource) {
 		super();
-		this.dao = dao;
+		this.resource = resource;
 	}
 	
 	@Override
@@ -52,17 +49,25 @@ public class DeleteTodoItem implements MethodDescriptor<Void, Void> {
 
 	@Override
 	public Response<Void> invoke(Request<Void> request) throws ErrorException {
-
-
-		ContentDescriptor<TodoItemDto> item = dao.delete(request.getUri());
 		
-		if (item == null) {
-			throw new ErrorException(request.getUri(), HttpServletResponse.SC_NOT_FOUND);
-		}
-
+		// Set Allow header - no response content
 		ResponseHolder<Void> response = new ResponseHolder<Void>();
-		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+
+		String allow = Method.OPTIONS.name();
+			
+		if (resource.methods().keySet() != null) {
+			for (Method method : resource.methods().keySet()) {
+				if (!Method.OPTIONS.equals(method)) {
+					allow += ", " + method.name();					
+				}
+			}
+		}
+		ContentHolder<Void> content = new ContentHolder<Void>();
+		content.setMeta(ContentDescriptor.META_ALLOW, allow);
+		
+		response.setContent(content);
+		response.setUri(request.getUri());
+		
 		return response;
 	}
-
 }

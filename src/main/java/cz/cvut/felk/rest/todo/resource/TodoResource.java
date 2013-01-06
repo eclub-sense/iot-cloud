@@ -18,10 +18,11 @@ package cz.cvut.felk.rest.todo.resource;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import cz.cvut.felk.rest.todo.api.ResourceDescriptor;
-import cz.cvut.felk.rest.todo.api.method.DefaultOptionsMethod;
-import cz.cvut.felk.rest.todo.api.method.Method;
-import cz.cvut.felk.rest.todo.api.method.MethodDescriptor;
+import org.sprintapi.api.ResourceDescriptor;
+import org.sprintapi.api.method.DefaultOptionsMethod;
+import org.sprintapi.api.method.Method;
+import org.sprintapi.api.method.MethodDescriptor;
+
 import cz.cvut.felk.rest.todo.dao.TodoListDao;
 import cz.cvut.felk.rest.todo.method.DeleteTodoItem;
 import cz.cvut.felk.rest.todo.method.ReadMetaTodoItem;

@@ -13,21 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.dao;
+package org.sprintapi.api.content;
 
-import java.util.Collection;
+import org.sprintapi.api.ErrorException;
 
-import org.sprintapi.api.content.ContentDescriptor;
+public interface ContentAdapter<A, B> {
 
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
-
-public interface TodoListDao {
-
-	ContentDescriptor<TodoItemDto> persist(String uri, ContentDescriptor<TodoItemDto> content);
-	
-	ContentDescriptor<TodoItemDto> read(String uri);
-	
-	ContentDescriptor<TodoItemDto> delete(String uri);
-	
-	Collection<String> list();
+	B transform(String uri, A in) throws ErrorException;
 }

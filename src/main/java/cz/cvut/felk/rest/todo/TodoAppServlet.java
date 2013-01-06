@@ -18,9 +18,10 @@ package cz.cvut.felk.rest.todo;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import cz.cvut.felk.rest.todo.api.ErrorException;
-import cz.cvut.felk.rest.todo.api.ResourceDescriptor;
-import cz.cvut.felk.rest.todo.api.http.HttpServlet;
+import org.sprintapi.api.ErrorException;
+import org.sprintapi.api.ResourceDescriptor;
+import org.sprintapi.api.http.HttpServlet;
+
 import cz.cvut.felk.rest.todo.dao.TodoListDao;
 import cz.cvut.felk.rest.todo.dao.TodoListInMemoryDao;
 import cz.cvut.felk.rest.todo.resource.TodoListResource;
