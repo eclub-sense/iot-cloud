@@ -59,7 +59,8 @@ public class TodoAppServlet extends HttpServlet {
 	@Override
 	protected void handleError(ErrorException ex, HttpServletResponse httpResponse) {
 		httpResponse.setStatus(ex.getStatusCode());
-		log(ex.getMessage(), ex.getCause());		
+		if (ex.getStatusCode() >= 500) { 
+			log(ex.getMessage(), ex.getCause());
+		}
 	}
-
 }
