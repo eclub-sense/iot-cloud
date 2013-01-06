@@ -37,15 +37,15 @@ public class JsonDeserializer<T> implements ContentAdapter<InputStream, T>{
 	}
 	
 	@Override
-	public T transform(InputStream in) throws ErrorException {
+	public T transform(String uri, InputStream in) throws ErrorException {
 		try {
 		    return (new Gson()).fromJson(new InputStreamReader(in), clazz);
 		    			
 		} catch (JsonSyntaxException e) {
-			throw new ErrorException(HttpServletResponse.SC_BAD_REQUEST, e);
+			throw new ErrorException(uri, HttpServletResponse.SC_BAD_REQUEST, e);
 			
 		} catch (JsonIOException e) {
-			throw new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);			
+			throw new ErrorException(uri, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);			
 		}
 	}
 }

@@ -15,9 +15,6 @@
  */
 package cz.cvut.felk.rest.todo.api;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import cz.cvut.felk.rest.todo.api.content.ContentDescriptor;
 
 public class ResponseHolder<T> implements Response<T> {
@@ -26,22 +23,9 @@ public class ResponseHolder<T> implements Response<T> {
 	private String contextUrl;
 	
 	private ContentDescriptor<T> content;
-	private Map<String, Object> metas = new HashMap<String, Object>();
 	
 	private int status;
 	
-	public Object getMeta(String name) {
-		return metas.get(name);
-	}
-
-	public void setMeta(String name, Object value) {
-		metas.put(name, value);
-	}
-
-	public String[] getMetaNames() {
-		return metas.keySet().toArray(new String[0]);
-	}
-
 	public String getUri() {
 		return url;
 	}

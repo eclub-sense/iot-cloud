@@ -25,6 +25,7 @@ import cz.cvut.felk.rest.todo.api.Response;
 import cz.cvut.felk.rest.todo.api.ResponseHolder;
 import cz.cvut.felk.rest.todo.api.content.ContentAdapter;
 import cz.cvut.felk.rest.todo.api.content.ContentDescriptor;
+import cz.cvut.felk.rest.todo.api.content.ContentHolder;
 
 public class DefaultOptionsMethod implements MethodDescriptor<Void, Void> {
 
@@ -60,7 +61,12 @@ public class DefaultOptionsMethod implements MethodDescriptor<Void, Void> {
 				}
 			}
 		}
-		response.setMeta(ContentDescriptor.META_ALLOW, allow);
+		ContentHolder<Void> content = new ContentHolder<Void>();
+		content.setMeta(ContentDescriptor.META_ALLOW, allow);
+		
+		response.setContent(content);
+		response.setUri(request.getUri());
+		
 		return response;
 	}
 }

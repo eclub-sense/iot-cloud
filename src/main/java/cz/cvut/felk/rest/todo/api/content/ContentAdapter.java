@@ -19,5 +19,5 @@ import cz.cvut.felk.rest.todo.api.ErrorException;
 
 public interface ContentAdapter<A, B> {
 
-	B transform(A in) throws ErrorException;
+	B transform(String uri, A in) throws ErrorException;
 }

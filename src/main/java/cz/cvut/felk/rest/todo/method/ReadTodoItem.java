@@ -69,12 +69,14 @@ public class ReadTodoItem implements MethodDescriptor<Void, TodoItemDto> {
 			ResponseHolder<TodoItemDto> response = new ResponseHolder<TodoItemDto>();
 			response.setContent(content);
 
-			Date ifModifiedSince = (Date) request.getContent().getMeta(ContentDescriptor.META_IF_MODIFIED_SINCE);
-			Date lastModified = (Date) content.getMeta(ContentDescriptor.META_LAST_MODIFIED);
+			if (request.getContent() != null) {
+				Date ifModifiedSince = (Date) request.getContent().getMeta(ContentDescriptor.META_IF_MODIFIED_SINCE);
+				Date lastModified = (Date) content.getMeta(ContentDescriptor.META_LAST_MODIFIED);
 			
-			if ((ifModifiedSince != null) && (ifModifiedSince.equals(lastModified) || lastModified.before(ifModifiedSince))) {
-				response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-				return response;
+				if ((ifModifiedSince != null) && (ifModifiedSince.equals(lastModified) || lastModified.before(ifModifiedSince))) {
+					response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+					return response;
+				}
 			}
 			return response;
 		}

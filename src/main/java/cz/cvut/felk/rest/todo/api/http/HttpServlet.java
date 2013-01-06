@@ -138,7 +138,7 @@ public abstract class HttpServlet extends GenericServlet {
 		
 		if (inputContentAdapter != null) {
 			ContentHolder<Object> lc = new ContentHolder<Object>();
-			lc.setBody(inputContentAdapter.transform(httpRequest.getInputStream()));
+			lc.setBody(inputContentAdapter.transform(request.getUri(), httpRequest.getInputStream()));
 			request.setContent(lc);
 		}
 		
@@ -182,7 +182,7 @@ public abstract class HttpServlet extends GenericServlet {
 		// Write response body
 		if (outputContentAdapter != null) {
 			httpResponse.setHeader(ContentDescriptor.META_CONTENT_TYPE, responseContentType);
-			InputStream is =  ((ContentAdapter<Object, InputStream>)outputContentAdapter).transform(response.getContent().getBody());
+			InputStream is =  ((ContentAdapter<Object, InputStream>)outputContentAdapter).transform(request.getUri(), response.getContent().getBody());
 			if (is != null) {
 				CopyUtils.copy(is, httpResponse.getOutputStream());
 			}
@@ -212,7 +212,7 @@ public abstract class HttpServlet extends GenericServlet {
 			throw new ServletException(e);
 		} catch (Exception e) {
 			if (nativeHttpResponse != null) {
-				handleError(new ErrorException(servletRequest.getRemoteAddr(), HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e), nativeHttpResponse);
+				handleError(new ErrorException(getUri(nativeHttpRequest), HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e), nativeHttpResponse);
 				return;
 			} 
 			throw new ServletException(e);			
@@ -222,6 +222,9 @@ public abstract class HttpServlet extends GenericServlet {
 	protected abstract void handleError(ErrorException ex, HttpServletResponse httpResponse);
 	
 	protected static String getUri(final HttpServletRequest httpRequest) {
+		if (httpRequest == null) {
+			return null;
+		}
 		final String context = httpRequest.getContextPath();
 
 		return (context != null) 

@@ -26,7 +26,7 @@ import cz.cvut.felk.rest.todo.api.content.ContentAdapter;
 public class JsonSerializer<T> implements ContentAdapter<T, InputStream>{
 
 	@Override
-	public InputStream transform(T in) throws ErrorException {
+	public InputStream transform(String uri, T in) throws ErrorException {
 		return new ByteArrayInputStream((new Gson()).toJson(in).getBytes());
 	}
 }
