@@ -2,11 +2,38 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cz.cvut.felk.rest</groupId>
 	<artifactId>via-todo-api-example</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>Simple TODO list - REST API Example</name>
   
   	<packaging>war</packaging>
   
+	
+	<!--  License -->
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<distribution>repo</distribution>
+		</license>
+    </licenses>
+
+    <inceptionYear>2012</inceptionYear>
+	
+    <!-- SCM -->
+    <scm>
+		<url>git@github.com:filip26/VIATodoListApiExample.git</url>
+        <connection>scm:git:git@github.com:filip26/VIATodoListApiExample.git</connection>
+        <developerConnection>scm:git:git@github.com:filip26/VIATodoListApiExample.git</developerConnection>
+      	<tag>HEAD</tag>
+  	</scm>
+  	
+    <!-- Bugs -->
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/filip26/VIATodoListApiExample/issues</url>
+    </issueManagement>
+  		
+    <!-- Build -->
 	<build>
 		<!-- Generate compiled stuff in the folder used for development mode -->
 		<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
@@ -33,6 +60,8 @@
                 	<scanIntervalSeconds>10</scanIntervalSeconds>
                 	<stopKey>foo</stopKey>
                 	<stopPort>9999</stopPort>
+                	<!-- Configure the webapp -->
+                	<contextPath>/todo</contextPath>
         		</configuration>
         		<executions>
                 	<execution>
@@ -58,6 +87,26 @@
                 	</execution>
         		</executions>
 			</plugin>
+			
+			<!-- License -->
+			<plugin>
+                <groupId>com.google.code.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.4.0</version>
+                <configuration>
+                    <header>src/license/header.txt</header>
+                    <includes>
+                        <include>src/**/*.java</include>
+                    </includes>
+                    <properties>
+                        <year>${project.inceptionYear}</year>
+                    </properties>
+                    <encoding>UTF-8</encoding>
+                    <headerDefinitions>
+                        <headerDefinition>src/license/header-definition.xml</headerDefinition>
+                    </headerDefinitions>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
   	
@@ -84,6 +133,20 @@
       		<version>2.2.2</version>
       		<scope>compile</scope>
     	</dependency>
-	</dependencies>
-	
+    	
+		<dependency>
+        	<groupId>commons-io</groupId>
+        	<artifactId>commons-io</artifactId>
+        	<version>1.0</version>
+        	<scope>compile</scope>
+      	</dependency>
+      	
+		<!-- Tests -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>    
 </project>

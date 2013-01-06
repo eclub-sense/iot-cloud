@@ -13,32 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.dto;
+package cz.cvut.felk.rest.todo.json;
 
-public class TodoItemDto implements Validator {
-
-	public enum State { New, WorkInProgress, Closed};
+public class JsonMediaType {
 	
-	private String description;
-	private State state;
-	
-	public boolean validate() {
-		return (state != null) && (description != null);
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
-	}
+	public static final String LIST = "application/vnd.todo.list+json";
+	public static final String ITEM = "application/vnd.todo.item+json";
+	public static final String COMMON = "application/json";
 }

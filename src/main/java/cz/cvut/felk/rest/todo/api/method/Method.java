@@ -13,32 +13,31 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.dto;
+package cz.cvut.felk.rest.todo.api.method;
 
-public class TodoItemDto implements Validator {
 
-	public enum State { New, WorkInProgress, Closed};
+public enum Method {
+
+	GET(false, true),
+	POST(true, true),
+	PUT(true, true),
+	DELETE(false, false),
+	HEAD(false, false),
+	OPTIONS(false, false);
 	
-	private String description;
-	private State state;
+	private final boolean requestBody;
+	private final boolean responseBody;
 	
-	public boolean validate() {
-		return (state != null) && (description != null);
+	Method(boolean requestBody, boolean responseBody) {
+		this.requestBody = requestBody;
+		this.responseBody = responseBody;
+	}
+	
+	public boolean isRequestBody() {
+		return requestBody;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
+	public boolean isResponseBody() {
+		return responseBody;
 	}
 }

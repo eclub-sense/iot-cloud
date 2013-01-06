@@ -13,32 +13,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.dto;
+package cz.cvut.felk.rest.todo.dao;
 
-public class TodoItemDto implements Validator {
+import java.util.Collection;
 
-	public enum State { New, WorkInProgress, Closed};
+import cz.cvut.felk.rest.todo.api.content.ContentDescriptor;
+import cz.cvut.felk.rest.todo.dto.TodoItemDto;
+
+public interface TodoListDao {
+
+	ContentDescriptor<TodoItemDto> persist(String uri, ContentDescriptor<TodoItemDto> content);
 	
-	private String description;
-	private State state;
+	ContentDescriptor<TodoItemDto> read(String uri);
 	
-	public boolean validate() {
-		return (state != null) && (description != null);
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
-	}
+	ContentDescriptor<TodoItemDto> delete(String uri);
+	
+	Collection<String> list();
 }

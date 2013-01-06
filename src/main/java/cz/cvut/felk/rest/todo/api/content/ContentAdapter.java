@@ -13,32 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.dto;
+package cz.cvut.felk.rest.todo.api.content;
 
-public class TodoItemDto implements Validator {
+import cz.cvut.felk.rest.todo.api.ErrorException;
 
-	public enum State { New, WorkInProgress, Closed};
-	
-	private String description;
-	private State state;
-	
-	public boolean validate() {
-		return (state != null) && (description != null);
-	}
+public interface ContentAdapter<A, B> {
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
-	}
+	B transform(String uri, A in) throws ErrorException;
 }

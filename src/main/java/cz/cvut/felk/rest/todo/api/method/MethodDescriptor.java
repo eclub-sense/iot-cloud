@@ -13,32 +13,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.dto;
+package cz.cvut.felk.rest.todo.api.method;
 
-public class TodoItemDto implements Validator {
+import java.io.InputStream;
+import java.util.Map;
 
-	public enum State { New, WorkInProgress, Closed};
+import cz.cvut.felk.rest.todo.api.ErrorException;
+import cz.cvut.felk.rest.todo.api.Request;
+import cz.cvut.felk.rest.todo.api.Response;
+import cz.cvut.felk.rest.todo.api.content.ContentAdapter;
+
+public interface MethodDescriptor<I, O> {
+
+	Map<String, ContentAdapter<InputStream, I>> consumes();
+	Map<String, ContentAdapter<O, InputStream>> produces();
 	
-	private String description;
-	private State state;
-	
-	public boolean validate() {
-		return (state != null) && (description != null);
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
-	}
+	Response<O> invoke(Request<I> request) throws ErrorException;
 }

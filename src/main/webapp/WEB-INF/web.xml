@@ -15,7 +15,7 @@
 	
   	<servlet>
 	    <servlet-name>todo-api</servlet-name>
-        <servlet-class>cz.cvut.felk.rest.todo.servlet.TodoAppServlet</servlet-class>
+        <servlet-class>cz.cvut.felk.rest.todo.TodoAppServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
   	</servlet>
  

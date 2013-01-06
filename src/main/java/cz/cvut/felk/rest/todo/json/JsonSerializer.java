@@ -13,32 +13,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.dto;
+package cz.cvut.felk.rest.todo.json;
 
-public class TodoItemDto implements Validator {
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
-	public enum State { New, WorkInProgress, Closed};
-	
-	private String description;
-	private State state;
-	
-	public boolean validate() {
-		return (state != null) && (description != null);
-	}
+import com.google.gson.Gson;
 
-	public String getDescription() {
-		return description;
-	}
+import cz.cvut.felk.rest.todo.api.ErrorException;
+import cz.cvut.felk.rest.todo.api.content.ContentAdapter;
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+public class JsonSerializer<T> implements ContentAdapter<T, InputStream>{
 
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
+	@Override
+	public InputStream transform(String uri, T in) throws ErrorException {
+		return new ByteArrayInputStream((new Gson()).toJson(in).getBytes());
 	}
 }
