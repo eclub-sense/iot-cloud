@@ -59,23 +59,23 @@ public abstract class HttpServlet extends GenericServlet {
 		
 		// Does the requested resource exist?
 		if (resourceDsc == null) {	
-			throw new ErrorException(HttpServletResponse.SC_NOT_FOUND);
+			throw new ErrorException(request.getUri(), HttpServletResponse.SC_NOT_FOUND);
 		}
 		
 		// Is requested method supported?
 		if (httpRequest.getMethod() == null) {
-			throw new ErrorException(HttpServletResponse.SC_BAD_REQUEST);
+			throw new ErrorException(request.getUri(), HttpServletResponse.SC_BAD_REQUEST);
 		}
 			
 		try {
 			request.setMethod(Method.valueOf(httpRequest.getMethod().toUpperCase(Locale.US)));
 			
 		} catch (IllegalArgumentException ex) {
-			throw new ErrorException(HttpServletResponse.SC_NOT_IMPLEMENTED);			
+			throw new ErrorException(request.getUri(), HttpServletResponse.SC_NOT_IMPLEMENTED);			
 		}
 		
 		if (request.getMethod() == null) {
-			throw new ErrorException(HttpServletResponse.SC_NOT_IMPLEMENTED);
+			throw new ErrorException(request.getUri(), HttpServletResponse.SC_NOT_IMPLEMENTED);
 		}
 
 		// Get supported methods for requested resource
@@ -86,7 +86,7 @@ public abstract class HttpServlet extends GenericServlet {
 
 		// Is requested method supported?
 		if ((methodDsc == null)) {
-			throw new ErrorException(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+			throw new ErrorException(request.getUri(), HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 		}
 
 		ContentAdapter<InputStream, ?> inputContentAdapter = null;
@@ -97,12 +97,12 @@ public abstract class HttpServlet extends GenericServlet {
 			
 			inputContentAdapter = (methodDsc.consumes() != null) ? methodDsc.consumes().get(requestContentType) : null;
 			if (inputContentAdapter == null) {
-				throw new ErrorException(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);		
+				throw new ErrorException(request.getUri(), HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);		
 			}
 			
 		} else if (httpRequest.getContentLength() > 0){
 			// Unexpected request body
-			throw new ErrorException(HttpServletResponse.SC_BAD_REQUEST);
+			throw new ErrorException(request.getUri(), HttpServletResponse.SC_BAD_REQUEST);
 		}
 		
 		ContentAdapter<?, InputStream> outputContentAdapter = null;
@@ -131,7 +131,7 @@ public abstract class HttpServlet extends GenericServlet {
 					}
 				}
 				if (outputContentAdapter == null) {
-					throw new ErrorException(HttpServletResponse.SC_NOT_ACCEPTABLE);
+					throw new ErrorException(request.getUri(), HttpServletResponse.SC_NOT_ACCEPTABLE);
 				}
 			}
 		}
@@ -146,7 +146,7 @@ public abstract class HttpServlet extends GenericServlet {
 		Response response = methodDsc.invoke((Request) request);
 		
 		if (response == null) {
-			throw new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			throw new ErrorException(request.getUri(), HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 
 		// Write response status
@@ -212,7 +212,7 @@ public abstract class HttpServlet extends GenericServlet {
 			throw new ServletException(e);
 		} catch (Exception e) {
 			if (nativeHttpResponse != null) {
-				handleError(new ErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e), nativeHttpResponse);
+				handleError(new ErrorException(servletRequest.getRemoteAddr(), HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e), nativeHttpResponse);
 				return;
 			} 
 			throw new ServletException(e);			

@@ -73,12 +73,12 @@ public class UpdateTodoItem implements MethodDescriptor<TodoItemDto, TodoItemDto
 	public Response<TodoItemDto> invoke(Request<TodoItemDto> request) throws ErrorException {
 
 		if (dao.read(request.getUri()) == null) {
-			throw new ErrorException(HttpServletResponse.SC_NOT_FOUND);
+			throw new ErrorException(request.getUri(), HttpServletResponse.SC_NOT_FOUND);
 		}
 		
 
 		if ((request == null) || (request.getContent() == null) || (request.getContent().getBody() == null) || !request.getContent().getBody().validate()) {
-			throw new ErrorException(HttpServletResponse.SC_BAD_REQUEST);
+			throw new ErrorException(request.getUri(), HttpServletResponse.SC_BAD_REQUEST);
 		}
 
 		Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));

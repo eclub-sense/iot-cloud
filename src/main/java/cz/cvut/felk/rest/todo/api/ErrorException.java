@@ -21,14 +21,15 @@ public class ErrorException extends Exception {
 	private static final long serialVersionUID = 1531552972478130773L;
 	
 	private final int statusCode;
+	private final String uri;
 
-	public ErrorException(int statusCode) {
-		super();
-		this.statusCode = statusCode;
+	public ErrorException(String uri, int statusCode) {
+		this(uri, statusCode, null);
 	}
 	
-	public ErrorException(int statusCode, Throwable cause) {
+	public ErrorException(String uri, int statusCode, Throwable cause) {
 		super(cause);
+		this.uri = uri;
 		this.statusCode = statusCode;
 	}
 	
@@ -38,6 +39,6 @@ public class ErrorException extends Exception {
 	
 	@Override
 	public String getMessage() {
-		return "ErrorException (code=" + statusCode + ")" + ((getCause() != null) ? " [" + getCause().getMessage() + "]." : "." );
+		return "ErrorException (code=" + statusCode + ", uri=" + uri + ")" + ((getCause() != null) ? " [" + getCause().getMessage() + "]" : "" );
 	}
 }

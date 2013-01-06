@@ -78,6 +78,6 @@ public class ReadTodoItem implements MethodDescriptor<Void, TodoItemDto> {
 			}
 			return response;
 		}
-		throw new ErrorException(HttpServletResponse.SC_NOT_FOUND);
+		throw new ErrorException(request.getUri(), HttpServletResponse.SC_NOT_FOUND);
 	}
 }

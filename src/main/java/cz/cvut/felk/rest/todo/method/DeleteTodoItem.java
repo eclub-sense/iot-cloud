@@ -56,7 +56,7 @@ public class DeleteTodoItem implements MethodDescriptor<Void, Void> {
 		ContentDescriptor<TodoItemDto> item = dao.delete(request.getUri());
 		
 		if (item == null) {
-			throw new ErrorException(HttpServletResponse.SC_NOT_FOUND);
+			throw new ErrorException(request.getUri(), HttpServletResponse.SC_NOT_FOUND);
 		}
 
 		ResponseHolder<Void> response = new ResponseHolder<Void>();
