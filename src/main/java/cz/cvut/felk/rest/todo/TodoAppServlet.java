@@ -49,7 +49,8 @@ public class TodoAppServlet extends HttpServlet {
 		if (URL_ITEM.equals(uri)) {
 			return new TodoListResource(todoListDao);	
 		}
-		if (uri.startsWith(URL_ITEM)) {
+		 
+		if (todoListDao.read(uri) != null) {
 			return new TodoResource(todoListDao);
 		}
 		return null;

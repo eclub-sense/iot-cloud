@@ -35,4 +35,9 @@ public class ErrorException extends Exception {
 	public int getStatusCode() {
 		return statusCode;
 	}
+	
+	@Override
+	public String getMessage() {
+		return "ErrorException (code=" + statusCode + ")" + ((getCause() != null) ? " [" + getCause().getMessage() + "]." : "." );
+	}
 }
