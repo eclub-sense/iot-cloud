@@ -25,10 +25,10 @@ public class ResponseHolder<T> implements Response<T> {
 	private String url;
 	private String contextUrl;
 	
-	private T body;
+	private ContentDescriptor<T> content;
 	private Map<String, Object> metas = new HashMap<String, Object>();
 	
-	
+	private int status;
 	
 	public Object getMeta(String name) {
 		return metas.get(name);
@@ -36,14 +36,6 @@ public class ResponseHolder<T> implements Response<T> {
 
 	public void setMeta(String name, Object value) {
 		metas.put(name, value);
-	}
-	
-	public T getBody() {
-		return body;
-	}
-	
-	public void setBody(T body) {
-		this.body = body;
 	}
 
 	public String[] getMetaNames() {
@@ -68,13 +60,19 @@ public class ResponseHolder<T> implements Response<T> {
 
 	@Override
 	public int getStatus() {
-		// TODO Auto-generated method stub
-		return 0;
+		return status;
+	}
+	
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	@Override
 	public ContentDescriptor<T> getContent() {
-		// TODO Auto-generated method stub
-		return null;
+		return content;
+	}
+
+	public void setContent(ContentDescriptor<T> content) {
+		this.content = content;
 	}
 }

@@ -49,7 +49,7 @@ public class TodoListServiceImpl implements TodoListService {
 		cal.set(Calendar.MILLISECOND, 0);  
 		
 		item.setMeta(ContentDescriptor.META_LAST_MODIFIED, cal.getTime());
-		item.setBody(content.getBody());
+//		item.setBody(content.getBody());
 		
 //		memcache.put(item.getUri(), item);
 //		

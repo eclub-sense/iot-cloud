@@ -21,27 +21,30 @@ import cz.cvut.felk.rest.todo.http.method.Method;
 public class RequestHolder<T> implements Request<T> {
 
 	private Method method;
+	private String uri;
+	private String context;
+	private ContentDescriptor<T> content; 
 	
 	public RequestHolder(String uri) {
 		super();
+		this.uri = uri;
 	}
 	
 	public void setMethod(Method method) {
 		this.method = method;
 	}
 
-	public void setBody(T body) {
-		
+	public void setContent(ContentDescriptor<T> content) {
+		this.content = content;
 	}
 	
 	public void setUri(String uri) {
-		
+		this.uri = uri;
 	}
 
 	@Override
 	public String getUri() {
-		// TODO Auto-generated method stub
-		return null;
+		return uri;
 	}
 
 	@Override
@@ -51,8 +54,18 @@ public class RequestHolder<T> implements Request<T> {
 
 	@Override
 	public ContentDescriptor<T> getContent() {
-		// TODO Auto-generated method stub
-		return null;
+		return content;
 	}
 
+	@Override
+	public String getContext() {
+		return context;
+	}
+
+	
+	public void setContext(String context) {
+		this.context = context;
+	}
+
+	
 }

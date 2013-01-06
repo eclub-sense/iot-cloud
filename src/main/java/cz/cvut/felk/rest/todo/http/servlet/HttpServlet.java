@@ -17,8 +17,6 @@ package cz.cvut.felk.rest.todo.http.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -40,6 +38,7 @@ import cz.cvut.felk.rest.todo.core.Response;
 import cz.cvut.felk.rest.todo.http.ErrorException;
 import cz.cvut.felk.rest.todo.http.content.ContentAdapter;
 import cz.cvut.felk.rest.todo.http.content.ContentDescriptor;
+import cz.cvut.felk.rest.todo.http.content.ContentHolder;
 import cz.cvut.felk.rest.todo.http.headers.HttpAcceptHeader;
 import cz.cvut.felk.rest.todo.http.headers.HttpDate;
 import cz.cvut.felk.rest.todo.http.method.Method;
@@ -54,6 +53,8 @@ public abstract class HttpServlet extends GenericServlet {
 	protected void doService(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ErrorException, IOException {
 		
 		final RequestHolder<Object> request = new RequestHolder<Object>(HttpRequest.getUri(httpRequest));
+		request.setContext(httpRequest.getContextPath());
+		
 		// Resolve incoming URL and get resource descriptor
 		final ResourceDescriptor resourceDsc = resolve(request.getUri());
 		
@@ -88,7 +89,7 @@ public abstract class HttpServlet extends GenericServlet {
 		if ((methodDsc == null)) {
 
 			// Is it resource discovery request? (HTTP OPTIONS)
-			if (Method.OPTIONS.equals(httpRequest.getMethod()) && (methods != null)) {
+			if (Method.OPTIONS.equals(request.getMethod()) && (methods != null)) {
 				// Set Allow header - no response content
 				setAllowHeader(methods.keySet(), httpResponse);
 				httpResponse.setStatus(HttpServletResponse.SC_OK);
@@ -115,6 +116,8 @@ public abstract class HttpServlet extends GenericServlet {
 		
 		ContentAdapter<?, InputStream> outputContentAdapter = null;
 
+		String responseContentType = null;
+		
 		// Is response body expected?
 		if (request.getMethod().isResponseBody()) {
 			// Check Accept header
@@ -131,6 +134,7 @@ public abstract class HttpServlet extends GenericServlet {
 						int tw = acceptHeader.accept(ct); 
 						if (tw > weight) {
 							weight = tw;
+							responseContentType = ct;
 							outputContentAdapter = (ContentAdapter<?, InputStream>) produces.get(ct);
 						}
 					}
@@ -142,7 +146,9 @@ public abstract class HttpServlet extends GenericServlet {
 		}
 		
 		if (inputContentAdapter != null) {
-			request.setBody(inputContentAdapter.transform(httpRequest.getInputStream()));
+			ContentHolder<Object> lc = new ContentHolder<Object>();
+			lc.setBody(inputContentAdapter.transform(httpRequest.getInputStream()));
+			request.setContent(lc);
 		}
 		
 		// Invoke resource method
@@ -153,9 +159,10 @@ public abstract class HttpServlet extends GenericServlet {
 		}
 
 		// Write response status
-		httpResponse.setStatus((response.getStatus() > 0) ? response.getStatus() : HttpServletResponse.SC_OK);
+		int responseStatus = (response.getStatus() > 0) ? response.getStatus() : HttpServletResponse.SC_OK;
+		httpResponse.setStatus(responseStatus);
 		
-		if (response.getContent() != null) {
+		if (response.getContent() == null) {
 			return;
 		}
 		
@@ -173,16 +180,17 @@ public abstract class HttpServlet extends GenericServlet {
 			}
 		}
 
-		if ((HttpServletResponse.SC_CREATED == httpResponse.getStatus())) {
+		if ((HttpServletResponse.SC_CREATED == responseStatus)) {
 			httpResponse.setHeader(ContentDescriptor.META_LOCATION, response.getContext() + response.getUri());
 		} 
 
-		if ((response.getContent().getBody() == null) || (HttpServletResponse.SC_NOT_MODIFIED == httpResponse.getStatus())) {
+		if ((response.getContent().getBody() == null) || (HttpServletResponse.SC_NOT_MODIFIED == responseStatus)) {
 			return;
 		}
 		
 		// Write response body
 		if (outputContentAdapter != null) {
+			httpResponse.setHeader("Content-Type", responseContentType);
 			InputStream is =  ((ContentAdapter<Object, InputStream>)outputContentAdapter).transform(response.getContent().getBody());
 			if (is != null) {
 				CopyUtils.copy(is, httpResponse.getOutputStream());

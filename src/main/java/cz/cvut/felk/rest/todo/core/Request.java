@@ -22,6 +22,7 @@ import cz.cvut.felk.rest.todo.http.method.Method;
 public interface Request<T> {
 
 	String getUri();
+	String getContext();
 	Method getMethod();
 	
 	ContentDescriptor<T> getContent();

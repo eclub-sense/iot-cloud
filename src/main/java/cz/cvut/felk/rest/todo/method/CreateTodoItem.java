@@ -17,6 +17,7 @@ package cz.cvut.felk.rest.todo.method;
 
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +32,7 @@ import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 import cz.cvut.felk.rest.todo.http.ErrorException;
 import cz.cvut.felk.rest.todo.http.content.ContentAdapter;
 import cz.cvut.felk.rest.todo.http.content.ContentDescriptor;
-import cz.cvut.felk.rest.todo.http.content.LocalContent;
+import cz.cvut.felk.rest.todo.http.content.ContentHolder;
 import cz.cvut.felk.rest.todo.http.method.MethodDescriptor;
 import cz.cvut.felk.rest.todo.json.JsonDeserializer;
 import cz.cvut.felk.rest.todo.json.JsonMediaType;
@@ -74,15 +75,15 @@ public class CreateTodoItem implements MethodDescriptor<TodoItemDto, TodoItemDto
 		Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
 		cal.set(Calendar.MILLISECOND, 0);  
 	
-		LocalContent<TodoItemDto> content = new LocalContent<TodoItemDto>();
+		ContentHolder<TodoItemDto> content = new ContentHolder<TodoItemDto>();
 		content.setMeta(ContentDescriptor.META_LAST_MODIFIED, cal.getTime());
 		content.setBody(request.getContent().getBody());
 		
 		ResponseHolder<TodoItemDto> response = new ResponseHolder<TodoItemDto>();
-//		response.setStatus(HttpServletResponse.SC_CREATED);
-//		response.setUri(request.getUri() + Long.toHexString((new Date()).getTime()));	//FIXME append timestamp!
-//		response.setContext(request.getContext());
-		response.setBody(content.getBody());
+		response.setStatus(HttpServletResponse.SC_CREATED);
+		response.setUri(request.getUri() + Long.toHexString((new Date()).getTime()));
+		response.setContext(request.getContext());
+		response.setContent(content);
 //
 //		memcache.put(response.getUri(), content);
 		return response;

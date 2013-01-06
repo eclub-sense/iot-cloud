@@ -15,35 +15,41 @@
  */
 package cz.cvut.felk.rest.todo.http.content;
 
+import java.util.HashMap;
+import java.util.Map;
 
 
-public class LocalContent<T> implements ContentDescriptor<T> {
 
+public class ContentHolder<T> implements ContentDescriptor<T> {
+
+	private T body;
+	private Map<String, Object> meta;
+	
+	public ContentHolder() {
+		super();
+		this.meta = new HashMap<String, Object>();
+	}
+	
 	@Override
 	public Object getMeta(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return meta.get(name);
 	}
 
 	@Override
 	public T getBody() {
-		// TODO Auto-generated method stub
-		return null;
+		return body;
 	}
 
 	@Override
 	public String[] getMetaNames() {
-		// TODO Auto-generated method stub
-		return null;
+		return meta.keySet().toArray(new String[0]);
 	}
 
 	public void setMeta(String name, Object value) {
-		// TODO Auto-generated method stub
-		
+		meta.put(name, value);
 	}
 
 	public void setBody(T body) {
-		// TODO Auto-generated method stub
-		
+		this.body = body;
 	}
 }
