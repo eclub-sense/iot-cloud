@@ -18,10 +18,11 @@ package cz.cvut.felk.rest.todo.json;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import org.sprintapi.api.ErrorException;
+import org.sprintapi.api.content.ContentAdapter;
+
 import com.google.gson.Gson;
 
-import cz.cvut.felk.rest.todo.api.ErrorException;
-import cz.cvut.felk.rest.todo.api.content.ContentAdapter;
 
 public class JsonSerializer<T> implements ContentAdapter<T, InputStream>{
 

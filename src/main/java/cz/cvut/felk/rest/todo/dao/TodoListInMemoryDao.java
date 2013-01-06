@@ -18,7 +18,8 @@ package cz.cvut.felk.rest.todo.dao;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
-import cz.cvut.felk.rest.todo.api.content.ContentDescriptor;
+import org.sprintapi.api.content.ContentDescriptor;
+
 import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 
 public class TodoListInMemoryDao implements TodoListDao {

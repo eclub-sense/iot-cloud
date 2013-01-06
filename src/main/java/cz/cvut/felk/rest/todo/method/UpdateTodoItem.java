@@ -24,14 +24,15 @@ import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletResponse;
 
-import cz.cvut.felk.rest.todo.api.ErrorException;
-import cz.cvut.felk.rest.todo.api.Request;
-import cz.cvut.felk.rest.todo.api.Response;
-import cz.cvut.felk.rest.todo.api.ResponseHolder;
-import cz.cvut.felk.rest.todo.api.content.ContentAdapter;
-import cz.cvut.felk.rest.todo.api.content.ContentDescriptor;
-import cz.cvut.felk.rest.todo.api.content.ContentHolder;
-import cz.cvut.felk.rest.todo.api.method.MethodDescriptor;
+import org.sprintapi.api.ErrorException;
+import org.sprintapi.api.Request;
+import org.sprintapi.api.Response;
+import org.sprintapi.api.ResponseHolder;
+import org.sprintapi.api.content.ContentAdapter;
+import org.sprintapi.api.content.ContentDescriptor;
+import org.sprintapi.api.content.ContentHolder;
+import org.sprintapi.api.method.MethodDescriptor;
+
 import cz.cvut.felk.rest.todo.dao.TodoListDao;
 import cz.cvut.felk.rest.todo.dto.TodoItemDto;
 import cz.cvut.felk.rest.todo.json.JsonDeserializer;
