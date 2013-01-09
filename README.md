@@ -21,13 +21,13 @@ Intended to be used as an example in VIA course (https://sites.google.com/a/via.
 3.   Setup SCM URL: git@github.com:filip26/VIATodoListApiExample.git and Finish
 
 ## Collaboration Support
-1. Eclipse Package Explorer: Right Click on via-todo-api-example root directory
+1. Eclipse Package Explorer: right click on via-todo-api-example root directory
 2.   Team->Share->Git
 3.   Select 'Use or create repository in parent ...'
 4.   Select project via-todo-api-example and Finish
    
 ## Run Configuration
-1. Eclipse Package Explorer: Right Click on via-todo-api-example root directory
+1. Eclipse Package Explorer: right click on via-todo-api-example root directory
 2.   Run As->Maven Build...
 3.   Goals: jetty:run
 4.   Apply and Run
