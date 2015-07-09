@@ -13,14 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.dao;
+package cz.esc.iot.cloudservice.dao;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.sprintapi.api.content.ContentDescriptor;
 
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
+import cz.esc.iot.cloudservice.dto.TodoItemDto;
 
 public class TodoListInMemoryDao implements TodoListDao {
 

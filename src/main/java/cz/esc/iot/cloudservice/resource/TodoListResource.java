@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.resource;
+package cz.esc.iot.cloudservice.resource;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,28 +23,23 @@ import org.sprintapi.api.method.DefaultOptionsMethod;
 import org.sprintapi.api.method.Method;
 import org.sprintapi.api.method.MethodDescriptor;
 
-import cz.cvut.felk.rest.todo.dao.TodoListDao;
-import cz.cvut.felk.rest.todo.method.DeleteTodoItem;
-import cz.cvut.felk.rest.todo.method.ReadMetaTodoItem;
-import cz.cvut.felk.rest.todo.method.ReadTodoItem;
-import cz.cvut.felk.rest.todo.method.UpdateTodoItem;
+import cz.esc.iot.cloudservice.dao.TodoListDao;
+import cz.esc.iot.cloudservice.method.CreateTodoItem;
+import cz.esc.iot.cloudservice.method.ListTodoItems;
 
-public class TodoResource implements ResourceDescriptor {
+public class TodoListResource implements ResourceDescriptor {
 
 	private final Map<Method, MethodDescriptor<?, ?>> methods = new ConcurrentHashMap<Method, MethodDescriptor<?, ?>>();
-	
-	public TodoResource(TodoListDao dao) {
-		super();
-		methods.put(Method.GET, new ReadTodoItem(dao));
-		methods.put(Method.DELETE, new DeleteTodoItem(dao));
-		methods.put(Method.PUT, new UpdateTodoItem(dao));
-		methods.put(Method.HEAD, new ReadMetaTodoItem(dao));
-		methods.put(Method.OPTIONS, new DefaultOptionsMethod(this));
-	}
 
+	public TodoListResource(TodoListDao dao) {
+		super();
+		methods.put(Method.OPTIONS, new DefaultOptionsMethod(this));
+		methods.put(Method.POST, new CreateTodoItem(dao));
+		methods.put(Method.GET, new ListTodoItems(dao));
+	}
+	
 	@Override
 	public Map<Method, MethodDescriptor<?, ?>> methods() {
 		return methods;
 	}
-
 }

@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.method;
+package cz.esc.iot.cloudservice.method;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -31,11 +31,11 @@ import org.sprintapi.api.content.ContentDescriptor;
 import org.sprintapi.api.content.ContentHolder;
 import org.sprintapi.api.method.MethodDescriptor;
 
-import cz.cvut.felk.rest.todo.dao.TodoListDao;
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
-import cz.cvut.felk.rest.todo.dto.TodoListItemDto;
-import cz.cvut.felk.rest.todo.json.JsonMediaType;
-import cz.cvut.felk.rest.todo.json.JsonSerializer;
+import cz.esc.iot.cloudservice.dao.TodoListDao;
+import cz.esc.iot.cloudservice.dto.TodoItemDto;
+import cz.esc.iot.cloudservice.dto.TodoListItemDto;
+import cz.esc.iot.cloudservice.json.JsonMediaType;
+import cz.esc.iot.cloudservice.json.JsonSerializer;
 
 public class ListTodoItems implements MethodDescriptor<Void, TodoListItemDto[]> {
 

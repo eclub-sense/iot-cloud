@@ -13,21 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.dao;
+package cz.esc.iot.cloudservice.dto;
 
-import java.util.Collection;
+public interface Validator {
 
-import org.sprintapi.api.content.ContentDescriptor;
-
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
-
-public interface TodoListDao {
-
-	ContentDescriptor<TodoItemDto> persist(String uri, ContentDescriptor<TodoItemDto> content);
+	boolean validate();
 	
-	ContentDescriptor<TodoItemDto> read(String uri);
-	
-	ContentDescriptor<TodoItemDto> delete(String uri);
-	
-	Collection<String> list();
 }

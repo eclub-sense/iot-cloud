@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.method;
+package cz.esc.iot.cloudservice.method;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -26,19 +26,18 @@ import org.sprintapi.api.Response;
 import org.sprintapi.api.ResponseHolder;
 import org.sprintapi.api.content.ContentAdapter;
 import org.sprintapi.api.content.ContentDescriptor;
-import org.sprintapi.api.content.ContentHolder;
 import org.sprintapi.api.method.MethodDescriptor;
 
-import cz.cvut.felk.rest.todo.dao.TodoListDao;
-import cz.cvut.felk.rest.todo.dto.TodoItemDto;
+import cz.esc.iot.cloudservice.dao.TodoListDao;
+import cz.esc.iot.cloudservice.dto.TodoItemDto;
 
-public class ReadMetaTodoItem implements MethodDescriptor<Void, Void> {
+public class DeleteTodoItem implements MethodDescriptor<Void, Void> {
 
 	private final TodoListDao dao;
 	
-	public ReadMetaTodoItem(TodoListDao dao) {
+	public DeleteTodoItem(TodoListDao dao) {
 		super();
-		this.dao = dao;		
+		this.dao = dao;
 	}
 	
 	@Override
@@ -53,23 +52,17 @@ public class ReadMetaTodoItem implements MethodDescriptor<Void, Void> {
 
 	@Override
 	public Response<Void> invoke(Request<Void> request) throws ErrorException {
-				
-		ContentDescriptor<TodoItemDto> content = dao.read(request.getUri());
 
-		if (content != null) {
-			ResponseHolder<Void> response = new ResponseHolder<Void>();
-			
-			ContentHolder<Void> meta = new ContentHolder<Void>();
-			if (content.getMetaNames() != null) {
-				for (String key : content.getMetaNames()) {
-					meta.setMeta(key, content.getMeta(key));	
-				}
-			}
-			response.setContent(meta);
-			response.setUri(request.getUri());
-			response.setContext(request.getContext());
-			return response;
+
+		ContentDescriptor<TodoItemDto> item = dao.delete(request.getUri());
+		
+		if (item == null) {
+			throw new ErrorException(request.getUri(), HttpServletResponse.SC_NOT_FOUND);
 		}
-		throw new ErrorException(request.getUri(), HttpServletResponse.SC_NOT_FOUND);
+
+		ResponseHolder<Void> response = new ResponseHolder<Void>();
+		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+		return response;
 	}
+
 }

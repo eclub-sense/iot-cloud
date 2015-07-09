@@ -13,21 +13,32 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.json;
+package cz.esc.iot.cloudservice.dto;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+public class TodoItemDto implements Validator {
 
-import org.sprintapi.api.ErrorException;
-import org.sprintapi.api.content.ContentAdapter;
+	public enum State { New, WorkInProgress, Closed};
+	
+	private String description;
+	private State state;
+	
+	public boolean validate() {
+		return (state != null) && (description != null);
+	}
 
-import com.google.gson.Gson;
+	public String getDescription() {
+		return description;
+	}
 
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-public class JsonSerializer<T> implements ContentAdapter<T, InputStream>{
+	public State getState() {
+		return state;
+	}
 
-	@Override
-	public InputStream transform(String uri, T in) throws ErrorException {
-		return new ByteArrayInputStream((new Gson()).toJson(in).getBytes());
+	public void setState(State state) {
+		this.state = state;
 	}
 }

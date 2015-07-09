@@ -1,123 +1,109 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>cz.cvut.felk.rest</groupId>
-	<artifactId>via-todo-api-example</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
-	<name>Simple TODO list - REST API Example</name>
-  
-  	<packaging>war</packaging>
-  
-	
-	<!--  License -->
+	<groupId>cz.esc.iot.cloudservice</groupId>
+	<artifactId>cloud-service</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Cloud Service</name>
+
+	<packaging>war</packaging>
+
+	<!-- License -->
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
 			<distribution>repo</distribution>
 		</license>
-    </licenses>
+	</licenses>
 
-    <inceptionYear>2012</inceptionYear>
-	
-    <!-- SCM -->
-    <scm>
-		<url>git@github.com:filip26/VIATodoListApiExample.git</url>
-        <connection>scm:git:git@github.com:filip26/VIATodoListApiExample.git</connection>
-        <developerConnection>scm:git:git@github.com:filip26/VIATodoListApiExample.git</developerConnection>
-      	<tag>HEAD</tag>
-  	</scm>
-  	
-    <!-- Bugs -->
-    <issueManagement>
-        <system>github</system>
-        <url>https://github.com/filip26/VIATodoListApiExample/issues</url>
-    </issueManagement>
-  		
-    <!-- Build -->
+	<inceptionYear>2012</inceptionYear>
+
+	<!-- Build -->
 	<build>
 		<!-- Generate compiled stuff in the folder used for development mode -->
 		<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
 
-		<plugins> 
-		    <!--  Compiler -->
+		<plugins>
+			<!-- Compiler -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.4</version>
-				
+
 				<configuration>
-				    <!--  Java 6 -->
-					<source>1.6</source>
-					<target>1.6</target>
+					<!-- Java 6 -->
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
-		    
+
 			<!-- Jetty -->
 			<plugin>
-        		<groupId>org.mortbay.jetty</groupId>
-        		<artifactId>maven-jetty-plugin</artifactId>
-        		<version>6.1.10</version>
-        		<configuration>
-                	<scanIntervalSeconds>10</scanIntervalSeconds>
-                	<stopKey>foo</stopKey>
-                	<stopPort>9999</stopPort>
-                	<!-- Configure the webapp -->
-                	<contextPath>/todo</contextPath>
-        		</configuration>
-        		<executions>
-                	<execution>
-                        <id>start-jetty</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <scanIntervalSeconds>0</scanIntervalSeconds>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.3.0.v20150612</version>
+				<configuration>
+					<scanIntervalSeconds>10</scanIntervalSeconds>
+					<stopKey>foo</stopKey>
+					<stopPort>9999</stopPort>
+					<!-- Configure the webapp -->
+					<contextPath>/todo</contextPath>
+				</configuration>
+				<executions>
+					<execution>
+						<id>start-jetty</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<scanIntervalSeconds>0</scanIntervalSeconds>
 							<daemon>true</daemon>
-                             <webApp>
-      							<contextPath>/todo</contextPath>
-    						</webApp>    
-                        </configuration>
-                	</execution>
-                	<execution>
-                        <id>stop-jetty</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
+							<webApp>
+								<contextPath>/todo</contextPath>
+							</webApp>
+						</configuration>
+					</execution>
+					<execution>
+						<id>stop-jetty</id>
+						<phase>post-integration-test</phase>
+						<goals>
 							<goal>stop</goal>
-                        </goals>
-                	</execution>
-        		</executions>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
-			
+
 			<!-- License -->
 			<plugin>
-                <groupId>com.google.code.maven-license-plugin</groupId>
-                <artifactId>maven-license-plugin</artifactId>
-                <version>1.4.0</version>
-                <configuration>
-                    <header>src/license/header.txt</header>
-                    <includes>
-                        <include>src/**/*.java</include>
-                    </includes>
-                    <properties>
-                        <year>${project.inceptionYear}</year>
-                    </properties>
-                    <encoding>UTF-8</encoding>
-                    <headerDefinitions>
-                        <headerDefinition>src/license/header-definition.xml</headerDefinition>
-                    </headerDefinitions>
-                </configuration>
-            </plugin>
+				<groupId>com.google.code.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>1.4.0</version>
+				<configuration>
+					<header>src/license/header.txt</header>
+					<includes>
+						<include>src/**/*.java</include>
+					</includes>
+					<properties>
+						<year>${project.inceptionYear}</year>
+					</properties>
+					<encoding>UTF-8</encoding>
+					<headerDefinitions>
+						<headerDefinition>src/license/header-definition.xml</headerDefinition>
+					</headerDefinitions>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-  	
+
 	<repositories>
 		<repository>
 			<id>java.net2</id>
-    		<name>Repository hosting the jee6 artifacts</name>
-    		<url>http://download.java.net/maven/2</url>
-  		</repository>
-  	</repositories>    
-      
+			<name>Repository hosting the jee6 artifacts</name>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>javax</groupId>
@@ -125,22 +111,49 @@
 			<version>6.0</version>
 			<scope>provided</scope>
 		</dependency>
-  
-    	<!--  Gson: Java to Json conversion -->
-    	<dependency>
-      		<groupId>com.google.code.gson</groupId>
-      		<artifactId>gson</artifactId>
-      		<version>2.2.2</version>
-      		<scope>compile</scope>
-    	</dependency>
-    	
+
+		<!-- To write basic websockets against -->
 		<dependency>
-        	<groupId>commons-io</groupId>
-        	<artifactId>commons-io</artifactId>
-        	<version>1.0</version>
-        	<scope>compile</scope>
-      	</dependency>
-      	
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>websocket-api</artifactId>
+			<version>9.3.0.v20150612</version>
+		</dependency>
+
+		<!-- To run websockets in embedded server -->
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>websocket-server</artifactId>
+			<version>9.3.0.v20150612</version>
+		</dependency>
+
+		<!-- To run websockets client -->
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>websocket-client</artifactId>
+			<version>9.3.0.v20150612</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>websocket-servlet</artifactId>
+			<version>9.3.0.v20150612</version>
+		</dependency>
+
+		<!-- Gson: Java to Json conversion -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.0</version>
+			<scope>compile</scope>
+		</dependency>
+
 		<!-- Tests -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -148,5 +161,5 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>    
+	</dependencies>
 </project>

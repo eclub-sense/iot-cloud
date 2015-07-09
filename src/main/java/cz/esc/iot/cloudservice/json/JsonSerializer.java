@@ -13,11 +13,21 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package cz.cvut.felk.rest.todo.json;
+package cz.esc.iot.cloudservice.json;
 
-public class JsonMediaType {
-	
-	public static final String LIST = "application/vnd.todo.list+json";
-	public static final String ITEM = "application/vnd.todo.item+json";
-	public static final String COMMON = "application/json";
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import org.sprintapi.api.ErrorException;
+import org.sprintapi.api.content.ContentAdapter;
+
+import com.google.gson.Gson;
+
+
+public class JsonSerializer<T> implements ContentAdapter<T, InputStream>{
+
+	@Override
+	public InputStream transform(String uri, T in) throws ErrorException {
+		return new ByteArrayInputStream((new Gson()).toJson(in).getBytes());
+	}
 }
