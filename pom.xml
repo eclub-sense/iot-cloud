@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cz.esc.iot.cloudservice</groupId>
-	<artifactId>cloud-service</artifactId>
+	<artifactId>iot-cloud</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Cloud Service</name>
 
@@ -19,6 +19,20 @@
 
 	<inceptionYear>2012</inceptionYear>
 
+    <!-- SCM -->
+    <scm>
+		<url>git@github.com:filip26/VIATodoListApiExample.git</url>
+        <connection>scm:git:git@github.com:filip26/VIATodoListApiExample.git</connection>
+        <developerConnection>scm:git:git@github.com:filip26/VIATodoListApiExample.git</developerConnection>
+      	<tag>HEAD</tag>
+  	</scm>
+  	
+    <!-- Bugs -->
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/filip26/VIATodoListApiExample/issues</url>
+    </issueManagement>
+    
 	<!-- Build -->
 	<build>
 		<!-- Generate compiled stuff in the folder used for development mode -->
