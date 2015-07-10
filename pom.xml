@@ -45,7 +45,7 @@
 				<version>2.4</version>
 
 				<configuration>
-					<!-- Java 6 -->
+					<!-- Java 8 -->
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
@@ -61,7 +61,7 @@
 					<stopKey>foo</stopKey>
 					<stopPort>9999</stopPort>
 					<!-- Configure the webapp -->
-					<contextPath>/todo</contextPath>
+					<contextPath>/cloudservice</contextPath>
 				</configuration>
 				<executions>
 					<execution>
@@ -74,7 +74,7 @@
 							<scanIntervalSeconds>0</scanIntervalSeconds>
 							<daemon>true</daemon>
 							<webApp>
-								<contextPath>/todo</contextPath>
+								<contextPath>/cloudservice</contextPath>
 							</webApp>
 						</configuration>
 					</execution>
@@ -116,8 +116,13 @@
 			<name>Repository hosting the jee6 artifacts</name>
 			<url>http://download.java.net/maven/2</url>
 		</repository>
+		<repository>
+	        <id>maven-restlet</id>
+	        <name>Restlet repository</name>
+	        <url>http://maven.restlet.com</url>
+	    </repository>
 	</repositories>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>javax</groupId>
@@ -175,5 +180,30 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+	        <groupId>org.restlet.gae</groupId>
+	        <artifactId>org.restlet</artifactId>
+	        <version>2.2.1</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.restlet.gae</groupId>
+	        <artifactId>org.restlet.ext.servlet</artifactId>
+	        <version>2.2.1</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.restlet.gae</groupId>
+	        <artifactId>org.restlet.ext.json</artifactId>
+	        <version>2.2.1</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.restlet.gae</groupId>
+	        <artifactId>org.restlet.ext.jackson</artifactId>
+	        <version>2.2.0</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>javax.servlet</groupId>
+	        <artifactId>servlet-api</artifactId>
+	        <version>2.5</version>
+	    </dependency>
 	</dependencies>
 </project>

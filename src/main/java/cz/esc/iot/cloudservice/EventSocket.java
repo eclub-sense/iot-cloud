@@ -6,15 +6,15 @@ import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 public class EventSocket extends WebSocketAdapter
 {
 	
-	private Responder responder;
+	//private Responder responder;
 	
     @Override
     public void onWebSocketConnect(Session sess)
     {
         super.onWebSocketConnect(sess);
         System.out.println("Socket Connected: " + sess);
-        responder = new Responder(sess);
-        responder.sendAck("connection");
+        //responder = new Responder(sess);
+        //responder.sendAck("connection");
     }
     
     @Override
@@ -26,7 +26,7 @@ public class EventSocket extends WebSocketAdapter
         	System.out.printf("%X", payload[i]);
         }
         System.out.print('\n');
-        responder.sendAck("binary");
+        //responder.sendAck("binary");
     }
     
     @Override
@@ -34,7 +34,7 @@ public class EventSocket extends WebSocketAdapter
     {
         super.onWebSocketText(message);
         System.out.println("Received TEXT message: " + message);
-        responder.sendAck("text");
+        //responder.sendAck("text");
     }
     
     @Override
@@ -42,7 +42,6 @@ public class EventSocket extends WebSocketAdapter
     {
         super.onWebSocketClose(statusCode,reason);
         System.out.println("Socket Closed: [" + statusCode + "] " + reason);
-        responder.sendAck("close");
     }
     
     @Override
