@@ -13,6 +13,8 @@ public class EventSocket extends WebSocketAdapter
     {
         super.onWebSocketConnect(sess);
         System.out.println("Socket Connected: " + sess);
+
+        System.out.println(sess);
         //responder = new Responder(sess);
         //responder.sendAck("connection");
     }

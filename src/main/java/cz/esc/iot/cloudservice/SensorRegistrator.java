@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.restlet.Request;
 import org.restlet.data.MediaType;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.resource.Get;
