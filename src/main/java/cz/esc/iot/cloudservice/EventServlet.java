@@ -9,6 +9,6 @@ public class EventServlet extends WebSocketServlet
     @Override
     public void configure(WebSocketServletFactory factory)
     {
-        factory.register(EventSocket.class);
+        factory.register(WebSocket.class);
     }
 }

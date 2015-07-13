@@ -1,4 +1,4 @@
-package cz.esc.iot.cloudservice.sensors;
+package cz.esc.iot.cloudservice.resources;
 
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.resource.Get;

@@ -1,4 +1,4 @@
-package cz.esc.iot.cloudservice.sensors;
+package cz.esc.iot.cloudservice.resources;
 
 import java.io.IOException;
 
@@ -12,6 +12,9 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import cz.esc.iot.cloudservice.RestletApplication;
+import cz.esc.iot.cloudservice.sensors.Sensor;
+import cz.esc.iot.cloudservice.sensors.SensorType;
+import cz.esc.iot.cloudservice.sensors.VirtualSensorCreator;
 
 public class SensorRegistrator extends ServerResource {
 
