@@ -1,18 +1,7 @@
 package cz.esc.iot.cloudservice;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.RandomAccessFile;
-import java.nio.CharBuffer;
 
 import org.restlet.Application;
 import org.restlet.Restlet;
@@ -34,7 +23,7 @@ public class RestletApplication extends Application {
 			@Override
 			public void run() {
 				try {
-					System.out.println("a");
+					//System.out.println("init");
 					BufferedReader pipe = new BufferedReader(new FileReader("pipe.fifo"));
 				    String res = pipe.readLine();
 				    System.out.println("RESTLET: " + res);
