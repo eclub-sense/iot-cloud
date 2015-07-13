@@ -25,6 +25,6 @@ public class Sensor {
 	
 	@Override
 	public String toString() {
-		return "Sensor [uuid=" + uuid + ", type=" + type + ", secret=" + secret + "]";
+		return "{\"uuid\" : " + uuid + ", \"type\" : \""+ type + "\", \"secret\" : " + secret + "}";
 	}
 }

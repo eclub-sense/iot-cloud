@@ -19,13 +19,14 @@
     <servlet-name>websocket</servlet-name>
     <url-pattern>/peers/zetta-server</url-pattern>
   </servlet-mapping>
-   <servlet>
+  <servlet>
     <servlet-name>http</servlet-name>
     <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
     <init-param>
   	 <param-name>org.restlet.application</param-name>
   	 <param-value>cz.esc.iot.cloudservice.RestletApplication</param-value>
 	</init-param>
+	<load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>http</servlet-name>

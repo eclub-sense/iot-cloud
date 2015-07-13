@@ -1,10 +1,9 @@
-package cz.esc.iot.cloudservice;
+package cz.esc.iot.cloudservice.sensors;
 
 import java.io.IOException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.Request;
 import org.restlet.data.MediaType;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.resource.Get;
@@ -12,9 +11,7 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import cz.esc.iot.cloudservice.sensors.Sensor;
-import cz.esc.iot.cloudservice.sensors.SensorType;
-import cz.esc.iot.cloudservice.sensors.VirtualSensorCreator;
+import cz.esc.iot.cloudservice.RestletApplication;
 
 public class SensorRegistrator extends ServerResource {
 
@@ -24,9 +21,9 @@ public class SensorRegistrator extends ServerResource {
 	    	try {
 	    		JSONObject json = entity.getJsonObject();
 				Sensor sensor = VirtualSensorCreator.createSensorInstance(json.getInt("uuid"), SensorType.values()[json.getInt("type")-0x41], json.getInt("secret"));
-				System.out.println(sensor);
-				System.out.println(sensor.getClass());
-			} catch (JSONException e) {
+				((RestletApplication)this.getApplication()).registry.add(sensor);
+				//System.out.println(((RestletApplication)this.getApplication()).registry.getList());
+	    	} catch (JSONException e) {
 				e.printStackTrace();
 			}
 	    }
