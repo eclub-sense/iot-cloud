@@ -23,10 +23,10 @@ public class SensorRegistrator extends ServerResource {
 	    if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
 	    	try {
 	    		JSONObject json = entity.getJsonObject();
-				Sensor sensor = VirtualSensorCreator.createSensorInstance(json.getInt("uuid"), SensorType.values()[json.getInt("type")-0x41], json.getInt("secret"));
+				Sensor sensor = VirtualSensorCreator.createSensorInstance(json.getInt("uuid"), SensorType.valueOf(json.getString("type")), json.getInt("secret"));
 				((RestletApplication)this.getApplication()).registry.add(sensor);
 				//System.out.println(((RestletApplication)this.getApplication()).registry.getList());
-	    	} catch (JSONException e) {
+			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 	    }
