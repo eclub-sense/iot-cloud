@@ -3,12 +3,12 @@ package cz.esc.iot.cloudservice;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
+import cz.esc.iot.cloudservice.resources.RegisteredSensors;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
 import cz.esc.iot.cloudservice.registry.ConnectedSensorList;
-import cz.esc.iot.cloudservice.resources.RegistratedSensors;
 import cz.esc.iot.cloudservice.resources.SensorRegistrator;
 
 public class RestletApplication extends Application {
@@ -36,7 +36,7 @@ public class RestletApplication extends Application {
         
         Router router = new Router(getContext());
         router.attach("/sensor_registration", SensorRegistrator.class);
-        router.attach("/registrated_sensors", RegistratedSensors.class);
+        router.attach("/registered_sensors", RegisteredSensors.class);
         return router;
     }
 }

@@ -6,7 +6,7 @@ import org.restlet.resource.ServerResource;
 
 import cz.esc.iot.cloudservice.RestletApplication;
 
-public class RegistratedSensors extends ServerResource {
+public class RegisteredSensors extends ServerResource {
 	
 	@Get("json")
 	public JsonRepresentation sensors() {
