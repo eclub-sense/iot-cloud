@@ -15,7 +15,7 @@ public enum SensorType {
 		return name;
 	}
 
-	SensorType(int code, String name) {
+	private SensorType(int code, String name) {
 		this.code = code;
 		this.name = name;
 	}

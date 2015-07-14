@@ -23,6 +23,18 @@ public class Sensor {
 		return data;
 	}
 	
+	public int getUuid() {
+		return uuid;
+	}
+
+	public SensorType getType() {
+		return type;
+	}
+
+	public int getSecret() {
+		return secret;
+	}
+
 	@Override
 	public String toString() {
 		return "{\"uuid\" : " + uuid + ", \"type\" : \""+ type + "\", \"secret\" : " + secret + "}";

@@ -1,14 +1,16 @@
 # Sends messages to cloud server and prints acknowledgements.
 
 from websocket import create_connection
-ws = create_connection("ws://127.0.0.1:8080/peers/zetta-server")
+import time
+ws = create_connection("ws://127.0.0.1:8080/events/2")
 #result = ws.recv()
 #print "Received '%s'" % result
-ws.send("Hello Server")
+ws.send("Hello Server2")
 #result = ws.recv()
 #print "Received '%s'" % result
-for i in range (1, 1):
-	ws.send_binary("Hello Server")
+for i in range (1, 10):
+	ws.send("Hello Server2")
+	time.sleep(1)
 #result = ws.recv()
 #print "Received '%s'" % result
 ws.close()

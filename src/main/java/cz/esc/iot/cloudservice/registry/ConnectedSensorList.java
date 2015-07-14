@@ -8,10 +8,18 @@ import cz.esc.iot.cloudservice.sensors.Sensor;
 
 public class ConnectedSensorList {
 
+	private static ConnectedSensorList sensorlist = null;
 	private ArrayList<Sensor> list;
 	
 	public ConnectedSensorList() {
 		list = new ArrayList<Sensor>();
+	}
+	
+	public static ConnectedSensorList getInstance() {
+		if(sensorlist == null) {
+			sensorlist = new ConnectedSensorList();
+		}
+		return sensorlist;
 	}
 	
 	public ArrayList<Sensor> getList() {

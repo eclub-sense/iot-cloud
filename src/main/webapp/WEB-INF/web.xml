@@ -17,7 +17,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>websocket</servlet-name>
-    <url-pattern>/peers/zetta-server</url-pattern>
+    <url-pattern>/events/*</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>http</servlet-name>

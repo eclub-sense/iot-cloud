@@ -11,7 +11,8 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import cz.esc.iot.cloudservice.RestletApplication;
+import cz.esc.iot.cloudservice.WebSocket;
+import cz.esc.iot.cloudservice.registry.ConnectedSensorList;
 import cz.esc.iot.cloudservice.sensors.Sensor;
 import cz.esc.iot.cloudservice.sensors.SensorType;
 import cz.esc.iot.cloudservice.sensors.VirtualSensorCreator;
@@ -23,10 +24,11 @@ public class SensorRegistrator extends ServerResource {
 	    if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
 	    	try {
 	    		JSONObject json = entity.getJsonObject();
-				Sensor sensor = VirtualSensorCreator.createSensorInstance(json.getInt("uuid"), SensorType.valueOf(json.getString("type")), json.getInt("secret"));
-				((RestletApplication)this.getApplication()).registry.add(sensor);
-				//System.out.println(((RestletApplication)this.getApplication()).registry.getList());
-			} catch (JSONException e) {
+	    		Sensor sensor = VirtualSensorCreator.createSensorInstance(json.getInt("uuid"), SensorType.valueOf(json.getString("type")), json.getInt("secret"));
+				ConnectedSensorList.getInstance().add(sensor);
+				WebSocket.getInstance(0).getRemote().sendString(sensor.getUuid() + ": registered");
+				System.out.println(ConnectedSensorList.getInstance().getList());
+	    	} catch (JSONException e) {
 				e.printStackTrace();
 			}
 	    }

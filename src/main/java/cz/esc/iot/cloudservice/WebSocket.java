@@ -1,20 +1,53 @@
 package cz.esc.iot.cloudservice;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.util.ArrayList;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 public class WebSocket extends WebSocketAdapter
 {
+	private static ArrayList<WebSocket> sockets = new ArrayList<WebSocket>();
+	//private static WebSocket socket;
+	
+	public static WebSocket getInstance(int hubNum) {
+		return sockets.get(hubNum);
+		//return socket;
+	}
+	
     @Override
     public void onWebSocketConnect(Session sess)
     {
         super.onWebSocketConnect(sess);
+        sockets.add(this);
+        System.out.println(sockets);
         System.out.println("Socket Connected: " + sess);
+        //System.out.println(ConnectedSensorList.getInstance().getList());
     }
     
+    @Override
+    public void onWebSocketText(String message)
+    {
+        super.onWebSocketText(message);
+        System.out.println(sockets);
+        System.out.println("Received TEXT message: " + message);
+        /*try {
+        	System.out.println("odeslano");
+			session.getRemote().sendString("Ahoj, Michale");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
+    }
+    
+    @Override
+    public void onWebSocketClose(int statusCode, String reason)
+    {
+    	sockets.remove(this);
+    	System.out.println(sockets);
+        super.onWebSocketClose(statusCode,reason);
+        System.out.println("Socket Closed: [" + statusCode + "] " + reason);
+    }    
+	
     @Override
     public void onWebSocketBinary(byte[] payload, int offset, int len)
     {
@@ -27,34 +60,9 @@ public class WebSocket extends WebSocketAdapter
     }
     
     @Override
-    public void onWebSocketText(String message)
-    {
-        super.onWebSocketText(message);
-        System.out.println("Received TEXT message: " + message);
-        messageTunnel(message);
-    }
-    
-    @Override
-    public void onWebSocketClose(int statusCode, String reason)
-    {
-        super.onWebSocketClose(statusCode,reason);
-        System.out.println("Socket Closed: [" + statusCode + "] " + reason);
-    }
-    
-    @Override
     public void onWebSocketError(Throwable cause)
     {
         super.onWebSocketError(cause);
         cause.printStackTrace(System.err);
-    }
-    
-    private void messageTunnel(String msg) {
-    	try {
-    	    BufferedWriter pipe = new BufferedWriter(new FileWriter("pipe.fifo"));
-    	    pipe.write(msg);
-    	    pipe.close();
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
     }
 }
