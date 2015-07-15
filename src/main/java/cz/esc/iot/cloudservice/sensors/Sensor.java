@@ -1,19 +1,23 @@
 package cz.esc.iot.cloudservice.sensors;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import cz.esc.iot.cloudservice.sensors.data.SensorData;
 
 public class Sensor {
 
-	protected int uuid;
-	protected SensorType type = SensorType.THERMOMETER;
-	protected int secret;
-	protected transient SensorData data;
+	@Expose @SerializedName("@type") private String jsonType = "sensor";
+	@Expose protected int uuid;
+	@Expose protected SensorType type = SensorType.THERMOMETER;
+	@Expose (serialize = false) protected String secret;
+	protected SensorData data;
 	
 	public Sensor() {
 		super();
 	}
 	
-	public Sensor(int uuid, SensorType type, int secret) {
+	public Sensor(int uuid, SensorType type, String secret) {
 		this.uuid = uuid;
 		this.type = type;
 		this.secret = secret;
@@ -35,7 +39,7 @@ public class Sensor {
 		return type;
 	}
 
-	public int getSecret() {
+	public String getSecret() {
 		return secret;
 	}
 

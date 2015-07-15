@@ -1,15 +1,18 @@
 package cz.esc.iot.cloudservice.resources;
 
-import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
-import cz.esc.iot.cloudservice.RestletApplication;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import cz.esc.iot.cloudservice.registry.ConnectedSensorList;
 
 public class RegisteredSensors extends ServerResource {
 	
 	@Get("json")
-	public JsonRepresentation sensors() {
-		return ((RestletApplication)this.getApplication()).registry.toJson();
+	public String sensors() {
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		return gson.toJson(ConnectedSensorList.getInstance());
 	}
 }

@@ -4,11 +4,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class VirtualSensorCreator {
 
 	public static Sensor createSensorInstance(String json) {
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		JSONObject jsonObject;
 		Object type = null;
 		try {

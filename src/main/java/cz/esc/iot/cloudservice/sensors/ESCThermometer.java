@@ -6,7 +6,7 @@ public class ESCThermometer extends Sensor {
 		super();
 	}
 	
-	public ESCThermometer(int uuid, int secret) {
+	public ESCThermometer(int uuid, String secret) {
 		super(uuid, SensorType.THERMOMETER, secret);
 	}
 }
