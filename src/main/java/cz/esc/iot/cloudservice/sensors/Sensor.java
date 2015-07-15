@@ -3,15 +3,12 @@ package cz.esc.iot.cloudservice.sensors;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import cz.esc.iot.cloudservice.sensors.data.SensorData;
-
-public class Sensor {
+public abstract class Sensor {
 
 	@Expose @SerializedName("@type") private String jsonType = "sensor";
 	@Expose protected int uuid;
 	@Expose protected SensorType type = SensorType.THERMOMETER;
 	@Expose (serialize = false) protected String secret;
-	protected SensorData data;
 	
 	public Sensor() {
 		super();
@@ -23,13 +20,7 @@ public class Sensor {
 		this.secret = secret;
 	}
 
-	public void setData(SensorData data) {
-		this.data = data;
-	}
-	
-	public SensorData getData() {
-		return data;
-	}
+	public abstract void setBinaryData(byte[] data);
 	
 	public int getUuid() {
 		return uuid;

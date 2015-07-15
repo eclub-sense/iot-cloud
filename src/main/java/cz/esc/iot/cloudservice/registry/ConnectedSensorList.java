@@ -11,8 +11,8 @@ public class ConnectedSensorList {
 
 	private static ConnectedSensorList sensorlist = null;
 	@Expose @SerializedName("@type") private String jsonType = "collection";
+	@Expose private int total_count = 0;
 	@Expose private ArrayList<Sensor> items = new ArrayList<Sensor>();
-	@Expose private int total_count = items.size();
 	
 	public static ConnectedSensorList getInstance() {
 		if(sensorlist == null) {
@@ -25,7 +25,20 @@ public class ConnectedSensorList {
 		return items;
 	}
 	
+	public Sensor getSensor(int uuid) {
+		for (Sensor sensor : items) {
+			if (sensor.getUuid() == uuid) return sensor;
+		}
+		return null;
+	}
+	
 	public void add (Sensor s) {
+		total_count++;
 		items.add(s);
+	}
+	
+	public void remove (Sensor s) {
+		total_count--;
+		items.remove(s);
 	}
 }
