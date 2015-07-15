@@ -4,10 +4,14 @@ import cz.esc.iot.cloudservice.sensors.data.SensorData;
 
 public class Sensor {
 
-	private int uuid;
-	private SensorType type;
-	private int secret;
-	private SensorData data;
+	protected int uuid;
+	protected SensorType type = SensorType.THERMOMETER;
+	protected int secret;
+	protected transient SensorData data;
+	
+	public Sensor() {
+		super();
+	}
 	
 	public Sensor(int uuid, SensorType type, int secret) {
 		this.uuid = uuid;
@@ -37,6 +41,6 @@ public class Sensor {
 
 	@Override
 	public String toString() {
-		return "{\"uuid\" : " + uuid + ", \"type\" : \""+ type + "\", \"secret\" : " + secret + "}";
+		return "SENSOR: {\"uuid\" : " + uuid + ", \"type\" : \""+ type + "\", \"secret\" : " + secret + "}";
 	}
 }

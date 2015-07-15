@@ -10,6 +10,10 @@ public class WebSocket extends WebSocketAdapter
 	private static ArrayList<WebSocket> sockets = new ArrayList<WebSocket>();
 	//private static WebSocket socket;
 	
+	/*public WebSocket() {
+		socket = this;
+	}*/
+	
 	public static WebSocket getInstance(int hubNum) {
 		return sockets.get(hubNum);
 		//return socket;
@@ -19,8 +23,8 @@ public class WebSocket extends WebSocketAdapter
     public void onWebSocketConnect(Session sess)
     {
         super.onWebSocketConnect(sess);
-        sockets.add(this);
-        System.out.println(sockets);
+        
+        //System.out.println(sockets);
         System.out.println("Socket Connected: " + sess);
         //System.out.println(ConnectedSensorList.getInstance().getList());
     }
@@ -29,7 +33,7 @@ public class WebSocket extends WebSocketAdapter
     public void onWebSocketText(String message)
     {
         super.onWebSocketText(message);
-        System.out.println(sockets);
+        //System.out.println(sockets);
         System.out.println("Received TEXT message: " + message);
         /*try {
         	System.out.println("odeslano");
@@ -43,7 +47,7 @@ public class WebSocket extends WebSocketAdapter
     public void onWebSocketClose(int statusCode, String reason)
     {
     	sockets.remove(this);
-    	System.out.println(sockets);
+    	//System.out.println(sockets);
         super.onWebSocketClose(statusCode,reason);
         System.out.println("Socket Closed: [" + statusCode + "] " + reason);
     }    

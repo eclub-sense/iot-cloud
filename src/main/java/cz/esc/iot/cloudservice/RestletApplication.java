@@ -17,7 +17,7 @@ public class RestletApplication extends Application {
         registry = ConnectedSensorList.getInstance();
         Router router = new Router(getContext());
         router.attach("/sensor_registration", SensorRegistrator.class);
-        router.attach("/registrated_sensors", RegisteredSensors.class);
+        router.attach("/registered_sensors", RegisteredSensors.class);
         return router;
     }
 }
