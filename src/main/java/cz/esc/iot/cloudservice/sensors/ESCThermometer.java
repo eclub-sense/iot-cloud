@@ -2,8 +2,8 @@ package cz.esc.iot.cloudservice.sensors;
 
 public class ESCThermometer extends Sensor {
 	
-	private int temperature;
-	private int pressure;
+	private float temperature;
+	private float pressure;
 	
 	public ESCThermometer() {
 		super();
@@ -12,14 +12,17 @@ public class ESCThermometer extends Sensor {
 	public ESCThermometer(int uuid, String secret) {
 		super(uuid, SensorType.THERMOMETER, secret);
 	}
-
+	
 	@Override
-	public void setBinaryData(byte[] data) {
+	public void setBinaryData(byte[] encrypted_data) {
+		final int OUR_ENCRYPTED_LENGTH = 28;
+		byte[] data = decrypt(encrypted_data, OUR_ENCRYPTED_LENGTH);
+		
 		// TODO Auto-generated method stub
 		
 	}
 
-	public int getTemperature() {
+	public float getTemperature() {
 		return temperature;
 	}
 
@@ -27,7 +30,7 @@ public class ESCThermometer extends Sensor {
 		this.temperature = temperature;
 	}
 
-	public int getPressure() {
+	public float getPressure() {
 		return pressure;
 	}
 
