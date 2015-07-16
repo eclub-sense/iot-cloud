@@ -1,10 +1,12 @@
 package cz.esc.iot.cloudservice.messages;
 
+import com.google.gson.annotations.Expose;
+
 public class HubMessage {
 
-	private HubMessageType type;
-	private int uuid;
-	private byte[] encrypted;
+	@Expose private HubMessageType type;
+	@Expose private String uuid;
+	@Expose private String data;
 	
 	public HubMessage() {
 		super();
@@ -16,16 +18,24 @@ public class HubMessage {
 	public void setType(HubMessageType type) {
 		this.type = type;
 	}
-	public int getUuid() {
+	public String getUuid() {
 		return uuid;
 	}
-	public void setUuid(int uuid) {
+	public int getIntUuid() {
+		return Integer.parseInt(uuid);
+	}
+	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-	public byte[] getEncrypted() {
-		return encrypted;
+	public String getEncrypted() {
+		return data;
 	}
-	public void setEncrypted(byte[] encrypted) {
-		this.encrypted = encrypted;
+	public void setEncrypted(String encrypted) {
+		this.data = encrypted;
+	}
+
+	@Override
+	public String toString() {
+		return "HubMessage [type=" + type + ", uuid=" + uuid + ", data=" + data + "]";
 	}	
 }

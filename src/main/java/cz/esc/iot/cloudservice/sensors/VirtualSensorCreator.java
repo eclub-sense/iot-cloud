@@ -15,7 +15,6 @@ public class VirtualSensorCreator {
 		try {
 			jsonObject = new JSONObject(json);
 			type = jsonObject.get("type");
-			System.out.println(type +""+ type.getClass());
 			} catch (JSONException e) {
 			e.printStackTrace();
 		}

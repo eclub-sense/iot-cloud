@@ -9,6 +9,9 @@ public abstract class Sensor {
 	@Expose protected int uuid;
 	@Expose protected SensorType type = SensorType.THERMOMETER;
 	@Expose (serialize = false) protected String secret;
+	private int incr;
+	private int battery;
+	private int reserved;
 	
 	public Sensor() {
 		super();
@@ -20,15 +23,31 @@ public abstract class Sensor {
 		this.secret = secret;
 	}
 
-	public abstract void setBinaryData(byte[] data);
+	public abstract void setPayload(String data);
+	
+	public void setMessageParts(String p) {
+		System.out.println(p+ " "+ secret);
+		String packet = decrypt(p);
+		System.out.println("DECR: "+packet);
+		System.out.println(packet.substring(0, 1));
+		System.out.println(packet.substring(4,5));
+		System.out.println(packet.substring(6,11));
+		System.out.println(packet.substring(12,packet.length()));
+		incr = (int)(Integer.parseInt(packet.substring(0, 1)));
+		battery = (int)(Integer.parseInt(packet.substring(4, 5)));
+		reserved = (int)(Integer.parseInt(packet.substring(6, 11)));
+		setPayload(packet.substring(12, packet.length()));
+	}
 
-	protected byte[] decrypt(byte[] encrypted, int length) {
+	private String decrypt(String encrypted) {
+		int len = encrypted.length();
 		byte[] secretBytes = secret.getBytes();
-		byte[] decrypted = new byte[length];
-		for (int i = 0; i < length; i++) {
-			decrypted[i] = (byte)(0xff & ((int)secretBytes[i] ^ (int)encrypted[i]));
+		byte[] encryptedBytes = encrypted.getBytes();
+		String res = "";
+		for (int i = 0; i < len; i++) {
+			res = res + Byte.toString((byte)(0xff & ((int)secretBytes[i] ^ (int)encryptedBytes[i])));
 		}
-		return decrypted;
+		return res;
 	}
 	
 	public int getUuid() {
@@ -43,8 +62,52 @@ public abstract class Sensor {
 		return secret;
 	}
 
+	public String getJsonType() {
+		return jsonType;
+	}
+
+	public void setJsonType(String jsonType) {
+		this.jsonType = jsonType;
+	}
+
+	public int getIncr() {
+		return incr;
+	}
+
+	public void setIncr(int incr) {
+		this.incr = incr;
+	}
+
+	public int getBattery() {
+		return battery;
+	}
+
+	public void setBattery(int battery) {
+		this.battery = battery;
+	}
+
+	public int getReserved() {
+		return reserved;
+	}
+
+	public void setReserved(int reserved) {
+		this.reserved = reserved;
+	}
+
+	public void setUuid(int uuid) {
+		this.uuid = uuid;
+	}
+
+	public void setType(SensorType type) {
+		this.type = type;
+	}
+
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+
 	@Override
 	public String toString() {
-		return "SENSOR: {\"uuid\" : " + uuid + ", \"type\" : \""+ type + "\", \"secret\" : " + secret + "}";
+		return "Sensor [jsonType=" + jsonType + ", uuid=" + uuid + ", type=" + type + ", secret=" + secret + "]";
 	}
 }

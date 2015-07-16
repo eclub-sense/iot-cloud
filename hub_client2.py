@@ -2,7 +2,7 @@
 
 from websocket import create_connection
 import time
-ws = create_connection("ws://127.0.0.1:8080/events/2")
+ws = create_connection("ws://127.0.0.1:8080/events/")
 #result = ws.recv()
 #print "Received '%s'" % result
 ws.send("Hello Server2")
