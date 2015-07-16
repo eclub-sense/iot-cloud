@@ -21,7 +21,7 @@ public class SensorRegistrator extends ServerResource {
     		String json = entity.getText();
     		Sensor sensor = VirtualSensorCreator.createSensorInstance(json);
     		ConnectedSensorList.getInstance().add(sensor);
-			//WebSocket.getInstance(0).getRemote().sendString(sensor.getUuid() + ": register");
+			//WebSocket.getInstance(0).getRemote().sendString("{\"type\":\"NEW\",\"uuid\":" + sensor.getUuid() + "}");
 	    }
 	}
 	

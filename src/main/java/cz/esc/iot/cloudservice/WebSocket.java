@@ -1,18 +1,14 @@
 package cz.esc.iot.cloudservice;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import cz.esc.iot.cloudservice.messages.HubMessage;
-import cz.esc.iot.cloudservice.messages.HubMessageType;
 import cz.esc.iot.cloudservice.registry.ConnectedSensorList;
 import cz.esc.iot.cloudservice.sensors.Sensor;
 
@@ -28,6 +24,7 @@ public class WebSocket extends WebSocketAdapter
     public void onWebSocketConnect(Session sess)
     {
         super.onWebSocketConnect(sess);
+        sockets.add(this);
         System.out.println("Socket Connected: " + sess);
         //System.out.println(ConnectedSensorList.getInstance().getList());
     }
@@ -68,10 +65,6 @@ public class WebSocket extends WebSocketAdapter
         System.out.print("Received binary message: ");
         String msg = new String(payload);
         System.out.println(msg);
-        for (int i = 0; i < len; i++) {
-        	System.out.printf("%X", payload[i]);
-        }
-        System.out.print('\n');
     }
     
     @Override

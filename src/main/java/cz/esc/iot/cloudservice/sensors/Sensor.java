@@ -1,5 +1,9 @@
 package cz.esc.iot.cloudservice.sensors;
 
+import java.util.Arrays;
+
+import javax.xml.bind.DatatypeConverter;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,7 +15,7 @@ public abstract class Sensor {
 	@Expose (serialize = false) protected String secret;
 	private int incr;
 	private int battery;
-	private int reserved;
+	private byte reserved[] = new byte[3];
 	
 	public Sensor() {
 		super();
@@ -23,31 +27,26 @@ public abstract class Sensor {
 		this.secret = secret;
 	}
 
-	public abstract void setPayload(String data);
+	public abstract void setPayload(byte[] data);
 	
 	public void setMessageParts(String p) {
-		System.out.println(p+ " "+ secret);
-		String packet = decrypt(p);
-		System.out.println("DECR: "+packet);
-		System.out.println(packet.substring(0, 1));
-		System.out.println(packet.substring(4,5));
-		System.out.println(packet.substring(6,11));
-		System.out.println(packet.substring(12,packet.length()));
-		incr = (int)(Integer.parseInt(packet.substring(0, 1)));
-		battery = (int)(Integer.parseInt(packet.substring(4, 5)));
-		reserved = (int)(Integer.parseInt(packet.substring(6, 11)));
-		setPayload(packet.substring(12, packet.length()));
+		byte[] packet = decrypt(p);
+		incr = (int)(packet[0]);
+		battery = (int)(packet[2]);
+		reserved[0] = packet[3];
+		reserved[1] = packet[4];
+		reserved[2] = packet[5];
+		setPayload(Arrays.copyOfRange(packet, 6, (p.length()/2)+1));
 	}
-
-	private String decrypt(String encrypted) {
-		int len = encrypted.length();
-		byte[] secretBytes = secret.getBytes();
-		byte[] encryptedBytes = encrypted.getBytes();
-		String res = "";
+	
+	private byte[] decrypt(String encrypted) {
+		int len = encrypted.length()/2;
+		byte[] secretBytes = DatatypeConverter.parseHexBinary(secret);
+		byte[] encryptedBytes = DatatypeConverter.parseHexBinary(encrypted);
 		for (int i = 0; i < len; i++) {
-			res = res + Byte.toString((byte)(0xff & ((int)secretBytes[i] ^ (int)encryptedBytes[i])));
+			encryptedBytes[i] = (byte)(0xff & ((int)secretBytes[i] ^ (int)encryptedBytes[i]));
 		}
-		return res;
+		return encryptedBytes;
 	}
 	
 	public int getUuid() {
@@ -84,14 +83,6 @@ public abstract class Sensor {
 
 	public void setBattery(int battery) {
 		this.battery = battery;
-	}
-
-	public int getReserved() {
-		return reserved;
-	}
-
-	public void setReserved(int reserved) {
-		this.reserved = reserved;
 	}
 
 	public void setUuid(int uuid) {
