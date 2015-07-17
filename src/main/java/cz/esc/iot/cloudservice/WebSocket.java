@@ -33,8 +33,6 @@ public class WebSocket extends WebSocketAdapter {
         if (message.getType() == HubMessageType.DATA && verified == true) {
         	Sensor sensor = ConnectedSensorRegistry.getInstance().get(message.getIntUuid());
         	sensor.setMessageParts(((HubDataMsg)message).getData());
-        	//System.out.println(sensor);
-        	//System.out.println(message);
         } else if (message.getType() == HubMessageType.LOGIN) {
         	System.out.println(message);
         	if ((((HubLoginMsg)message).getUsername().equals(RestletApplication.username)) 
@@ -51,7 +49,6 @@ public class WebSocket extends WebSocketAdapter {
         } else {
         	getSession().close(2, "Connection refused.");
         }
-        //System.out.println(ConnectedHubRegistry.getInstance().getList());
     }
     
     @Override
