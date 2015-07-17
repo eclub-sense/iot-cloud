@@ -9,10 +9,6 @@ public class HubDataMsg extends HubMessage {
 	public String getData() {
 		return data;
 	}
-	
-	public void setData(String encrypted) {
-		this.data = encrypted;
-	}
 
 	@Override
 	public String toString() {

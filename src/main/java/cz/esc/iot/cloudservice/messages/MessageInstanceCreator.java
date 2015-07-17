@@ -20,6 +20,7 @@ public class MessageInstanceCreator {
 		}
 		switch ((String)type) {
 		case "DATA" : return gson.fromJson(json, HubDataMsg.class);
+		case "LOGIN" : return gson.fromJson(json, HubLoginMsg.class);
 		default : return null;
 		}
 	}

@@ -22,20 +22,12 @@ public class ESCThermometer extends Sensor {
 		pressure = ByteBuffer.wrap(Arrays.copyOfRange(payload, 4, 8)).getInt();
 	}
 
-	public float getTemperature() {
+	public int getTemperature() {
 		return temperature;
 	}
 
-	public void setTemperature(int temperature) {
-		this.temperature = temperature;
-	}
-
-	public float getPressure() {
+	public int getPressure() {
 		return pressure;
-	}
-
-	public void setPressure(int pressure) {
-		this.pressure = pressure;
 	}
 
 	@Override
