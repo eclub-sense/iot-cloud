@@ -5,8 +5,8 @@ import java.util.Arrays;
 
 public class ESCThermometer extends Sensor {
 	
-	private int temperature;
-	private int pressure;
+	protected int temperature;
+	protected int pressure;
 	
 	public ESCThermometer() {
 		super();
@@ -20,7 +20,6 @@ public class ESCThermometer extends Sensor {
 	public void setPayload(byte[] payload) {
 		temperature = ByteBuffer.wrap(Arrays.copyOfRange(payload, 0, 4)).getInt();
 		pressure = ByteBuffer.wrap(Arrays.copyOfRange(payload, 4, 8)).getInt();
-		System.out.println("Temperature: "+temperature+", Pressure: "+pressure);
 	}
 
 	public float getTemperature() {
@@ -37,5 +36,11 @@ public class ESCThermometer extends Sensor {
 
 	public void setPressure(int pressure) {
 		this.pressure = pressure;
+	}
+
+	@Override
+	public String toString() {
+		return "ESCThermometer [temperature=" + temperature + ", pressure=" + pressure + ", uuid=" + uuid + ", type="
+				+ type + ", secret=" + secret + "]";
 	}
 }

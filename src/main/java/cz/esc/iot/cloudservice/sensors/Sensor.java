@@ -13,9 +13,9 @@ public abstract class Sensor {
 	@Expose protected int uuid;
 	@Expose protected SensorType type = SensorType.THERMOMETER;
 	@Expose (serialize = false) protected String secret;
-	private int incr;
-	private int battery;
-	private byte reserved[] = new byte[3];
+	protected int incr;
+	protected int battery;
+	protected byte reserved[] = new byte[3];
 	
 	public Sensor() {
 		super();

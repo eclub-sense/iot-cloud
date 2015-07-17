@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class VirtualSensorCreator {
+public class SensorInstanceCreator {
 
 	public static Sensor createSensorInstance(String json) {
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
@@ -23,5 +23,4 @@ public class VirtualSensorCreator {
 		default : return null;
 		}
 	}
-
 }

@@ -19,20 +19,6 @@
 
 	<inceptionYear>2012</inceptionYear>
 
-    <!-- SCM -->
-    <scm>
-		<url>git@github.com:filip26/VIATodoListApiExample.git</url>
-        <connection>scm:git:git@github.com:filip26/VIATodoListApiExample.git</connection>
-        <developerConnection>scm:git:git@github.com:filip26/VIATodoListApiExample.git</developerConnection>
-      	<tag>HEAD</tag>
-  	</scm>
-  	
-    <!-- Bugs -->
-    <issueManagement>
-        <system>github</system>
-        <url>https://github.com/filip26/VIATodoListApiExample/issues</url>
-    </issueManagement>
-    
 	<!-- Build -->
 	<build>
 		<!-- Generate compiled stuff in the folder used for development mode -->

@@ -11,7 +11,7 @@ import org.restlet.resource.ServerResource;
 
 import cz.esc.iot.cloudservice.registry.ConnectedSensorList;
 import cz.esc.iot.cloudservice.sensors.Sensor;
-import cz.esc.iot.cloudservice.sensors.VirtualSensorCreator;
+import cz.esc.iot.cloudservice.sensors.SensorInstanceCreator;
 
 public class SensorRegistrator extends ServerResource {
 
@@ -19,7 +19,7 @@ public class SensorRegistrator extends ServerResource {
 	public void acceptRepresentation(Representation entity) throws ResourceException, IOException {
 	    if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
     		String json = entity.getText();
-    		Sensor sensor = VirtualSensorCreator.createSensorInstance(json);
+    		Sensor sensor = SensorInstanceCreator.createSensorInstance(json);
     		ConnectedSensorList.getInstance().add(sensor);
 			//WebSocket.getInstance(0).getRemote().sendString("{\"type\":\"NEW\",\"uuid\":" + sensor.getUuid() + "}");
 	    }
