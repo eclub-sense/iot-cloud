@@ -9,7 +9,7 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import cz.esc.iot.cloudservice.registry.ConnectedSensorList;
+import cz.esc.iot.cloudservice.registry.ConnectedSensorRegistry;
 import cz.esc.iot.cloudservice.sensors.Sensor;
 import cz.esc.iot.cloudservice.sensors.SensorInstanceCreator;
 
@@ -20,7 +20,7 @@ public class SensorRegistrator extends ServerResource {
 	    if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
     		String json = entity.getText();
     		Sensor sensor = SensorInstanceCreator.createSensorInstance(json);
-    		ConnectedSensorList.getInstance().add(sensor);
+    		ConnectedSensorRegistry.getInstance().add(sensor);
 			//WebSocket.getInstance(0).getRemote().sendString("{\"type\":\"NEW\",\"uuid\":" + sensor.getUuid() + "}");
 	    }
 	}

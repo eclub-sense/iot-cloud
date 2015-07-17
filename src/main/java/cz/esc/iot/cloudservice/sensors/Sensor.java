@@ -7,7 +7,9 @@ import javax.xml.bind.DatatypeConverter;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public abstract class Sensor {
+import cz.esc.iot.cloudservice.registry.Identificable;
+
+public abstract class Sensor implements Identificable {
 	
 	@Expose @SerializedName("@type") private String jsonType = "sensor";
 	@Expose protected int uuid;
@@ -49,6 +51,7 @@ public abstract class Sensor {
 		return encryptedBytes;
 	}
 	
+	@Override
 	public int getUuid() {
 		return uuid;
 	}
@@ -61,40 +64,16 @@ public abstract class Sensor {
 		return secret;
 	}
 
-	public String getJsonType() {
-		return jsonType;
-	}
-
-	public void setJsonType(String jsonType) {
-		this.jsonType = jsonType;
-	}
-
 	public int getIncr() {
 		return incr;
-	}
-
-	public void setIncr(int incr) {
-		this.incr = incr;
 	}
 
 	public int getBattery() {
 		return battery;
 	}
 
-	public void setBattery(int battery) {
-		this.battery = battery;
-	}
-
 	public void setUuid(int uuid) {
 		this.uuid = uuid;
-	}
-
-	public void setType(SensorType type) {
-		this.type = type;
-	}
-
-	public void setSecret(String secret) {
-		this.secret = secret;
 	}
 
 	@Override
