@@ -7,6 +7,7 @@ import javax.xml.bind.DatatypeConverter;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import cz.esc.iot.cloudservice.hubs.Hub;
 import cz.esc.iot.cloudservice.registry.Identificable;
 
 public abstract class Sensor implements Identificable {
@@ -16,7 +17,8 @@ public abstract class Sensor implements Identificable {
 	@Expose protected SensorType type = SensorType.THERMOMETER;
 	@Expose (serialize = false) protected String secret;
 	protected int incr;
-	protected int battery;
+	@Expose (deserialize = false) protected int battery;
+	@Expose (deserialize = false) protected Hub hub;
 	protected byte reserved[] = new byte[3];
 	
 	public Sensor() {
@@ -70,6 +72,14 @@ public abstract class Sensor implements Identificable {
 
 	public int getBattery() {
 		return battery;
+	}
+
+	public Hub getHub() {
+		return hub;
+	}
+
+	public void setHub(Hub hub) {
+		this.hub = hub;
 	}
 
 	public void setUuid(int uuid) {

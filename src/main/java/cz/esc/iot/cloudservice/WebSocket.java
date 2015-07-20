@@ -1,5 +1,7 @@
 package cz.esc.iot.cloudservice;
 
+import java.io.IOException;
+
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
@@ -21,7 +23,7 @@ public class WebSocket extends WebSocketAdapter {
     public void onWebSocketConnect(Session sess) {
         super.onWebSocketConnect(sess);
         System.out.println("Socket Connected: " + sess);
-        //System.out.println(ConnectedSensorList.getInstance().getList());
+        System.out.println(ConnectedHubRegistry.getInstance().getList());
     }
     
     @Override
@@ -29,7 +31,6 @@ public class WebSocket extends WebSocketAdapter {
         super.onWebSocketText(json);
         System.out.println("Received TEXT message: " + json);
         HubMessage message = MessageInstanceCreator.createMsgInstance(json);
-        
         if (message.getType() == HubMessageType.DATA && verified == true) {
         	Sensor sensor = ConnectedSensorRegistry.getInstance().get(message.getIntUuid());
         	sensor.setMessageParts(((HubDataMsg)message).getData());
@@ -42,6 +43,11 @@ public class WebSocket extends WebSocketAdapter {
         			ConnectedHubRegistry.getInstance().add(new Hub(message.getIntUuid(), this));
         		else
         			hub.setSocket(this);
+        		try {
+					hub.reregisterAllSensors();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
         		verified = true;
         	} else {
         		getSession().close(1, "Incorrect username or password.");
@@ -49,6 +55,7 @@ public class WebSocket extends WebSocketAdapter {
         } else {
         	getSession().close(2, "Connection refused.");
         }
+        System.out.println(ConnectedHubRegistry.getInstance().getList());
     }
     
     @Override
@@ -56,6 +63,7 @@ public class WebSocket extends WebSocketAdapter {
     	ConnectedHubRegistry.getInstance().whoHasSocket(this).setSocket(null);
         super.onWebSocketClose(statusCode,reason);
         System.out.println("Socket Closed: [" + statusCode + "] " + reason);
+        System.out.println(ConnectedHubRegistry.getInstance().getList());
     }    
 	
     @Override

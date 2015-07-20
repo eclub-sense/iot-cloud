@@ -1,10 +1,14 @@
 package cz.esc.iot.cloudservice.hubs;
 
+import java.io.IOException;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import cz.esc.iot.cloudservice.WebSocket;
+import cz.esc.iot.cloudservice.registry.ConnectedSensorRegistry;
 import cz.esc.iot.cloudservice.registry.Identificable;
+import cz.esc.iot.cloudservice.sensors.Sensor;
 
 public class Hub implements Identificable {
 
@@ -21,7 +25,18 @@ public class Hub implements Identificable {
 	public int getUuid() {
 		return uuid;
 	}
-
+	
+	public void reregisterAllSensors() throws IOException {
+		for (Sensor sensor : ConnectedSensorRegistry.getInstance().getList()) {
+			if (sensor.getHub().getUuid() == this.uuid)
+				registerSensor(sensor.getUuid());
+		}
+	}
+	
+	public void registerSensor(int uuid) throws IOException {
+		socket.getRemote().sendString("{\"type\":\"NEW\",\"uuid\":" + uuid + "}");
+	}
+	
 	public WebSocket getSocket() {
 		return socket;
 	}

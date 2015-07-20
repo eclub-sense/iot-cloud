@@ -1,7 +1,5 @@
 package cz.esc.iot.cloudservice.resources;
 
-import java.io.IOException;
-
 import org.restlet.data.Form;
 import org.restlet.data.Parameter;
 import org.restlet.resource.Get;

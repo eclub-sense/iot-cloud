@@ -1,12 +1,11 @@
 package cz.esc.iot.cloudservice.sensors;
 
-import java.nio.ByteBuffer;
-import java.util.Arrays;
+import com.google.gson.annotations.Expose;
 
 public class ESCThermometer extends Sensor {
 	
-	protected int temperature;
-	protected int pressure;
+	@Expose (deserialize = false) protected int temperature;
+	@Expose (deserialize = false) protected int pressure;
 	
 	public ESCThermometer() {
 		super();
@@ -18,8 +17,8 @@ public class ESCThermometer extends Sensor {
 	
 	@Override
 	public void setPayload(byte[] payload) {
-		temperature = ByteBuffer.wrap(Arrays.copyOfRange(payload, 0, 4)).getInt();
-		pressure = ByteBuffer.wrap(Arrays.copyOfRange(payload, 4, 8)).getInt();
+		temperature = payload[0];
+		pressure = payload[1];
 	}
 
 	public int getTemperature() {
