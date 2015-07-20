@@ -41,13 +41,14 @@ public class WebSocket extends WebSocketAdapter {
         		Hub hub = ConnectedHubRegistry.getInstance().get(message.getIntUuid());
         		if (hub == null)
         			ConnectedHubRegistry.getInstance().add(new Hub(message.getIntUuid(), this));
-        		else
+        		else {
         			hub.setSocket(this);
-        		try {
-					hub.reregisterAllSensors();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+            		try {
+    					hub.reregisterAllSensors();
+    				} catch (IOException e) {
+    					e.printStackTrace();
+    				}
+        		}
         		verified = true;
         	} else {
         		getSession().close(1, "Incorrect username or password.");

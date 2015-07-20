@@ -14,7 +14,8 @@ public class Hub implements Identificable {
 
 	@Expose @SerializedName("@type") private String jsonType = "hub";
 	@Expose protected int uuid;
-	private WebSocket socket;
+	protected WebSocket socket;
+	@Expose (deserialize = false) protected String status = "connected";
 	
 	public Hub(int uuid, WebSocket socket) {
 		this.uuid = uuid;
@@ -42,6 +43,7 @@ public class Hub implements Identificable {
 	}
 	
 	public void setSocket(WebSocket socket) {
+		status = (socket == null) ? "disconnected" : "connected";
 		this.socket =  socket;
 	}
 

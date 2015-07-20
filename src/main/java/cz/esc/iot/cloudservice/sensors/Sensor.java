@@ -18,7 +18,8 @@ public abstract class Sensor implements Identificable {
 	@Expose (serialize = false) protected String secret;
 	protected int incr;
 	@Expose (deserialize = false) protected int battery;
-	@Expose (deserialize = false) protected Hub hub;
+	@Expose (deserialize = false) protected int hubID;
+	protected Hub hub;
 	protected byte reserved[] = new byte[3];
 	
 	public Sensor() {
@@ -79,6 +80,7 @@ public abstract class Sensor implements Identificable {
 	}
 
 	public void setHub(Hub hub) {
+		this.hubID = hub.getUuid();
 		this.hub = hub;
 	}
 
