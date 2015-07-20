@@ -30,17 +30,35 @@ public class RegisteredDevices extends ServerResource {
 	private String registeredSensors(Gson gson, Form form) {
 		ConnectedSensorRegistry result = new ConnectedSensorRegistry();
 		SensorType type = null;
+		int hubID = -1;
 		for (Parameter parameter : form) {
 			if (parameter.getName().equals("type")) {
 				type = SensorType.valueOf(parameter.getValue());
-				break;
+			} else if (parameter.getName().equals("hubID")) {
+				hubID = Integer.parseInt(parameter.getValue());
 			}
 		}
-		if (type == null)
+		if (type == null && hubID == -1)
 			return gson.toJson(ConnectedSensorRegistry.getInstance());
-		else {
+		else if (type == null) {
+			for (Sensor sensor : ConnectedSensorRegistry.getInstance().getList()) {
+				if (sensor.getHub().getUuid() == hubID) {
+					result.add(sensor);
+				}
+			}
+			result.setTotalCount(ConnectedSensorRegistry.getInstance().getList().size());
+			return gson.toJson(result);
+		} else if (hubID == -1) {
 			for (Sensor sensor : ConnectedSensorRegistry.getInstance().getList()) {
 				if (sensor.getType() == type) {
+					result.add(sensor);
+				}
+			}
+			result.setTotalCount(ConnectedSensorRegistry.getInstance().getList().size());
+			return gson.toJson(result);
+		} else {
+			for (Sensor sensor : ConnectedSensorRegistry.getInstance().getList()) {
+				if (sensor.getType() == type && sensor.getHub().getUuid() == hubID) {
 					result.add(sensor);
 				}
 			}
