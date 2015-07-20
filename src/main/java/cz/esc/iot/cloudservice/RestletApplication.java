@@ -4,7 +4,8 @@ import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
-import cz.esc.iot.cloudservice.resources.RegisteredDevices;
+import cz.esc.iot.cloudservice.resources.RegisteredHubs;
+import cz.esc.iot.cloudservice.resources.RegisteredSensors;
 import cz.esc.iot.cloudservice.resources.SensorRegistrator;
 
 public class RestletApplication extends Application {
@@ -16,8 +17,10 @@ public class RestletApplication extends Application {
     public synchronized Restlet createInboundRoot() {
         Router router = new Router(getContext());
         router.attach("/sensor_registration", SensorRegistrator.class);
-        router.attach("/registered_sensors", RegisteredDevices.class);
-        router.attach("/registered_hubs", RegisteredDevices.class);
+        router.attach("/registered_sensors/{uuid}", RegisteredSensors.class);
+        router.attach("/registered_sensors", RegisteredSensors.class);
+        router.attach("/registered_hubs/{uuid}", RegisteredHubs.class);
+        router.attach("/registered_hubs", RegisteredHubs.class);
         return router;
     }
 }

@@ -8,12 +8,11 @@ import org.restlet.resource.ServerResource;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
 import cz.esc.iot.cloudservice.registry.ConnectedSensorRegistry;
 import cz.esc.iot.cloudservice.sensors.Sensor;
 import cz.esc.iot.cloudservice.sensors.SensorType;
 
-public class RegisteredDevices extends ServerResource {
+public class RegisteredSensors extends ServerResource {
 	
 	@Get("json")
 	public String returnList() {
@@ -22,8 +21,7 @@ public class RegisteredDevices extends ServerResource {
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		switch (path) {
 		case "/registered_sensors" : return registeredSensors(gson, form);
-		case "/registered_hubs" : return gson.toJson(ConnectedHubRegistry.getInstance());
-		default : return null;
+		default : return gson.toJson(ConnectedSensorRegistry.getInstance().get(Integer.parseInt((String)this.getRequestAttributes().get("uuid"))));
 		}
 	}
 	
@@ -38,9 +36,9 @@ public class RegisteredDevices extends ServerResource {
 				hubID = Integer.parseInt(parameter.getValue());
 			}
 		}
-		if (type == null && hubID == -1)
+		if (type == null && hubID == -1) {
 			return gson.toJson(ConnectedSensorRegistry.getInstance());
-		else if (type == null) {
+		} else if (type == null) {
 			for (Sensor sensor : ConnectedSensorRegistry.getInstance().getList()) {
 				if (sensor.getHub().getIntUuid() == hubID) {
 					result.add(sensor);

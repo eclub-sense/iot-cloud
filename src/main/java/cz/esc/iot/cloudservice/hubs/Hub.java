@@ -31,6 +31,14 @@ public class Hub implements Identificable {
 		return socket;
 	}
 	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public void setSocket(WebSocket socket) {
 		status = (socket == null) ? "disconnected" : "connected";
 		this.socket =  socket;
