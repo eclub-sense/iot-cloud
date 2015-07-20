@@ -9,6 +9,7 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
 import cz.esc.iot.cloudservice.hubs.Hub;
+import cz.esc.iot.cloudservice.messages.Postman;
 import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
 import cz.esc.iot.cloudservice.registry.ConnectedSensorRegistry;
 import cz.esc.iot.cloudservice.sensors.Sensor;
@@ -25,7 +26,7 @@ public class SensorRegistrator extends ServerResource {
     		System.out.println(ConnectedHubRegistry.getInstance().getList());
     		
     		Hub hub = chooseHub();
-			hub.registerSensor(sensor.getUuid());
+			Postman.registerSensor(hub, sensor.getStringUuid());
 			sensor.setHub(hub);
 	    }
 	}

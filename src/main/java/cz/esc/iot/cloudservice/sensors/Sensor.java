@@ -55,10 +55,14 @@ public abstract class Sensor implements Identificable {
 	}
 	
 	@Override
-	public int getUuid() {
+	public int getIntUuid() {
 		return uuid;
 	}
 
+	public String getStringUuid() {
+		return String.format("%08d", uuid);
+	}
+	
 	public SensorType getType() {
 		return type;
 	}
@@ -80,7 +84,7 @@ public abstract class Sensor implements Identificable {
 	}
 
 	public void setHub(Hub hub) {
-		this.hubID = hub.getUuid();
+		this.hubID = hub.getIntUuid();
 		this.hub = hub;
 	}
 

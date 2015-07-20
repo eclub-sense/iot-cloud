@@ -42,7 +42,7 @@ public class RegisteredDevices extends ServerResource {
 			return gson.toJson(ConnectedSensorRegistry.getInstance());
 		else if (type == null) {
 			for (Sensor sensor : ConnectedSensorRegistry.getInstance().getList()) {
-				if (sensor.getHub().getUuid() == hubID) {
+				if (sensor.getHub().getIntUuid() == hubID) {
 					result.add(sensor);
 				}
 			}
@@ -58,7 +58,7 @@ public class RegisteredDevices extends ServerResource {
 			return gson.toJson(result);
 		} else {
 			for (Sensor sensor : ConnectedSensorRegistry.getInstance().getList()) {
-				if (sensor.getType() == type && sensor.getHub().getUuid() == hubID) {
+				if (sensor.getType() == type && sensor.getHub().getIntUuid() == hubID) {
 					result.add(sensor);
 				}
 			}

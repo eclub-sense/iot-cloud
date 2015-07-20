@@ -17,7 +17,7 @@ public class ConnectedDeviceList<T extends Identificable> {
 	
 	public T get(int uuid) {
 		for (T device : items) {
-			if (device.getUuid() == uuid) return device;
+			if (device.getIntUuid() == uuid) return device;
 		}
 		return null;
 	}

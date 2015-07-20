@@ -10,6 +10,7 @@ import cz.esc.iot.cloudservice.messages.HubLoginMsg;
 import cz.esc.iot.cloudservice.messages.HubMessage;
 import cz.esc.iot.cloudservice.messages.HubMessageType;
 import cz.esc.iot.cloudservice.messages.MessageInstanceCreator;
+import cz.esc.iot.cloudservice.messages.Postman;
 import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
 import cz.esc.iot.cloudservice.registry.ConnectedSensorRegistry;
 import cz.esc.iot.cloudservice.sensors.Sensor;
@@ -35,28 +36,34 @@ public class WebSocket extends WebSocketAdapter {
         	Sensor sensor = ConnectedSensorRegistry.getInstance().get(message.getIntUuid());
         	sensor.setMessageParts(((HubDataMsg)message).getData());
         } else if (message.getType() == HubMessageType.LOGIN) {
-        	System.out.println(message);
-        	if ((((HubLoginMsg)message).getUsername().equals(RestletApplication.username)) 
-        			&& (((HubLoginMsg)message).getPassword().equals(RestletApplication.password))) {
-        		Hub hub = ConnectedHubRegistry.getInstance().get(message.getIntUuid());
-        		if (hub == null)
-        			ConnectedHubRegistry.getInstance().add(new Hub(message.getIntUuid(), this));
-        		else {
-        			hub.setSocket(this);
-            		try {
-    					hub.reregisterAllSensors();
-    				} catch (IOException e) {
-    					e.printStackTrace();
-    				}
-        		}
-        		verified = true;
-        	} else {
-        		getSession().close(1, "Incorrect username or password.");
-        	}
+        	verifyConnection(message);
         } else {
         	getSession().close(2, "Connection refused.");
         }
         System.out.println(ConnectedHubRegistry.getInstance().getList());
+    }
+    
+    private void verifyConnection(HubMessage message) {
+    	System.out.println(message);
+    	if ((((HubLoginMsg)message).getUsername().equals(RestletApplication.username)) 
+    			&& (((HubLoginMsg)message).getPassword().equals(RestletApplication.password))) {
+    		Hub hub = ConnectedHubRegistry.getInstance().get(message.getIntUuid());
+    		if (hub == null) {
+    			hub = new Hub(message.getIntUuid(), this);
+    			ConnectedHubRegistry.getInstance().add(hub);
+    		} else {
+    			hub.setSocket(this);
+        		try {
+					Postman.reregisterAllSensors(hub);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+    		}
+    		Postman.sendLoginAck(hub);
+    		verified = true;
+    	} else {
+    		getSession().close(1, "Incorrect username or password.");
+    	}
     }
     
     @Override
