@@ -15,15 +15,15 @@ public class ESCLed extends Sensor implements WriteableSensor {
 	}
 
 	@Override
-	public void writePacket(byte[] payload) {
+	public byte[] writePacket(byte[] payload) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
-	public void createPayload() {
+	public byte[] createPayload() {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override

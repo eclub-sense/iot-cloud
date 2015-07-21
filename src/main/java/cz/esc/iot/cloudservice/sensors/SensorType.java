@@ -1,5 +1,8 @@
 package cz.esc.iot.cloudservice.sensors;
 
+/**
+ * Types of sensors.
+ */
 public enum SensorType {
 	THERMOMETER(0x41, "thermometer"), // 0x41
 	LED(0x42, "led");

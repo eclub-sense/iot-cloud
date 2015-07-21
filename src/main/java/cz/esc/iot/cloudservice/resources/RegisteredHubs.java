@@ -11,6 +11,11 @@ import com.google.gson.GsonBuilder;
 import cz.esc.iot.cloudservice.hubs.Hub;
 import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
 
+/**
+ * Return list of registered hubs.
+ * E.g. with parameters: {SERVER_IP}/registered_hubs?status={HUB_STATUS}
+ * E.g. for specific hub according to its uuid: {SERVER_IP}/registered_hubs/{HUB_UUID}
+ */
 public class RegisteredHubs extends ServerResource {
 
 	@Get("json")

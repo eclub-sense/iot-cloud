@@ -6,6 +6,9 @@ import cz.esc.iot.cloudservice.hubs.Hub;
 import cz.esc.iot.cloudservice.registry.ConnectedSensorRegistry;
 import cz.esc.iot.cloudservice.sensors.Sensor;
 
+/**
+ * Serves to sending messages from server to hub.
+ */
 public class Postman {
 
 	public static void sendLoginAck(Hub hub) {

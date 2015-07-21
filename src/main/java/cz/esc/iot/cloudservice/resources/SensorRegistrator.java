@@ -16,6 +16,9 @@ import cz.esc.iot.cloudservice.registry.ConnectedSensorRegistry;
 import cz.esc.iot.cloudservice.sensors.Sensor;
 import cz.esc.iot.cloudservice.sensors.SensorInstanceCreator;
 
+/**
+ * Register new sensor.
+ */
 public class SensorRegistrator extends ServerResource {
 
 	@Post
@@ -37,8 +40,10 @@ public class SensorRegistrator extends ServerResource {
 	    }
 	}
 	
+	/**
+	 * Chooses random hub with which new sensor will be associated.
+	 */
 	private Hub chooseHub() throws Exception {
-		// register sensor to random hub (dummy choose)
 		Random randomGenerator = new Random();
 		int random = randomGenerator.nextInt(ConnectedHubRegistry.getInstance().getTotalCount());
 		int first = random;

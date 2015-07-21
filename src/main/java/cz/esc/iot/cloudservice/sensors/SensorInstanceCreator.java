@@ -6,6 +6,9 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+/**
+ * Creates instance of subclass of Sensor according to sensor type.
+ */
 public class SensorInstanceCreator {
 
 	public static Sensor createSensorInstance(String json) {

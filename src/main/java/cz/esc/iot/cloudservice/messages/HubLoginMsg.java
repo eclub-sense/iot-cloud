@@ -2,6 +2,10 @@ package cz.esc.iot.cloudservice.messages;
 
 import com.google.gson.annotations.Expose;
 
+/**
+ * Class for LOGIN type messages used for verification of new hub
+ * and its websocket connection.
+ */
 public class HubLoginMsg extends HubMessage{
 
 	@Expose private String username;

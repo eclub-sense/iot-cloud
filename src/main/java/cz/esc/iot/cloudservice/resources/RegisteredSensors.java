@@ -12,6 +12,11 @@ import cz.esc.iot.cloudservice.registry.ConnectedSensorRegistry;
 import cz.esc.iot.cloudservice.sensors.Sensor;
 import cz.esc.iot.cloudservice.sensors.SensorType;
 
+/**
+ * Return list of registered sensors.
+ * E.g. with parameters: {SERVER_IP}/registered_sensors?type={SENSOR_TYPE}&hubID={HUB_ID}
+ * E.g. for specific sensor according to its uuid: {SERVER_IP}/registered_sensors/{SENSOR_UUID}
+ */
 public class RegisteredSensors extends ServerResource {
 	
 	@Get("json")

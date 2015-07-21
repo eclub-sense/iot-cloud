@@ -6,6 +6,9 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+/**
+ * Creates instance of subclass of HubMessage according to message type.
+ */
 public class MessageInstanceCreator {
 
 	public static HubMessage createMsgInstance(String json) {
