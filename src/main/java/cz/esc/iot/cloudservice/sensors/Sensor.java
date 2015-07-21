@@ -26,7 +26,6 @@ public abstract class Sensor implements Identificable {
 	
 	public void readPacket(String p) {
 		byte[] packet = decrypt(p);
-		//byte[] packet = p.getBytes();
 		incr = (int)(packet[0]);
 		battery = (int)(packet[2]);
 		reserved[0] = packet[3];
