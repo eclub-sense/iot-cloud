@@ -51,15 +51,16 @@ public class WebSocket extends WebSocketAdapter {
     		if (hub == null) {
     			hub = new Hub(message.getIntUuid(), this);
     			ConnectedHubRegistry.getInstance().add(hub);
+    			Postman.sendLoginAck(hub);
     		} else {
     			hub.setSocket(this);
+    			Postman.sendLoginAck(hub);
         		try {
 					Postman.reregisterAllSensors(hub);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
     		}
-    		Postman.sendLoginAck(hub);
     		verified = true;
     	} else {
     		getSession().close(1, "Incorrect username or password.");

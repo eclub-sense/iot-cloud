@@ -1,5 +1,6 @@
 package cz.esc.iot.cloudservice.resources;
 
+import java.io.IOException;
 import java.util.Random;
 
 import org.restlet.data.MediaType;
@@ -18,16 +19,21 @@ import cz.esc.iot.cloudservice.sensors.SensorInstanceCreator;
 public class SensorRegistrator extends ServerResource {
 
 	@Post
-	public void acceptRepresentation(Representation entity) throws Exception {
+	public void acceptRepresentation(Representation entity) throws IOException {
 	    if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
     		String json = entity.getText();
     		Sensor sensor = SensorInstanceCreator.createSensorInstance(json);
     		ConnectedSensorRegistry.getInstance().add(sensor);
     		System.out.println(ConnectedHubRegistry.getInstance().getList());
     		
-    		Hub hub = chooseHub();
-			Postman.registerSensor(hub, sensor.getStringUuid());
-			sensor.setHub(hub);
+    		Hub hub;
+			try {
+				hub = chooseHub();
+				Postman.registerSensor(hub, sensor.getStringUuid());
+				sensor.setHub(hub);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 	    }
 	}
 	
