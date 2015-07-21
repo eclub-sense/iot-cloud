@@ -7,16 +7,12 @@ public class ESCThermometer extends Sensor {
 	@Expose (deserialize = false) protected int temperature;
 	@Expose (deserialize = false) protected int pressure;
 	
-	public ESCThermometer() {
+	/*public ESCThermometer() {
 		super();
-	}
-	
-	public ESCThermometer(int uuid, String secret) {
-		super(uuid, SensorType.THERMOMETER, secret);
-	}
+	}*/
 	
 	@Override
-	public void setPayload(byte[] payload) {
+	public void readPayload(byte[] payload) {
 		temperature = payload[0];
 		pressure = payload[1];
 	}

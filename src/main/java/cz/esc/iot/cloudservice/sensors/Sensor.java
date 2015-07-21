@@ -21,27 +21,17 @@ public abstract class Sensor implements Identificable {
 	@Expose (deserialize = false) protected int hubID;
 	protected Hub hub;
 	protected byte reserved[] = new byte[3];
-	
-	public Sensor() {
-		super();
-	}
-	
-	public Sensor(int uuid, SensorType type, String secret) {
-		this.uuid = uuid;
-		this.type = type;
-		this.secret = secret;
-	}
 
-	public abstract void setPayload(byte[] data);
+	public abstract void readPayload(byte[] data);
 	
-	public void setMessageParts(String p) {
+	public void readPacket(String p) {
 		byte[] packet = decrypt(p);
 		incr = (int)(packet[0]);
 		battery = (int)(packet[2]);
 		reserved[0] = packet[3];
 		reserved[1] = packet[4];
 		reserved[2] = packet[5];
-		setPayload(Arrays.copyOfRange(packet, 6, (p.length()/2)+1));
+		readPayload(Arrays.copyOfRange(packet, 6, (p.length()/2)+1));
 	}
 	
 	private byte[] decrypt(String encrypted) {

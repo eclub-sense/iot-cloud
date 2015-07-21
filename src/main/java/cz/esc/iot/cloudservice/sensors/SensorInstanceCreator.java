@@ -20,7 +20,7 @@ public class SensorInstanceCreator {
 		}
 		switch ((String)type) {
 		case "THERMOMETER" : return gson.fromJson(json, ESCThermometer.class);
-		case "LED" : return gson.fromJson(json, ESCThermometer.class);
+		case "LED" : return gson.fromJson(json, ESCLed.class);
 		default : return null;
 		}
 	}

@@ -34,7 +34,7 @@ public class WebSocket extends WebSocketAdapter {
         HubMessage message = MessageInstanceCreator.createMsgInstance(json);
         if (message.getType() == HubMessageType.DATA && verified == true) {
         	Sensor sensor = ConnectedSensorRegistry.getInstance().get(message.getIntUuid());
-        	sensor.setMessageParts(((HubDataMsg)message).getData());
+        	sensor.readPacket(((HubDataMsg)message).getData());
         } else if (message.getType() == HubMessageType.LOGIN) {
         	verifyConnection(message);
         } else {
