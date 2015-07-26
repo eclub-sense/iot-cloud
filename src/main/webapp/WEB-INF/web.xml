@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" 
 	version="2.5">
   <display-name>TODO List App</display-name>
   <context-param>
@@ -16,8 +16,8 @@
     <load-on-startup>2</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>websocket</servlet-name>
-    <url-pattern>/events/*</url-pattern>
+	<servlet-name>websocket</servlet-name>
+	<url-pattern>/events/*</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>http</servlet-name>
@@ -32,4 +32,28 @@
     <servlet-name>http</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
+  
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>registered</web-resource-name>
+      <url-pattern>/hub_registration</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>USER</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>Default</realm-name>
+  </login-config>
+
+  <security-role>
+    <role-name>USER</role-name>
+  </security-role>
+  
+  <security-role>
+    <role-name>ADMIN</role-name>
+  </security-role>
+  
 </web-app>

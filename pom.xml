@@ -43,35 +43,14 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>9.3.0.v20150612</version>
 				<configuration>
-					<scanIntervalSeconds>10</scanIntervalSeconds>
-					<stopKey>foo</stopKey>
-					<stopPort>9999</stopPort>
-					<!-- Configure the webapp -->
-					<contextPath>/cloudservice</contextPath>
+					<jettyXml>src/main/etc/jetty.xml</jettyXml>
+					<loginServices>
+			          <loginService implementation="org.eclipse.jetty.security.HashLoginService">
+			            <name>Default</name>
+			            <config>src/main/etc/realm.properties</config>
+			          </loginService>
+			        </loginServices> 
 				</configuration>
-				<executions>
-					<execution>
-						<id>start-jetty</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<scanIntervalSeconds>0</scanIntervalSeconds>
-							<daemon>true</daemon>
-							<webApp>
-								<contextPath>/cloudservice</contextPath>
-							</webApp>
-						</configuration>
-					</execution>
-					<execution>
-						<id>stop-jetty</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 
 			<!-- License -->
@@ -202,5 +181,10 @@
 	        <artifactId>servlet-api</artifactId>
 	        <version>2.5</version>
 	    </dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-proxy</artifactId>
+			<version>9.3.1.v20150714</version>
+		</dependency>
 	</dependencies>
 </project>
