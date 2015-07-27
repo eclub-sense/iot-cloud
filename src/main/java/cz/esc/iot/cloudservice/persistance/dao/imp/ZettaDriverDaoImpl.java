@@ -42,13 +42,25 @@ public class ZettaDriverDaoImpl implements ZettaDriverDao {
                 }
             }
         }
-        
-        //Zip folder {id}
-        
-        File folder = Paths.get("drivers/" + id).toFile();
-        File[] files = folder.listFiles();
-        
-        
+
+        AppZip appZip = new AppZip();
+        File file = Paths.get("drivers/" + id + ".zip").toFile();
+        try {
+            file.createNewFile();
+        } catch (IOException ex) {
+            Logger.getLogger(ZettaDriverDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        appZip.generateFileList(new File("drivers/" + id));
+        appZip.zipIt("drivers/" + id + ".zip");
+
+        try {
+            zettaDriver.setData(Files.readAllBytes(file.toPath()));
+            return zettaDriver;
+        } catch (IOException ex) {
+            Logger.getLogger(ZettaDriverDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     @Override
