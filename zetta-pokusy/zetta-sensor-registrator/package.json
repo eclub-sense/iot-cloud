@@ -1,0 +1,15 @@
+{
+  "name": "zetta-sensor-registrator",
+  "version": "0.1.0",
+  "description": "SensorRegistrator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "zetta",
+    "sensor",
+    "registrator"
+  ],
+  "license": "MIT"
+}

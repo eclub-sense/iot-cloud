@@ -1,14 +1,20 @@
 package cz.esc.iot.cloudservice.resources;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import org.bson.Document;
 import org.json.JSONException;
@@ -17,11 +23,16 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 
+import cz.esc.iot.cloudservice.database.CloudMongoDB;
+import cz.esc.iot.cloudservice.persistance.dao.imp.SensorTypeInfoDaoImpl;
+import cz.esc.iot.cloudservice.persistance.dao.imp.UserInfoDaoImpl;
+import cz.esc.iot.cloudservice.persistance.model.MeasureValue;
+import cz.esc.iot.cloudservice.persistance.model.SensorTypeInfo;
+import cz.esc.iot.cloudservice.persistance.model.UserInfo;
+import cz.esc.iot.cloudservice.sensors.SensorType;
 import cz.esc.iot.cloudservice.utils.PortNumGenerator;
 
 public class UserRegistrator extends ServerResource {
@@ -41,10 +52,9 @@ public class UserRegistrator extends ServerResource {
 		}
 		
 		int port = PortNumGenerator.freePort();
-		System.out.println(port);
 		insertUserToRealm(username, password);
 		insertToDatabase(username, port);
-		startZettaServer(username, port);
+		//startZettaServer(username, port);
 		
 		return "{\"status\":\"OK\"}";
 	}
@@ -84,19 +94,41 @@ public class UserRegistrator extends ServerResource {
 	}
 	
 	private void insertToDatabase(String username, int port) {
-		MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
-		MongoDatabase db = mongoClient.getDatabase("CloudDB");
-		MongoCollection<Document> collection = db.getCollection("Users");
 		
-		Map<String, Object> map = new HashMap<>();
-		map.put("user", username);
-		map.put("port", port);
-		map.put("uuids", new LinkedList<>());
-		Document doc = new Document(map);
-		collection.insertOne(doc);
+		// insert Sensor info into database ------------
+		/*
+		List<MeasureValue> values = new LinkedList<>();
+		values.add(new MeasureValue("temperature", "°C"));
+		System.out.println("a");
+		values.add(new MeasureValue("pressure", "Bar"));
+		SensorTypeInfo sensor = new SensorTypeInfo(0x41, "THERMOMETER", values, "zetta-drivers/0x41/zetta-esc_thermometer-driver.zip", "zetta-esc_thermometer-driver");
+		System.out.println(sensor);
+		new SensorTypeInfoDaoImpl().create(sensor);
+		*/
 		
-		FindIterable<Document> users = collection.find(new Document("user", username));
+		SensorTypeInfo sen = new SensorTypeInfoDaoImpl().read(SensorType.THERMOMETER);
+		System.out.println(sen);
+
+		try {
+			ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream("zipfile.zip")));
+			//now create the entry in zip file
+			 
+			ZipEntry entry = new ZipEntry(sen.getDriverName());
+			zos.putNextEntry(entry);
+			zos.write(sen.getDriver().getData());
+			zos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		//----------------------------------------------
+		
+		
+		UserInfo user = new UserInfo(username, port, new LinkedList<Integer>());
+		new UserInfoDaoImpl().create(user);
+
+		MongoCollection<Document> collection = CloudMongoDB.getInstance().getCollection("Users");
+		FindIterable<Document> users = collection.find(new Document("username", username));
 		System.out.println("Added into database: " + users.first());
-		mongoClient.close();
 	}
 }

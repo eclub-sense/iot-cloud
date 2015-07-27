@@ -16,8 +16,8 @@ public class AppZip
     private static final String OUTPUT_ZIP_FILE = "/home/alf/a4b33ds.zip";
     private static final String SOURCE_FOLDER = "/home/alf/a4b33ds";
  
-    AppZip(){
-	fileList = new ArrayList<String>();
+    public AppZip() {
+    	fileList = new ArrayList<String>();
     }
  
     public static void main( String[] args ) throws IOException
