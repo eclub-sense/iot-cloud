@@ -2,15 +2,11 @@ package cz.esc.iot.cloudservice;
 
 import java.io.IOException;
 
+import org.eclipse.jetty.websocket.common.WebSocketRemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
-import cz.esc.iot.cloudservice.messages.HubDataMsg;
-import cz.esc.iot.cloudservice.messages.HubLoginMsg;
-import cz.esc.iot.cloudservice.messages.HubMessage;
-import cz.esc.iot.cloudservice.messages.HubMessageType;
-import cz.esc.iot.cloudservice.messages.MessageInstanceCreator;
-import cz.esc.iot.cloudservice.messages.Postman;
+import cz.esc.iot.cloudservice.messages.*;
 import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
 import cz.esc.iot.cloudservice.registry.ConnectedSensorRegistry;
 import cz.esc.iot.cloudservice.sensors.Sensor;
@@ -25,11 +21,15 @@ public class WebSocket extends WebSocketAdapter {
         super.onWebSocketConnect(sess);
         System.out.println("Socket Connected: " + sess);
         System.out.println(ConnectedHubRegistry.getInstance().getList());
+    
+    	String ip = ((WebSocketRemoteEndpoint)this.getRemote()).getInetSocketAddress().getHostString();
+    	int port = ((WebSocketRemoteEndpoint)this.getRemote()).getInetSocketAddress().getPort();
+    	System.out.println("ws://" + ip + ":" + port);
     }
     
     @Override
     public void onWebSocketText(String json) {
-        super.onWebSocketText(json);
+    	super.onWebSocketText(json);
         System.out.println("Received TEXT message: " + json);
         HubMessage message = MessageInstanceCreator.createMsgInstance(json);
         if (message.getType() == HubMessageType.DATA && verified == true) {
@@ -69,10 +69,10 @@ public class WebSocket extends WebSocketAdapter {
     
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
-    	ConnectedHubRegistry.getInstance().whoHasSocket(this).setSocket(null);
+    	//ConnectedHubRegistry.getInstance().whoHasSocket(this).setSocket(null);
         super.onWebSocketClose(statusCode,reason);
         System.out.println("Socket Closed: [" + statusCode + "] " + reason);
-        System.out.println(ConnectedHubRegistry.getInstance().getList());
+        //System.out.println(ConnectedHubRegistry.getInstance().getList());
     }    
 	
     @Override

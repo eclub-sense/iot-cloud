@@ -17,7 +17,7 @@ public class Postman {
 			System.out.println(hub.getSocket());
 			String uuid = String.format("%08d", hub.getIntUuid());
 			System.out.println(uuid);
-			hub.getSocket().getRemote().sendString("{\"type\":\"LOGIN_ACK\",\"uuid\":" + uuid + "}");
+			hub.getSocket().getRemote().sendString("{\"type\":\"LOGIN_ACK\",\"uuid\":\"" + uuid + "\"}");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

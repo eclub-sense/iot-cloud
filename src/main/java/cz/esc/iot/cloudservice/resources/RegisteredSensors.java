@@ -1,6 +1,5 @@
 package cz.esc.iot.cloudservice.resources;
 
-import org.eclipse.jetty.security.HashLoginService;
 import org.restlet.data.Form;
 import org.restlet.data.Parameter;
 import org.restlet.resource.Get;
@@ -22,8 +21,7 @@ public class RegisteredSensors extends ServerResource {
 	
 	@Get("json")
 	public String returnList() {
-		HashLoginService service = new HashLoginService();
-		System.out.println(this.getRequest().getChallengeResponse().getIdentifier());
+		//System.out.println(this.getRequest().getChallengeResponse().getIdentifier());
 		
 		Form form = getRequest().getResourceRef().getQueryAsForm();
 		String path = this.getRequest().getResourceRef().getPath();
