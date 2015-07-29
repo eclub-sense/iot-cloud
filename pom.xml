@@ -1,190 +1,196 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>cz.esc.iot.cloudservice</groupId>
-	<artifactId>iot-cloud</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>Cloud Service</name>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cz.esc.iot.cloudservice</groupId>
+    <artifactId>iot-cloud</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>Cloud Service</name>
 
-	<packaging>war</packaging>
+    <packaging>war</packaging>
 
-	<!-- License -->
-	<licenses>
-		<license>
-			<name>Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
+    <!-- License -->
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-	<inceptionYear>2012</inceptionYear>
+    <inceptionYear>2012</inceptionYear>
 
-	<!-- Build -->
-	<build>
-		<!-- Generate compiled stuff in the folder used for development mode -->
-		<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
+    <!-- Build -->
+    <build>
+        <!-- Generate compiled stuff in the folder used for development mode -->
+        <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
 
-		<plugins>
-			<!-- Compiler -->
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.4</version>
+        <plugins>
+            <!-- Compiler -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.4</version>
 
-				<configuration>
-					<!-- Java 8 -->
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
+                <configuration>
+                    <!-- Java 8 -->
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
 
-			<!-- Jetty -->
-			<plugin>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>9.3.0.v20150612</version>
-				<configuration>
-					<jettyXml>src/main/etc/jetty.xml</jettyXml>
-					<loginServices>
-			          <loginService implementation="org.eclipse.jetty.security.HashLoginService">
-			            <name>Default</name>
-			            <config>src/main/etc/realm.properties</config>
-			          </loginService>
-			        </loginServices> 
-				</configuration>
-			</plugin>
+            <!-- Jetty -->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.3.0.v20150612</version>
+                <configuration>
+                    <jettyXml>src/main/etc/jetty.xml</jettyXml>
+                    <loginServices>
+                        <loginService implementation="org.eclipse.jetty.security.HashLoginService">
+                            <name>Default</name>
+                            <config>src/main/etc/realm.properties</config>
+                        </loginService>
+                    </loginServices> 
+                </configuration>
+            </plugin>
 
-			<!-- License -->
-			<plugin>
-				<groupId>com.google.code.maven-license-plugin</groupId>
-				<artifactId>maven-license-plugin</artifactId>
-				<version>1.4.0</version>
-				<configuration>
-					<header>src/license/header.txt</header>
-					<includes>
-						<include>src/**/*.java</include>
-					</includes>
-					<properties>
-						<year>${project.inceptionYear}</year>
-					</properties>
-					<encoding>UTF-8</encoding>
-					<headerDefinitions>
-						<headerDefinition>src/license/header-definition.xml</headerDefinition>
-					</headerDefinitions>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+            <!-- License -->
+            <plugin>
+                <groupId>com.google.code.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.4.0</version>
+                <configuration>
+                    <header>src/license/header.txt</header>
+                    <includes>
+                        <include>src/**/*.java</include>
+                    </includes>
+                    <properties>
+                        <year>${project.inceptionYear}</year>
+                    </properties>
+                    <encoding>UTF-8</encoding>
+                    <headerDefinitions>
+                        <headerDefinition>src/license/header-definition.xml</headerDefinition>
+                    </headerDefinitions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-	<repositories>
-		<repository>
-			<id>java.net2</id>
-			<name>Repository hosting the jee6 artifacts</name>
-			<url>http://download.java.net/maven/2</url>
-		</repository>
-		<repository>
-	        <id>maven-restlet</id>
-	        <name>Restlet repository</name>
-	        <url>http://maven.restlet.com</url>
-	    </repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>java.net2</id>
+            <name>Repository hosting the jee6 artifacts</name>
+            <url>http://download.java.net/maven/2</url>
+        </repository>
+        <repository>
+            <id>maven-restlet</id>
+            <name>Restlet repository</name>
+            <url>http://maven.restlet.com</url>
+        </repository>
+    </repositories>
 	
-	<dependencies>
-	    <dependency>
-	        <groupId>org.mongodb</groupId>
-	        <artifactId>mongodb-driver</artifactId>
-	        <version>3.0.2</version>
-	    </dependency>
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb.morphia</groupId>
+            <artifactId>morphia</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
 
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-web-api</artifactId>
-			<version>6.0</version>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>6.0</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<!-- To write basic websockets against -->
-		<dependency>
-			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>websocket-api</artifactId>
-			<version>9.3.0.v20150612</version>
-		</dependency>
+        <!-- To write basic websockets against -->
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-api</artifactId>
+            <version>9.3.0.v20150612</version>
+        </dependency>
 
-		<!-- To run websockets in embedded server -->
-		<dependency>
-			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>websocket-server</artifactId>
-			<version>9.3.0.v20150612</version>
-		</dependency>
+        <!-- To run websockets in embedded server -->
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-server</artifactId>
+            <version>9.3.0.v20150612</version>
+        </dependency>
 
-		<!-- To run websockets client -->
-		<dependency>
-			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>websocket-client</artifactId>
-			<version>9.3.0.v20150612</version>
-		</dependency>
+        <!-- To run websockets client -->
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-client</artifactId>
+            <version>9.3.0.v20150612</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>websocket-servlet</artifactId>
-			<version>9.3.0.v20150612</version>
-		</dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-servlet</artifactId>
+            <version>9.3.0.v20150612</version>
+        </dependency>
 
-		<!-- Gson: Java to Json conversion -->
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.2.2</version>
-			<scope>compile</scope>
-		</dependency>
+        <!-- Gson: Java to Json conversion -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.2.2</version>
+            <scope>compile</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>1.0</version>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
 
-		<!-- Tests -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-	        <groupId>org.restlet.gae</groupId>
-	        <artifactId>org.restlet</artifactId>
-	        <version>2.2.1</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.restlet.gae</groupId>
-	        <artifactId>org.restlet.ext.servlet</artifactId>
-	        <version>2.2.1</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.restlet.gae</groupId>
-	        <artifactId>org.restlet.ext.json</artifactId>
-	        <version>2.2.1</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.restlet.gae</groupId>
-	        <artifactId>org.restlet.ext.jackson</artifactId>
-	        <version>2.2.0</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>javax.servlet</groupId>
-	        <artifactId>servlet-api</artifactId>
-	        <version>2.5</version>
-	    </dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-proxy</artifactId>
-			<version>9.3.1.v20150714</version>
-		</dependency>
-	</dependencies>
+        <!-- Tests -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.gae</groupId>
+            <artifactId>org.restlet</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.gae</groupId>
+            <artifactId>org.restlet.ext.servlet</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.gae</groupId>
+            <artifactId>org.restlet.ext.json</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.gae</groupId>
+            <artifactId>org.restlet.ext.jackson</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-proxy</artifactId>
+            <version>9.3.1.v20150714</version>
+        </dependency>
+    </dependencies>
 </project>
