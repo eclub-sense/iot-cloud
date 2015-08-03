@@ -13,7 +13,7 @@ public class UserEntity {
     @Id
     private ObjectId id;
     private String username;
-    private String hash;
+    private String password;
     @Reference
     private Collection<SensorEntity> sensorEntities;
     @Reference
@@ -38,12 +38,12 @@ public class UserEntity {
         this.username = username;
     }
 
-    public String getHash() {
-        return hash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Collection<SensorEntity> getSensorEntities() {
@@ -64,12 +64,12 @@ public class UserEntity {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 31 * hash + Objects.hashCode(this.id);
-        hash = 31 * hash + Objects.hashCode(this.username);
-        hash = 31 * hash + Objects.hashCode(this.hash);
-        hash = 31 * hash + Objects.hashCode(this.sensorEntities);
-        hash = 31 * hash + Objects.hashCode(this.hubEntities);
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.id);
+        hash = 89 * hash + Objects.hashCode(this.username);
+        hash = 89 * hash + Objects.hashCode(this.password);
+        hash = 89 * hash + Objects.hashCode(this.sensorEntities);
+        hash = 89 * hash + Objects.hashCode(this.hubEntities);
         return hash;
     }
 
@@ -88,17 +88,22 @@ public class UserEntity {
         if (!Objects.equals(this.username, other.username)) {
             return false;
         }
-        if (!Objects.equals(this.hash, other.hash)) {
+        if (!Objects.equals(this.password, other.password)) {
             return false;
         }
         if (!Objects.equals(this.sensorEntities, other.sensorEntities)) {
             return false;
         }
-        return Objects.equals(this.hubEntities, other.hubEntities);
+        if (!Objects.equals(this.hubEntities, other.hubEntities)) {
+            return false;
+        }
+        return true;
     }
+
+    
 
     @Override
     public String toString() {
-        return "UserEntity{" + "id=" + id + ", username=" + username + ", hash=" + hash + ", sensorEntities=" + sensorEntities + ", hubEntities=" + hubEntities + '}';
+        return "UserEntity{" + "id=" + id + ", username=" + username + ", password=" + password + ", sensorEntities=" + sensorEntities + ", hubEntities=" + hubEntities + '}';
     }
 }
