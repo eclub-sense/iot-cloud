@@ -1,5 +1,7 @@
 package cz.esc.iot.cloudservice.resources;
 
+import java.util.List;
+
 import org.restlet.data.Form;
 import org.restlet.data.Parameter;
 import org.restlet.resource.Get;
@@ -8,6 +10,10 @@ import org.restlet.resource.ServerResource;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import cz.esc.iot.cloudservice.messages.HubDataMsg;
+import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
+import cz.esc.iot.cloudservice.persistance.model.MeasuredValues;
+import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 import cz.esc.iot.cloudservice.registry.ConnectedSensorRegistry;
 import cz.esc.iot.cloudservice.sensors.Sensor;
 import cz.esc.iot.cloudservice.sensors.SensorType;
@@ -33,6 +39,14 @@ public class RegisteredSensors extends ServerResource {
 	}
 	
 	private String registeredSensors(Gson gson, Form form) {
+		//List<SensorEntity> sensors = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).asList();
+
+		List<MeasuredValues> values = MorfiaSetUp.getDatastore().createQuery(MeasuredValues.class).asList();
+    	//MorfiaSetUp.getDatastore().update(values, MorfiaSetUp.getDatastore().createUpdateOperations(MeasuredValues.class).addAll("data", ((HubDataMsg)message).getData(), true));
+    		
+		return gson.toJson(values);
+		
+		/*
 		ConnectedSensorRegistry result = new ConnectedSensorRegistry();
 		SensorType type = null;
 		int hubID = -1;
@@ -69,6 +83,6 @@ public class RegisteredSensors extends ServerResource {
 			}
 			result.setTotalCount(ConnectedSensorRegistry.getInstance().getList().size());
 			return gson.toJson(result);
-		}
+		}*/
 	}
 }

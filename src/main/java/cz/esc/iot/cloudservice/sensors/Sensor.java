@@ -13,7 +13,7 @@ import cz.esc.iot.cloudservice.registry.Identificable;
 public abstract class Sensor implements Identificable {
 	
 	@Expose @SerializedName("@type") private String jsonType = "sensor";
-	@Expose protected int uuid;
+	@Expose protected String uuid;
 	@Expose protected SensorType type = SensorType.THERMOMETER;
 	@Expose (serialize = false) protected String secret;
 	protected int incr;
@@ -45,12 +45,13 @@ public abstract class Sensor implements Identificable {
 	}
 	
 	@Override
-	public int getIntUuid() {
+	public String getStringUuid() {
 		return uuid;
 	}
 
-	public String getStringUuid() {
-		return String.format("%08d", uuid);
+	@Override
+	public int getIntUuid() {
+		return Integer.parseInt(uuid);
 	}
 	
 	public SensorType getType() {
@@ -78,7 +79,7 @@ public abstract class Sensor implements Identificable {
 		this.hub = hub;
 	}
 
-	public void setUuid(int uuid) {
+	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
 

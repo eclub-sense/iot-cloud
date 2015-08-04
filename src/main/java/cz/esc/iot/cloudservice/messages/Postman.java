@@ -13,11 +13,7 @@ public class Postman {
 
 	public static void sendLoginAck(Hub hub) {
 		try {
-			System.out.println(hub);
-			System.out.println(hub.getSocket());
-			String uuid = String.format("%08d", hub.getIntUuid());
-			System.out.println(uuid);
-			hub.getSocket().getRemote().sendString("{\"type\":\"LOGIN_ACK\",\"uuid\":\"" + uuid + "\"}");
+			hub.getSocket().getRemote().sendString("{\"type\":\"LOGIN_ACK\",\"uuid\":\"" + hub.getStringUuid() + "\"}");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -27,11 +23,11 @@ public class Postman {
 	public static void reregisterAllSensors(Hub hub) throws IOException {
 		for (Sensor sensor : ConnectedSensorRegistry.getInstance().getList()) {
 			if (sensor.getHub().getIntUuid() == hub.getIntUuid())
-				registerSensor(hub, sensor.getStringUuid());
+				registerSensor(hub, sensor.getStringUuid(), sensor.getType().getCode());
 		}
 	}
 	
-	public static void registerSensor(Hub hub, String uuid) throws IOException {
-		hub.getSocket().getRemote().sendString("{\"type\":\"NEW\",\"uuid\":" + uuid + "}");
+	public static void registerSensor(Hub hub, String uuid, int sensor_type) throws IOException {
+		hub.getSocket().getRemote().sendString("{\"type\":\"NEW\",\"sensor_type\":" + sensor_type + ",\"uuid\":\"" + uuid + "\"}");
 	}
 }

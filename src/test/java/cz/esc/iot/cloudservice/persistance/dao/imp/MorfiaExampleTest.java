@@ -71,7 +71,7 @@ public class MorfiaExampleTest {
         datastore.save(userEntity0, userEntity1);
         
         SensorEntity sensorEntity = new SensorEntity();
-        sensorEntity.setUuid(1);
+        //sensorEntity.setUuid(1);
         sensorEntity.setType(1);
         
         datastore.save(sensorEntity);

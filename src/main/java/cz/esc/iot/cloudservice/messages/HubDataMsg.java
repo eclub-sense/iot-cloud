@@ -1,6 +1,10 @@
 package cz.esc.iot.cloudservice.messages;
 
+import java.util.List;
+
 import com.google.gson.annotations.Expose;
+
+import cz.esc.iot.cloudservice.persistance.model.Data;
 
 /**
  * Class for DATA type messages from hub to cloud. Used when sensor sends
@@ -8,9 +12,9 @@ import com.google.gson.annotations.Expose;
  */
 public class HubDataMsg extends HubMessage {
 	
-	@Expose private String data;
+	@Expose private List<Data> data;
 	
-	public String getData() {
+	public List<Data> getData() {
 		return data;
 	}
 

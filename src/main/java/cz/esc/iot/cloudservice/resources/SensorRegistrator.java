@@ -9,10 +9,17 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import cz.esc.iot.cloudservice.hubs.Hub;
 import cz.esc.iot.cloudservice.messages.Postman;
+import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
+import cz.esc.iot.cloudservice.persistance.model.MeasuredValues;
+import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
 import cz.esc.iot.cloudservice.registry.ConnectedSensorRegistry;
+import cz.esc.iot.cloudservice.sensors.ESCThermometer;
 import cz.esc.iot.cloudservice.sensors.Sensor;
 import cz.esc.iot.cloudservice.sensors.SensorInstanceCreator;
 
@@ -25,18 +32,29 @@ public class SensorRegistrator extends ServerResource {
 	public void acceptRepresentation(Representation entity) throws IOException {
 	    if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
     		String json = entity.getText();
-    		Sensor sensor = SensorInstanceCreator.createSensorInstance(json);
-    		ConnectedSensorRegistry.getInstance().add(sensor);
-    		System.out.println(ConnectedHubRegistry.getInstance().getList());
+    		//Sensor sensor = SensorInstanceCreator.createSensorInstance(json);
+    		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    		SensorEntity sensor = gson.fromJson(json, SensorEntity.class);
+    		MorfiaSetUp.getDatastore().save(sensor);
+    		
+    		MeasuredValues values = new MeasuredValues(null, sensor, null);
+    		MorfiaSetUp.getDatastore().save(values);
+    		
+    		//ConnectedSensorRegistry.getInstance().add(sensor);
+    		//System.out.println(ConnectedHubRegistry.getInstance().getList());
+    		
     		
     		Hub hub;
 			try {
 				hub = chooseHub();
-				Postman.registerSensor(hub, sensor.getStringUuid());
-				sensor.setHub(hub);
+				System.out.println(sensor);
+				System.out.println(sensor.getType());
+				Postman.registerSensor(hub, sensor.getUuid(), sensor.getType());
+				//sensor.setHub(hub);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
 	    }
 	}
 	

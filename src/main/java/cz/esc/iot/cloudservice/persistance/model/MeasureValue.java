@@ -1,5 +1,7 @@
 package cz.esc.iot.cloudservice.persistance.model;
 
+import org.bson.types.ObjectId;
+
 public class MeasureValue {
 
 	private String name;

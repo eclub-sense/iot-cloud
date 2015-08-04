@@ -7,6 +7,10 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 import cz.esc.iot.cloudservice.messages.*;
+import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
+import cz.esc.iot.cloudservice.persistance.model.Data;
+import cz.esc.iot.cloudservice.persistance.model.MeasuredValues;
+import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
 import cz.esc.iot.cloudservice.registry.ConnectedSensorRegistry;
 import cz.esc.iot.cloudservice.sensors.Sensor;
@@ -33,8 +37,16 @@ public class WebSocket extends WebSocketAdapter {
         System.out.println("Received TEXT message: " + json);
         HubMessage message = MessageInstanceCreator.createMsgInstance(json);
         if (message.getType() == HubMessageType.DATA && verified == true) {
-        	Sensor sensor = ConnectedSensorRegistry.getInstance().get(message.getIntUuid());
-        	sensor.readPacket(((HubDataMsg)message).getData());
+        	//Sensor sensor = ConnectedSensorRegistry.getInstance().get(message.getIntUuid());
+        	SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(message.getUuid()).get();
+        	//sensor.readPacket(((HubDataMsg)message).getData());
+        	if (sensor != null) {
+        		MeasuredValues values = MorfiaSetUp.getDatastore().createQuery(MeasuredValues.class).field("sensor").equal(sensor).get();
+        		MorfiaSetUp.getDatastore().update(values, MorfiaSetUp.getDatastore().createUpdateOperations(MeasuredValues.class).unset("data"));
+        		//values.setData(((HubDataMsg)message).getData());
+        		System.out.print(((HubDataMsg)message).getData());
+        		MorfiaSetUp.getDatastore().update(values, MorfiaSetUp.getDatastore().createUpdateOperations(MeasuredValues.class).addAll("data", ((HubDataMsg)message).getData(), true));
+        	}
         } else if (message.getType() == HubMessageType.LOGIN) {
         	verifyConnection(message);
         } else {
@@ -45,11 +57,11 @@ public class WebSocket extends WebSocketAdapter {
     
     private void verifyConnection(HubMessage message) {
     	System.out.println(message);
-    	if ((((HubLoginMsg)message).getUsername().equals(RestletApplication.username)) 
+    	if ((((HubLoginMsg)message).getUsername().equals(RestletApplication.username))
     			&& (((HubLoginMsg)message).getPassword().equals(RestletApplication.password))) {
     		Hub hub = ConnectedHubRegistry.getInstance().get(message.getIntUuid());
     		if (hub == null) {
-    			hub = new Hub(message.getIntUuid(), this);
+    			hub = new Hub(message.getUuid(), this);
     			ConnectedHubRegistry.getInstance().add(hub);
     			Postman.sendLoginAck(hub);
     		} else {

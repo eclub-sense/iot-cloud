@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -24,6 +25,7 @@ import com.mongodb.client.MongoCollection;
 import cz.esc.iot.cloudservice.database.CloudMongoDB;
 import cz.esc.iot.cloudservice.persistance.dao.imp.SensorTypeInfoDaoImpl;
 import cz.esc.iot.cloudservice.persistance.dao.imp.UserInfoDaoImpl;
+import cz.esc.iot.cloudservice.persistance.model.MeasureValue;
 import cz.esc.iot.cloudservice.persistance.model.SensorTypeInfo;
 import cz.esc.iot.cloudservice.persistance.model.UserInfo;
 import cz.esc.iot.cloudservice.sensors.SensorType;
@@ -48,7 +50,7 @@ public class UserRegistrator extends ServerResource {
 		int port = PortNumGenerator.freePort();
 		insertUserToRealm(username, password);
 		insertToDatabase(username, port);
-		startZettaServer(username, port);
+		//startZettaServer(username, port);
 		
 		return "{\"status\":\"OK\"}";
 	}

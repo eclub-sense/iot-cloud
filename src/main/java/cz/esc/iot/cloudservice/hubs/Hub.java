@@ -9,22 +9,23 @@ import cz.esc.iot.cloudservice.registry.Identificable;
 public class Hub implements Identificable {
 
 	@Expose @SerializedName("@type") private String jsonType = "hub";
-	@Expose protected int uuid;
+	@Expose protected String uuid;
 	protected WebSocket socket;
 	@Expose (deserialize = false) protected String status = "connected";
 	
-	public Hub(int uuid, WebSocket socket) {
+	public Hub(String uuid, WebSocket socket) {
 		this.uuid = uuid;
 		this.socket = socket;
 	}
 	
 	@Override
 	public int getIntUuid() {
-		return uuid;
+		return Integer.parseInt(uuid);
 	}
 	
+	@Override
 	public String getStringUuid() {
-		return String.format("%08d", uuid);
+		return uuid;
 	}
 	
 	public WebSocket getSocket() {

@@ -5,13 +5,16 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 @Entity
 public class SensorEntity {
 
     @Id
     private ObjectId id;
-    private Integer uuid;
-    private Integer type;
+    @Expose private String uuid;
+    @Expose private Integer type;
 
     public SensorEntity() {
     }
@@ -24,11 +27,11 @@ public class SensorEntity {
         this.id = id;
     }
 
-    public Integer getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(Integer uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 

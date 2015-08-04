@@ -15,7 +15,7 @@ public class MorfiaSetUp {
     }
 
     // create the Datastore connecting to the default port on the local host
-    private static final Datastore datastore = morphia.createDatastore(new MongoClient( "localhost" , 27017 ), "mongo_test");
+    private static final Datastore datastore = morphia.createDatastore(new MongoClient( "localhost" , 27017 ), "CloudDB");
 
     static {
         datastore.ensureIndexes();
