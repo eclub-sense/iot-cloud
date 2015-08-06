@@ -59,17 +59,15 @@ public class WebSocket extends WebSocketAdapter {
     			&& hubPassword.equals(dbUser.getPassword())) {
     		HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hubUuid).get();
     		
-    		// in case that hub's uuid is already registered in database
+    		// hub is new
     		if (hub == null) {
     			hub = new HubEntity();
     			hub.setUuid(hubUuid);
     			MorfiaSetUp.getDatastore().save(hub);
         		MorfiaSetUp.getDatastore().update(dbUser, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("hubEntities", hub, true));
     			Postman.sendLoginAck(this, hubUuid);
-    		// hub's uuid is new
+    		// in case that hub's uuid is already registered in database
     		} else {
-    			MorfiaSetUp.getDatastore().save(hub);
-    			MorfiaSetUp.getDatastore().update(dbUser, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("hubEntities", hub, true));
     			Postman.sendLoginAck(this, hubUuid);
         		try {
 					Postman.reregisterAllSensors(this, hubUuid);

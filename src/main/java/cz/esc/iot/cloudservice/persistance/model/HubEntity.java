@@ -27,7 +27,7 @@ public class HubEntity {
         this.id = id;
     }
 
-    public String getUuid() {
+	public String getUuid() {
         return uuid;
     }
 
