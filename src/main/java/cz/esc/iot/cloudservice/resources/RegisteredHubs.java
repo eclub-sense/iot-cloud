@@ -3,6 +3,7 @@ package cz.esc.iot.cloudservice.resources;
 import org.restlet.data.Form;
 import org.restlet.data.Parameter;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
 import com.google.gson.Gson;
@@ -18,6 +19,11 @@ import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
  */
 public class RegisteredHubs extends ServerResource {
 
+	@Post
+	public String p() {
+		return "aaa";
+	}
+	
 	@Get("json")
 	public String returnList() {
 		Form form = getRequest().getResourceRef().getQueryAsForm();
@@ -28,6 +34,7 @@ public class RegisteredHubs extends ServerResource {
 		default : return gson.toJson(ConnectedHubRegistry.getInstance().get(Integer.parseInt((String)this.getRequestAttributes().get("uuid"))));
 		}
 	}
+	
 	private String registeredHubs(Gson gson, Form form) {
 		ConnectedHubRegistry result = new ConnectedHubRegistry();
 		String status = null;

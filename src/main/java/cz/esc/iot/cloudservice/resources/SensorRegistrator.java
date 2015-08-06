@@ -49,7 +49,7 @@ public class SensorRegistrator extends ServerResource {
 				hub = chooseHub();
 				System.out.println(sensor);
 				System.out.println(sensor.getType());
-				Postman.registerSensor(hub, sensor.getUuid(), sensor.getType());
+				//Postman.registerSensor(hub, sensor.getUuid(), sensor.getType());
 				//sensor.setHub(hub);
 			} catch (Exception e) {
 				e.printStackTrace();

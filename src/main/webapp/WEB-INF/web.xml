@@ -31,29 +31,5 @@
   <servlet-mapping>
     <servlet-name>http</servlet-name>
     <url-pattern>/*</url-pattern>
-  </servlet-mapping>
-  
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>registered</web-resource-name>
-      <url-pattern>/hub_registration</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>USER</role-name>
-    </auth-constraint>
-  </security-constraint>
-
-  <login-config>
-    <auth-method>BASIC</auth-method>
-    <realm-name>Default</realm-name>
-  </login-config>
-
-  <security-role>
-    <role-name>USER</role-name>
-  </security-role>
-  
-  <security-role>
-    <role-name>ADMIN</role-name>
-  </security-role>
-  
+  </servlet-mapping>  
 </web-app>

@@ -8,6 +8,7 @@ import com.google.gson.annotations.Expose;
  */
 public class HubLoginMsg extends HubMessage{
 
+	@Expose private static final String type = "LOGIN";
 	@Expose private String username;
 	@Expose private String password;
 	
@@ -17,6 +18,11 @@ public class HubLoginMsg extends HubMessage{
 	
 	public String getPassword() {
 		return password;
+	}
+
+	@Override
+	public String getType() {
+		return type;
 	}
 
 	@Override

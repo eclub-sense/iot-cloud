@@ -12,6 +12,7 @@ import cz.esc.iot.cloudservice.persistance.model.Data;
  */
 public class HubDataMsg extends HubMessage {
 	
+	@Expose private static final String type = "DATA";
 	@Expose private List<Data> data;
 	
 	public List<Data> getData() {
@@ -21,5 +22,10 @@ public class HubDataMsg extends HubMessage {
 	@Override
 	public String toString() {
 		return "HubDataMsg [data=" + data + ", type=" + type + ", uuid=" + uuid + "]";
+	}
+
+	@Override
+	public String getType() {
+		return type;
 	}
 }
