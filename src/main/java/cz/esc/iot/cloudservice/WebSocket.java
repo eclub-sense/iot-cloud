@@ -12,10 +12,12 @@ import cz.esc.iot.cloudservice.persistance.model.MeasuredValues;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
+import cz.esc.iot.cloudservice.registry.WebSocketRegistry;
 
 public class WebSocket extends WebSocketAdapter {
 	
 	private boolean verified = false;
+	private String hubUuid;
 	
     @Override
     public void onWebSocketConnect(Session sess) {
@@ -75,6 +77,8 @@ public class WebSocket extends WebSocketAdapter {
 					e.printStackTrace();
 				}
     		}
+    		this.hubUuid = hubUuid;
+    		WebSocketRegistry.add(this);
     		verified = true;
     	} else {
     		getSession().close(1, "Incorrect username or password.");
@@ -83,8 +87,10 @@ public class WebSocket extends WebSocketAdapter {
     
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
+    	WebSocketRegistry.remove(this);
         super.onWebSocketClose(statusCode,reason);
         System.out.println("Socket Closed: [" + statusCode + "] " + reason);
+        System.out.println("len: "+WebSocketRegistry.size());
     }    
 	
     @Override
@@ -100,4 +106,20 @@ public class WebSocket extends WebSocketAdapter {
         super.onWebSocketError(cause);
         cause.printStackTrace(System.err);
     }
+
+	public boolean isVerified() {
+		return verified;
+	}
+
+	public void setVerified(boolean verified) {
+		this.verified = verified;
+	}
+
+	public String getHubUuid() {
+		return hubUuid;
+	}
+
+	public void setHubUuid(String hubUuid) {
+		this.hubUuid = hubUuid;
+	}
 }

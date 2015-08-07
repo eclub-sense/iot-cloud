@@ -2,6 +2,7 @@ package cz.esc.iot.cloudservice.messages;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,11 +31,11 @@ public class Postman {
 	
 	public static void reregisterAllSensors(WebSocket socket, String uuid) throws IOException {
 		HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(uuid).get();
-		Collection<SensorEntity> sensors = hub.getSensorEntities();
+		List<SensorEntity> sensors = hub.getSensorEntities();
 		registerSensors(socket, sensors);
 	}
 	
-	public static void registerSensors(WebSocket socket, Collection<SensorEntity> sensors) throws IOException {
+	public static void registerSensors(WebSocket socket, List<SensorEntity> sensors) throws IOException {
 		HubNewMsg msg = new HubNewMsg(sensors);
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		socket.getRemote().sendString(gson.toJson(msg));

@@ -1,6 +1,7 @@
 package cz.esc.iot.cloudservice.persistance.model;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
@@ -15,9 +16,9 @@ public class UserEntity {
     private String username;
     private String password;
     @Reference
-    private Collection<SensorEntity> sensorEntities;
+    private List<SensorEntity> sensorEntities;
     @Reference
-    private Collection<HubEntity> hubEntities;
+    private List<HubEntity> hubEntities;
 
     public UserEntity() {
     }
@@ -46,19 +47,19 @@ public class UserEntity {
         this.password = password;
     }
 
-    public Collection<SensorEntity> getSensorEntities() {
+    public List<SensorEntity> getSensorEntities() {
         return sensorEntities;
     }
 
-    public void setSensorEntities(Collection<SensorEntity> sensorEntities) {
+    public void setSensorEntities(List<SensorEntity> sensorEntities) {
         this.sensorEntities = sensorEntities;
     }
 
-    public Collection<HubEntity> getHubEntities() {
+    public List<HubEntity> getHubEntities() {
         return hubEntities;
     }
 
-    public void setHubEntities(Collection<HubEntity> hubEntities) {
+    public void setHubEntities(List<HubEntity> hubEntities) {
         this.hubEntities = hubEntities;
     }
 

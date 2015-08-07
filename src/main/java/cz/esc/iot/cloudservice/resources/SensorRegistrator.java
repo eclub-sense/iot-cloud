@@ -1,81 +1,74 @@
 package cz.esc.iot.cloudservice.resources;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import cz.esc.iot.cloudservice.hubs.Hub;
+import cz.esc.iot.cloudservice.WebSocket;
 import cz.esc.iot.cloudservice.messages.Postman;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
+import cz.esc.iot.cloudservice.persistance.model.HubEntity;
 import cz.esc.iot.cloudservice.persistance.model.MeasuredValues;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
-import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
-import cz.esc.iot.cloudservice.registry.ConnectedSensorRegistry;
-import cz.esc.iot.cloudservice.sensors.ESCThermometer;
-import cz.esc.iot.cloudservice.sensors.Sensor;
-import cz.esc.iot.cloudservice.sensors.SensorInstanceCreator;
+import cz.esc.iot.cloudservice.persistance.model.UserEntity;
+import cz.esc.iot.cloudservice.registry.WebSocketRegistry;
 
 /**
  * Register new sensor.
  */
 public class SensorRegistrator extends ServerResource {
-
+	
 	@Post
 	public void acceptRepresentation(Representation entity) throws IOException {
 	    if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
+	    	String username = getRequest().getChallengeResponse().getPrincipal().getName();
     		String json = entity.getText();
-    		//Sensor sensor = SensorInstanceCreator.createSensorInstance(json);
     		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     		SensorEntity sensor = gson.fromJson(json, SensorEntity.class);
-    		MorfiaSetUp.getDatastore().save(sensor);
-    		
     		MeasuredValues values = new MeasuredValues(null, sensor, null);
-    		MorfiaSetUp.getDatastore().save(values);
-    		
-    		//ConnectedSensorRegistry.getInstance().add(sensor);
-    		//System.out.println(ConnectedHubRegistry.getInstance().getList());
-    		
-    		
-    		Hub hub;
+    		List<HubEntity> hubs = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(username).get().getHubEntities();
+    		WebSocket socket;
 			try {
-				hub = chooseHub();
-				System.out.println(sensor);
-				System.out.println(sensor.getType());
-				//Postman.registerSensor(hub, sensor.getUuid(), sensor.getType());
-				//sensor.setHub(hub);
+				socket = chooseHubUuid(hubs);
+				MorfiaSetUp.getDatastore().save(sensor);
+				MorfiaSetUp.getDatastore().save(values);
+				HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(socket.getHubUuid()).get();
+				UserEntity user = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(username).get();
+				MorfiaSetUp.getDatastore().update(hub, MorfiaSetUp.getDatastore().createUpdateOperations(HubEntity.class).add("sensorEntities", sensor, true));
+				MorfiaSetUp.getDatastore().update(user, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("sensorEntities", sensor, true));
+				List<SensorEntity> list = new LinkedList<SensorEntity>();
+				list.add(sensor);
+				Postman.registerSensors(socket, list);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
 	    }
 	}
 	
 	/**
 	 * Chooses random hub with which new sensor will be associated.
+	 * @throws Exception 
 	 */
-	private Hub chooseHub() throws Exception {
+	private WebSocket chooseHubUuid(List<HubEntity> hubs) throws Exception {
+		HubEntity[] entities = new HubEntity[hubs.size()];
+		entities = hubs.toArray(entities);
 		Random randomGenerator = new Random();
-		int random = randomGenerator.nextInt(ConnectedHubRegistry.getInstance().getTotalCount());
+		if (WebSocketRegistry.size() == 0) throw new Exception("No hub is connected. Can not connect new sensor anywhere.");
+		int random = randomGenerator.nextInt(WebSocketRegistry.size());
 		int first = random;
-		while (ConnectedHubRegistry.getInstance().getList().get(random).getSocket() == null) {
-			random = (random+1) % (ConnectedHubRegistry.getInstance().getTotalCount());
-			if (random == first) {
-				throw new Exception("No hub is connected.");
-			}
+		while (WebSocketRegistry.get(entities[random].getUuid()) == null) {
+			random = (random +1) % (WebSocketRegistry.size());
+			if (random == first) throw new Exception("No hub is connected. Can not connect new sensor anywhere.");
 		}
-		return  ConnectedHubRegistry.getInstance().getList().get(random);
-	}
-	
-	@Get("html")
-	public String hello() {
-		return "<h1>Hello</h1>";
+		return WebSocketRegistry.get(entities[random].getUuid());
 	}
 }
