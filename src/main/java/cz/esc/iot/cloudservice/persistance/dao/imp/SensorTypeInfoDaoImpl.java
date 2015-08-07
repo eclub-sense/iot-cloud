@@ -32,7 +32,6 @@ public class SensorTypeInfoDaoImpl implements Dao<SensorTypeInfo> {
 		Map<String, Object> map = new HashMap<>();
 		map.put("type", sensor.getType());
 		map.put("type_name", sensor.getTypeName());
-		map.put("driver_path", sensor.getPath());
 		map.put("driver_name", sensor.getDriverName());
 		map.put("values", values);
 		Document doc = new Document(map);
@@ -54,7 +53,6 @@ public class SensorTypeInfoDaoImpl implements Dao<SensorTypeInfo> {
 		SensorTypeInfo sensorInfo = SensorTypeInfoInstanceCreator.createInstance(users.first());
 		//System.out.println(sensorInfo);
 
-		sensorInfo.setDriver();
         return sensorInfo;
     }
 

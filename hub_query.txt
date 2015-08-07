@@ -1,1 +1,3 @@
 {"type":"LOGIN","username":"martin","password":"martin","uuid":"1111"}
+
+{"type":"DISCOVERED","uuid":"1111","sensor_id":"61b4ab75-f854-4801-9e9b-0ea9b19148be","sensor_uuid":"0000000b"}

@@ -1,7 +1,5 @@
 package cz.esc.iot.cloudservice.messages;
 
-import java.util.Collection;
-
 import com.google.gson.annotations.Expose;
 
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
@@ -9,10 +7,10 @@ import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 public class HubNewMsg extends HubMessage {
 	
 	@Expose private static final String type = "NEW";
-	@Expose private Collection<SensorEntity> sensors;
+	@Expose private SensorEntity sensor;
 	
-	public HubNewMsg(Collection<SensorEntity> sensors) {
-		this.sensors = sensors;
+	public HubNewMsg(SensorEntity sensor) {
+		this.sensor = sensor;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package cz.esc.iot.cloudservice.resources;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -17,7 +16,6 @@ import cz.esc.iot.cloudservice.WebSocket;
 import cz.esc.iot.cloudservice.messages.Postman;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.HubEntity;
-import cz.esc.iot.cloudservice.persistance.model.MeasuredValues;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 import cz.esc.iot.cloudservice.registry.WebSocketRegistry;
@@ -34,20 +32,17 @@ public class SensorRegistrator extends ServerResource {
     		String json = entity.getText();
     		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     		SensorEntity sensor = gson.fromJson(json, SensorEntity.class);
-    		MeasuredValues values = new MeasuredValues(null, sensor, null);
+    		sensor.setData(null);
     		List<HubEntity> hubs = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(username).get().getHubEntities();
     		WebSocket socket;
 			try {
 				socket = chooseHubUuid(hubs);
 				MorfiaSetUp.getDatastore().save(sensor);
-				MorfiaSetUp.getDatastore().save(values);
 				HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(socket.getHubUuid()).get();
 				UserEntity user = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(username).get();
 				MorfiaSetUp.getDatastore().update(hub, MorfiaSetUp.getDatastore().createUpdateOperations(HubEntity.class).add("sensorEntities", sensor, true));
 				MorfiaSetUp.getDatastore().update(user, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("sensorEntities", sensor, true));
-				List<SensorEntity> list = new LinkedList<SensorEntity>();
-				list.add(sensor);
-				Postman.registerSensors(socket, list);
+				Postman.registerSensor(socket, sensor);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

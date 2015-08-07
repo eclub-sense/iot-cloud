@@ -1,11 +1,13 @@
 package cz.esc.iot.cloudservice.persistance.model;
 
-import org.bson.types.ObjectId;
-
 public class MeasureValue {
 
 	private String name;
 	private String unit;
+	
+	public MeasureValue() {
+		super();
+	}
 	
 	public MeasureValue(String name, String unit) {
 		super();

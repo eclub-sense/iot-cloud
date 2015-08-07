@@ -1,15 +1,21 @@
 package cz.esc.iot.cloudservice;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
+import com.google.gson.Gson;
+
 import cz.esc.iot.cloudservice.messages.*;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
+import cz.esc.iot.cloudservice.persistance.model.Data;
 import cz.esc.iot.cloudservice.persistance.model.HubEntity;
-import cz.esc.iot.cloudservice.persistance.model.MeasuredValues;
+import cz.esc.iot.cloudservice.persistance.model.MeasureValue;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
+import cz.esc.iot.cloudservice.persistance.model.SensorTypeInfo;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
 import cz.esc.iot.cloudservice.registry.WebSocketRegistry;
@@ -29,22 +35,60 @@ public class WebSocket extends WebSocketAdapter {
     public void onWebSocketText(String json) {
     	super.onWebSocketText(json);
         System.out.println("Received TEXT message: " + json);
-        HubMessage message = MessageInstanceCreator.createMsgInstance(json);
+        HubMessage message;
+		try {
+			message = MessageInstanceCreator.createMsgInstance(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
         if (message.getType().equals("DATA") && verified == true) {
-        	//Sensor sensor = ConnectedSensorRegistry.getInstance().get(message.getIntUuid());
         	SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(message.getUuid()).get();
-        	//sensor.readPacket(((HubDataMsg)message).getData());
         	if (sensor != null) {
-        		MeasuredValues values = MorfiaSetUp.getDatastore().createQuery(MeasuredValues.class).field("sensor").equal(sensor).get();
-        		MorfiaSetUp.getDatastore().update(values, MorfiaSetUp.getDatastore().createUpdateOperations(MeasuredValues.class).unset("data"));
-        		MorfiaSetUp.getDatastore().update(values, MorfiaSetUp.getDatastore().createUpdateOperations(MeasuredValues.class).addAll("data", ((HubDataMsg)message).getData(), true));
+        		//MeasuredValues values = sensor.getMeasured();
+        		//MorfiaSetUp.getDatastore().update(values, MorfiaSetUp.getDatastore().createUpdateOperations(MeasuredValues.class).unset("data"));
+        		//MorfiaSetUp.getDatastore().update(values, MorfiaSetUp.getDatastore().createUpdateOperations(MeasuredValues.class).addAll("data", ((HubDataMsg)message).getData(), true));
         	}
         } else if (message.getType().equals("LOGIN")) {
         	verifyConnection(message);
+        } else if (message.getType().equals("DISCOVERED") && verified == true) {
+        	startStoringIntoDb((HubDiscoveredMsg)message);
         } else {
         	getSession().close(2, "Connection refused.");
         }
         System.out.println(ConnectedHubRegistry.getInstance().getList());
+    }
+    
+    private void startStoringIntoDb(HubDiscoveredMsg message) {
+    	SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(message.getSensorUuid()).get();
+    	System.out.println("sen: "+sensor);
+    	SensorTypeInfo typeInfo = MorfiaSetUp.getDatastore().createQuery(SensorTypeInfo.class).field("type").equal(sensor.getType()).get();
+    	System.out.println("info: "+typeInfo);
+    	// example url: "ws://127.0.0.1:1337/servers/1111/events?topic=photocell%2F3afc5cd4-755f-422d-8585-c8d526af8e85%2Fintensity"
+    	for (MeasureValue value : typeInfo.getValues()) {
+    		String url = "ws://127.0.0.1:1337/servers/" + message.getUuid() + "/" +"events?topic=" 
+    		    + sensor.getType() + "%2F" + message.getSensorId() + "%2F" + value.getName();
+    		// TODO get first values without ws
+    		System.out.println(url);
+    		try {
+                WebsocketClient clientEndPoint = new WebsocketClient(new URI(url));
+                clientEndPoint.addMessageHandler(new WebsocketClient.MessageHandler() {
+                    public void handleMessage(String message) {
+                    	Gson gson = new Gson();
+                    	ZettaMessage zettaMsg = gson.fromJson(message, ZettaMessage.class);
+                    	String measured = zettaMsg.getData();
+                    	Data data = new Data();
+                    	data.setName(value.getName());
+                    	data.setValue(measured);
+                    	System.out.println(zettaMsg);
+                    	System.out.println(data);
+                    	MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).set("measured", data));
+                    }
+                });
+            } catch (URISyntaxException ex) {
+                ex.printStackTrace();
+            }
+    	}
     }
     
     private void verifyConnection(HubMessage message) {
@@ -67,9 +111,13 @@ public class WebSocket extends WebSocketAdapter {
     			hub.setUuid(hubUuid);
     			MorfiaSetUp.getDatastore().save(hub);
         		MorfiaSetUp.getDatastore().update(dbUser, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("hubEntities", hub, true));
-    			Postman.sendLoginAck(this, hubUuid);
+        		this.hubUuid = hubUuid;
+        		WebSocketRegistry.add(this);
+        		Postman.sendLoginAck(this, hubUuid);
     		// in case that hub's uuid is already registered in database
     		} else {
+        		this.hubUuid = hubUuid;
+        		WebSocketRegistry.add(this);
     			Postman.sendLoginAck(this, hubUuid);
         		try {
 					Postman.reregisterAllSensors(this, hubUuid);
@@ -77,9 +125,8 @@ public class WebSocket extends WebSocketAdapter {
 					e.printStackTrace();
 				}
     		}
-    		this.hubUuid = hubUuid;
-    		WebSocketRegistry.add(this);
     		verified = true;
+    		
     	} else {
     		getSession().close(1, "Incorrect username or password.");
     	}

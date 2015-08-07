@@ -1,6 +1,5 @@
 package cz.esc.iot.cloudservice.persistance.model;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import org.bson.types.ObjectId;

@@ -1,23 +1,12 @@
 package cz.esc.iot.cloudservice.persistance.model;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import cz.esc.iot.cloudservice.persistance.dao.imp.AppZip;
-import cz.esc.iot.cloudservice.persistance.dao.imp.SensorTypeInfoDaoImpl;
 
 public class SensorTypeInfo {
     
     private int type;
     private String type_name;
     private List<MeasureValue> values;
-    private String driver_path;
     private String driver_name;
     private transient ZettaDriver zettaDriver;
     
@@ -25,12 +14,11 @@ public class SensorTypeInfo {
     	super();
     }
     
-    public SensorTypeInfo(int type, String type_name, List<MeasureValue> values, String path, String driver_name) {
+    public SensorTypeInfo(int type, String type_name, List<MeasureValue> values, String driver_name) {
 		super();
 		this.type = type;
 		this.type_name = type_name;
 		this.values = values;
-		this.driver_path = path;
 		this.driver_name = driver_name;
 	}
     
@@ -58,14 +46,6 @@ public class SensorTypeInfo {
 		this.values = values;
 	}
 
-	public String getPath() {
-		return driver_path;
-	}
-
-	public void setPath(String path) {
-		this.driver_path = path;
-	}
-
 	public String getDriverName() {
 		return driver_name;
 	}
@@ -77,7 +57,7 @@ public class SensorTypeInfo {
 	public ZettaDriver getDriver() {
 		return zettaDriver;
 	}
-
+/*
 	public boolean setDriver() {
 
         Path zipFile = Paths.get(driver_path);
@@ -115,11 +95,10 @@ public class SensorTypeInfo {
             Logger.getLogger(SensorTypeInfoDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
-	}
+	}*/
 
 	@Override
 	public String toString() {
-		return "SensorTypeInfo [type=" + type + ", type_name=" + type_name + ", values=" + values + ", path=" + driver_path
-				+ ", driver_name=" + driver_name + "]";
+		return "SensorTypeInfo [type=" + type + ", type_name=" + type_name + ", values=" + values + ", driver_name=" + driver_name + "]";
 	}
 }
