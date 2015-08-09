@@ -1,6 +1,5 @@
 package cz.esc.iot.cloudservice.persistance.model;
 
-import java.util.Objects;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -12,9 +11,10 @@ public class SensorAccessEntity {
     @Id
     private ObjectId id;
     @Reference
-    private UserEntity owener;
+    private UserEntity owner;
     @Reference
-    private UserEntity client;
+    private UserEntity user;
+    private String permission;
     @Reference
     private SensorEntity sensor;
 
@@ -26,20 +26,36 @@ public class SensorAccessEntity {
         this.id = id;
     }
 
-    public UserEntity getOwener() {
-        return owener;
+    public UserEntity getOwner() {
+		return owner;
+	}
+
+	public void setOwner(UserEntity owner) {
+		this.owner = owner;
+	}
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
+	public String getPermission() {
+		return permission;
+	}
+
+	public void setPermission(String permission) {
+		this.permission = permission;
+	}
+
+	public UserEntity getOwener() {
+        return owner;
     }
 
-    public void setOwener(UserEntity owener) {
-        this.owener = owener;
-    }
-
-    public UserEntity getClient() {
-        return client;
-    }
-
-    public void setClient(UserEntity client) {
-        this.client = client;
+    public void setOwener(UserEntity owner) {
+        this.owner = owner;
     }
 
     public SensorEntity getSensor() {
@@ -50,39 +66,58 @@ public class SensorAccessEntity {
         this.sensor = sensor;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 29 * hash + Objects.hashCode(this.id);
-        hash = 29 * hash + Objects.hashCode(this.owener);
-        hash = 29 * hash + Objects.hashCode(this.client);
-        hash = 29 * hash + Objects.hashCode(this.sensor);
-        return hash;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+		result = prime * result + ((permission == null) ? 0 : permission.hashCode());
+		result = prime * result + ((sensor == null) ? 0 : sensor.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final SensorAccessEntity other = (SensorAccessEntity) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.owener, other.owener)) {
-            return false;
-        }
-        if (!Objects.equals(this.client, other.client)) {
-            return false;
-        }
-        return Objects.equals(this.sensor, other.sensor);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SensorAccessEntity other = (SensorAccessEntity) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (owner == null) {
+			if (other.owner != null)
+				return false;
+		} else if (!owner.equals(other.owner))
+			return false;
+		if (permission == null) {
+			if (other.permission != null)
+				return false;
+		} else if (!permission.equals(other.permission))
+			return false;
+		if (sensor == null) {
+			if (other.sensor != null)
+				return false;
+		} else if (!sensor.equals(other.sensor))
+			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
+		return true;
+	}
 
-    @Override
-    public String toString() {
-        return "SensorAccessEntity{" + "id=" + id + ", owener=" + owener + ", client=" + client + ", sensor=" + sensor + '}';
-    }
+	@Override
+	public String toString() {
+		return "SensorAccessEntity [id=" + id + ", owner=" + owner + ", user=" + user + ", permission=" + permission
+				+ ", sensor=" + sensor + "]";
+	}
 }
