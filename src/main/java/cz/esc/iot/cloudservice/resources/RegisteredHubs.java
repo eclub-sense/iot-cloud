@@ -1,59 +1,29 @@
 package cz.esc.iot.cloudservice.resources;
 
-import org.restlet.data.Form;
-import org.restlet.data.Parameter;
 import org.restlet.resource.Get;
-import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import cz.esc.iot.cloudservice.hubs.Hub;
-import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
+import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
+import cz.esc.iot.cloudservice.persistance.model.HubEntity;
+import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 
 /**
  * Return list of registered hubs.
- * E.g. with parameters: {SERVER_IP}/registered_hubs?status={HUB_STATUS}
- * E.g. for specific hub according to its uuid: {SERVER_IP}/registered_hubs/{HUB_UUID}
  */
 public class RegisteredHubs extends ServerResource {
 
-	@Post
-	public String p() {
-		return "aaa";
-	}
-	
 	@Get("json")
 	public String returnList() {
-		Form form = getRequest().getResourceRef().getQueryAsForm();
+		String user = this.getRequest().getChallengeResponse().getIdentifier();
 		String path = this.getRequest().getResourceRef().getPath();
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		switch (path) {
-		case "/registered_hubs" : return registeredHubs(gson, form);
-		default : return gson.toJson(ConnectedHubRegistry.getInstance().get(Integer.parseInt((String)this.getRequestAttributes().get("uuid"))));
+		case "/registered_hubs" : return gson.toJson(MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(user).get().getHubEntities());
+		default : UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(user).get();
+		  return gson.toJson(MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(userEntity).field("uuid").equal(this.getRequestAttributes().get("uuid")).get());
 		}
-	}
-	
-	private String registeredHubs(Gson gson, Form form) {
-		ConnectedHubRegistry result = new ConnectedHubRegistry();
-		String status = null;
-		for (Parameter parameter : form) {
-			if (parameter.getName().equals("status")) {
-				status = parameter.getValue();
-			}
-		}
-		if (status != null) {
-			for (Hub hub : ConnectedHubRegistry.getInstance().getList()) {
-				if (hub.getStatus().equals(status)) {
-					result.add(hub);
-				}
-			}
-			result.setTotalCount(ConnectedHubRegistry.getInstance().getList().size());
-			return gson.toJson(result);
-		} else {
-			return gson.toJson(ConnectedHubRegistry.getInstance());
-		}
-		
 	}
 }

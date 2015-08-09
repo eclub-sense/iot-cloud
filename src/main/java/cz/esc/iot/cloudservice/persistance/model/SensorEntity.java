@@ -5,6 +5,7 @@ import java.util.Objects;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Reference;
 
 import com.google.gson.annotations.Expose;
 
@@ -16,9 +17,11 @@ public class SensorEntity {
     @Expose private String uuid;
     @Expose private Integer type;
     @Expose private List<Data> measured;
+    @Reference
+    private UserEntity user;
 
     public SensorEntity() {
-    	
+    	super();
     }
 
     public ObjectId getId() {
@@ -48,7 +51,23 @@ public class SensorEntity {
         return type;
     }
 
-    public void setType(Integer type) {
+    public List<Data> getMeasured() {
+		return measured;
+	}
+
+	public void setMeasured(List<Data> measured) {
+		this.measured = measured;
+	}
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
+	public void setType(Integer type) {
         this.type = type;
     }
 

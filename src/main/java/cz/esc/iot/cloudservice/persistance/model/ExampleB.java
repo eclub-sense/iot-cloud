@@ -9,7 +9,11 @@ import org.mongodb.morphia.annotations.Reference;
 @Entity
 public class ExampleB extends ExampleA implements Serializable {
 
-    public String string = "text";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public String string = "text";
     public String[] array = {"1", "2", "3"};
     @Reference
     public List<ExampleC> list;

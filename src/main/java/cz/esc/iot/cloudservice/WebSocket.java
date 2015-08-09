@@ -39,6 +39,7 @@ public class WebSocket extends WebSocketAdapter {
 		try {
 			message = MessageInstanceCreator.createMsgInstance(json);
 		} catch (Exception e) {
+			getSession().close(2, "Connection refused.");
 			e.printStackTrace();
 			return;
 		}
@@ -72,7 +73,7 @@ public class WebSocket extends WebSocketAdapter {
     		System.out.println(url);
     		try {
                 WebsocketClient clientEndPoint = new WebsocketClient(new URI(url));
-                clientEndPoint.addMessageHandler(new WebsocketClient.MessageHandler() {
+                clientEndPoint.addMsgHandler(new WebsocketClient.MsgHandler() {
                     public void handleMessage(String message) {
                     	Gson gson = new Gson();
                     	ZettaMessage zettaMsg = gson.fromJson(message, ZettaMessage.class);
@@ -109,6 +110,7 @@ public class WebSocket extends WebSocketAdapter {
     		if (hub == null) {
     			hub = new HubEntity();
     			hub.setUuid(hubUuid);
+    			hub.setUser(dbUser);
     			MorfiaSetUp.getDatastore().save(hub);
         		MorfiaSetUp.getDatastore().update(dbUser, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("hubEntities", hub, true));
         		this.hubUuid = hubUuid;

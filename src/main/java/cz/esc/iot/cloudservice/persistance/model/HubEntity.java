@@ -7,14 +7,18 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
+import com.google.gson.annotations.Expose;
+
 @Entity
 public class HubEntity {
 
     @Id
     private ObjectId id;
-    private String uuid;
+    @Expose private String uuid;
     @Reference
-    private List<SensorEntity> sensorEntities;
+    @Expose private List<SensorEntity> sensorEntities;
+    @Reference
+    private UserEntity user;
 
     public HubEntity() {
     }
@@ -23,7 +27,15 @@ public class HubEntity {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
+	public void setId(ObjectId id) {
         this.id = id;
     }
 

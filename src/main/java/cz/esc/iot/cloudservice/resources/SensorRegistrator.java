@@ -33,13 +33,14 @@ public class SensorRegistrator extends ServerResource {
     		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     		SensorEntity sensor = gson.fromJson(json, SensorEntity.class);
     		sensor.setData(null);
-    		List<HubEntity> hubs = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(username).get().getHubEntities();
+    		UserEntity user = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(username).get();
+    		List<HubEntity> hubs = user.getHubEntities();
     		WebSocket socket;
 			try {
 				socket = chooseHubUuid(hubs);
+				sensor.setUser(user);
 				MorfiaSetUp.getDatastore().save(sensor);
 				HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(socket.getHubUuid()).get();
-				UserEntity user = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(username).get();
 				MorfiaSetUp.getDatastore().update(hub, MorfiaSetUp.getDatastore().createUpdateOperations(HubEntity.class).add("sensorEntities", sensor, true));
 				MorfiaSetUp.getDatastore().update(user, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("sensorEntities", sensor, true));
 				Postman.registerSensor(socket, sensor);
@@ -57,8 +58,8 @@ public class SensorRegistrator extends ServerResource {
 		HubEntity[] entities = new HubEntity[hubs.size()];
 		entities = hubs.toArray(entities);
 		Random randomGenerator = new Random();
-		if (WebSocketRegistry.size() == 0) throw new Exception("No hub is connected. Can not connect new sensor anywhere.");
-		int random = randomGenerator.nextInt(WebSocketRegistry.size());
+		if (hubs.size() == 0) throw new Exception("No hub is connected. Can not connect new sensor anywhere.");
+		int random = randomGenerator.nextInt(hubs.size());
 		int first = random;
 		while (WebSocketRegistry.get(entities[random].getUuid()) == null) {
 			random = (random +1) % (WebSocketRegistry.size());

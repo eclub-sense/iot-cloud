@@ -8,7 +8,11 @@ import org.mongodb.morphia.annotations.Id;
 @Entity
 public class ExampleA implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@Id
     public ObjectId id;
 
     @Override

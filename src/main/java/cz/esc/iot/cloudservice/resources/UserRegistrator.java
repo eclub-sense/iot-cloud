@@ -1,37 +1,17 @@
 package cz.esc.iot.cloudservice.resources;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
-import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-
-import cz.esc.iot.cloudservice.database.CloudMongoDB;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
-import cz.esc.iot.cloudservice.persistance.dao.imp.SensorTypeInfoDaoImpl;
-import cz.esc.iot.cloudservice.persistance.dao.imp.UserInfoDaoImpl;
-import cz.esc.iot.cloudservice.persistance.model.MeasureValue;
-import cz.esc.iot.cloudservice.persistance.model.SensorTypeInfo;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
-import cz.esc.iot.cloudservice.persistance.model.UserInfo;
-import cz.esc.iot.cloudservice.sensors.SensorType;
-import cz.esc.iot.cloudservice.utils.PortNumGenerator;
 
 public class UserRegistrator extends ServerResource {
 
