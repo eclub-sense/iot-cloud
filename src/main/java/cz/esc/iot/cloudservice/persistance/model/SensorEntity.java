@@ -27,7 +27,15 @@ public class SensorEntity {
     	super();
     }
 
-    public ObjectId getId() {
+    public HubEntity getHub() {
+		return hub;
+	}
+
+	public void setHub(HubEntity hub) {
+		this.hub = hub;
+	}
+
+	public ObjectId getId() {
         return id;
     }
 

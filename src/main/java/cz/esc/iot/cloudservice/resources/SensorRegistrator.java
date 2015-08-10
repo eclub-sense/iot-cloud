@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
@@ -37,14 +39,31 @@ public class SensorRegistrator extends ServerResource {
     		UserEntity user = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(username).get();
     		List<HubEntity> hubs = user.getHubEntities();
     		WebSocket socket;
+    		HubEntity hub;
+    		JSONObject jsonObject;
+    		Object hub_uuid = null;
+    		try {
+    			jsonObject = new JSONObject(json);
+    			hub_uuid = (String)jsonObject.get("hub_uuid");
+    		} catch (JSONException e) {
+    			e.printStackTrace();
+    		}
+    		
 			try {
-				socket = chooseHubUuid(hubs);
+				if (hub_uuid == null) {
+					hub = chooseHubUuid(hubs);
+					socket = WebSocketRegistry.get(hub.getUuid());
+				} else {
+					hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hub_uuid).get();
+					socket = null;
+				}
+				sensor.setHub(hub);
 				sensor.setUser(user);
 				MorfiaSetUp.getDatastore().save(sensor);
-				HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(socket.getHubUuid()).get();
 				MorfiaSetUp.getDatastore().update(hub, MorfiaSetUp.getDatastore().createUpdateOperations(HubEntity.class).add("sensorEntities", sensor, true));
 				MorfiaSetUp.getDatastore().update(user, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("sensorEntities", sensor, true));
-				Postman.registerSensor(socket, sensor);
+				if (socket != null)
+					Postman.registerSensor(socket, sensor);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -55,7 +74,7 @@ public class SensorRegistrator extends ServerResource {
 	 * Chooses random hub with which new sensor will be associated.
 	 * @throws Exception 
 	 */
-	private WebSocket chooseHubUuid(List<HubEntity> hubs) throws Exception {
+	private HubEntity chooseHubUuid(List<HubEntity> hubs) throws Exception {
 		HubEntity[] entities = new HubEntity[hubs.size()];
 		entities = hubs.toArray(entities);
 		Random randomGenerator = new Random();
@@ -66,6 +85,6 @@ public class SensorRegistrator extends ServerResource {
 			random = (random +1) % (WebSocketRegistry.size());
 			if (random == first) throw new Exception("No hub is connected. Can not connect new sensor anywhere.");
 		}
-		return WebSocketRegistry.get(entities[random].getUuid());
+		return entities[random];
 	}
 }

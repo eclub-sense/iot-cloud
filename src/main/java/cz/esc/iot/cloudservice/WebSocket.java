@@ -26,11 +26,11 @@ public class WebSocket extends WebSocketAdapter {
     
     private static Map<String, WebSocket> map = new HashMap<>();
     
-    public static WebSocket getWebSocketByUuid(String uuid){
+    public static WebSocket getWebSocketByUuid(String uuid) {
         return map.get(uuid);
     }
     
-    public static Map<String, WebSocket> getAllWebSockets(){
+    public static Map<String, WebSocket> getAllWebSockets() {
         return map;
     }
 	
@@ -59,8 +59,8 @@ public class WebSocket extends WebSocketAdapter {
         	SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(message.getUuid()).get();
         	if (sensor != null) {
         		//MeasuredValues values = sensor.getMeasured();
-        		//MorfiaSetUp.getDatastore().update(values, MorfiaSetUp.getDatastore().createUpdateOperations(MeasuredValues.class).unset("data"));
-        		//MorfiaSetUp.getDatastore().update(values, MorfiaSetUp.getDatastore().createUpdateOperations(MeasuredValues.class).addAll("data", ((HubDataMsg)message).getData(), true));
+        		MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).unset("measured"));
+        		MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).addAll("measured", ((HubDataMsg)message).getData(), true));
         	}
         } else if (message.getType().equals("LOGIN")) {
         	verifyConnection(message);
