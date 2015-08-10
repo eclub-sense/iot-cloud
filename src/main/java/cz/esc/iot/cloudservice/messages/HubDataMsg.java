@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 
 import cz.esc.iot.cloudservice.persistance.model.Data;
+import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 
 /**
  * Class for DATA type messages from hub to cloud. Used when sensor sends
@@ -13,9 +14,9 @@ import cz.esc.iot.cloudservice.persistance.model.Data;
 public class HubDataMsg extends HubMessage {
 	
 	@Expose private static final String type = "DATA";
-	@Expose private List<Data> data;
+	@Expose private List<SensorEntity> data;
 	
-	public List<Data> getData() {
+	public List<SensorEntity> getData() {
 		return data;
 	}
 

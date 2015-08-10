@@ -8,6 +8,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import cz.esc.iot.cloudservice.messages.*;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
@@ -20,6 +21,7 @@ import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
 import cz.esc.iot.cloudservice.registry.WebSocketRegistry;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class WebSocket extends WebSocketAdapter {
@@ -56,17 +58,33 @@ public class WebSocket extends WebSocketAdapter {
 			return;
 		}
         if (message.getType().equals("DATA") && verified == true) {
-        	SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(message.getUuid()).get();
-        	if (sensor != null) {
+        System.out.println("a");
+        	Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        	List<SensorEntity> sensors = ((HubDataMsg)message).getData();
+        	System.out.println(sensors);
+        	for (SensorEntity s : sensors) {
+        		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(s.getUuid()).get();
+        		System.out.println(sensor);
+        		MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).unset("measured"));
+        		MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).addAll("measured", s.getData(), true));
+        	}
+        	
+        	
+        	/*if (sensors != null) {
+        		System.out.println(message);
+        		System.out.println(((HubDataMsg)message).getData());
         		//MeasuredValues values = sensor.getMeasured();
         		MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).unset("measured"));
         		MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).addAll("measured", ((HubDataMsg)message).getData(), true));
-        	}
+        	}*/
         } else if (message.getType().equals("LOGIN")) {
+        	System.out.println("b");
         	verifyConnection(message);
         } else if (message.getType().equals("DISCOVERED") && verified == true) {
+        	System.out.println("c");
         	startStoringIntoDb((HubDiscoveredMsg)message);
         } else {
+        	System.out.println("d");
         	getSession().close(2, "Connection refused.");
         }
         System.out.println(ConnectedHubRegistry.getInstance().getList());
