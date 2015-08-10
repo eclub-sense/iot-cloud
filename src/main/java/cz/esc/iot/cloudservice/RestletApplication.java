@@ -1,5 +1,6 @@
 package cz.esc.iot.cloudservice;
 
+import cz.esc.iot.cloudservice.resources.Homepage;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
@@ -20,6 +21,7 @@ public class RestletApplication extends Application {
         router.attach("/registered_hubs/{uuid}", RegisteredHubs.class);
         router.attach("/registered_hubs", RegisteredHubs.class);
         router.attach("/user_registration", UserRegistrator.class);
+        router.attach("/", Homepage.class);
         return router;
     }
 }
