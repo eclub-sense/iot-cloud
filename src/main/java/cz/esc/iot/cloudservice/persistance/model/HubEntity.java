@@ -8,12 +8,14 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
 import com.google.gson.annotations.Expose;
+import org.mongodb.morphia.annotations.Indexed;
 
 @Entity
 public class HubEntity {
 
     @Id
     private ObjectId id;
+    @Indexed(unique = true)
     @Expose private String uuid;
     @Reference
     @Expose private List<SensorEntity> sensorEntities;
