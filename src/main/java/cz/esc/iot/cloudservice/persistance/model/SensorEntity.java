@@ -8,12 +8,14 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
 import com.google.gson.annotations.Expose;
+import org.mongodb.morphia.annotations.Indexed;
 
 @Entity
 public class SensorEntity {
 
     @Id
     private ObjectId id;
+    @Indexed(unique = true)
     @Expose private String uuid;
     @Expose(serialize = false) private String access;
     @Expose private Integer type;
