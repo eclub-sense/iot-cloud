@@ -15,9 +15,11 @@ public class SensorEntity {
     @Id
     private ObjectId id;
     @Expose private String uuid;
-    @Expose private String access;
+    @Expose(serialize = false) private String access;
     @Expose private Integer type;
     @Expose private List<Data> measured;
+    @Reference
+    private HubEntity hub;
     @Reference
     private UserEntity user;
 

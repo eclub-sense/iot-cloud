@@ -10,14 +10,12 @@ import cz.esc.iot.cloudservice.persistance.model.SensorTypeInfo;
 public class SensorInfoAdder {
 
 	public static void main(String[] args) {
-		List<MeasureValue> list1 = new LinkedList<>();
-		list1.add(new MeasureValue("intensity", "c"));
-		SensorTypeInfo info1 = new SensorTypeInfo(5, "zetta-photocell", list1, "zetta-photocell-mock-driver");
 		List<MeasureValue> list2 = new LinkedList<>();
-		list2.add(new MeasureValue("state", null));
-		SensorTypeInfo info2 = new SensorTypeInfo(6, "zetta-led", list2, "zetta-led-mock-driver");
+		list2.add(new MeasureValue("R", "intensity"));
+		list2.add(new MeasureValue("G", "intensity"));
+		list2.add(new MeasureValue("Y", "intensity"));
+		SensorTypeInfo info2 = new SensorTypeInfo(3, "a_leds", list2, "a_leds_driver");
 
-		MorfiaSetUp.getDatastore().save(info1);
 		MorfiaSetUp.getDatastore().save(info2);
 	}
 }

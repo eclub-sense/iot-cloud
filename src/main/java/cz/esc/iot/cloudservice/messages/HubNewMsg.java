@@ -2,19 +2,23 @@ package cz.esc.iot.cloudservice.messages;
 
 import com.google.gson.annotations.Expose;
 
-import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
-
 public class HubNewMsg extends HubMessage {
 	
-	@Expose private static final String type = "NEW";
-	@Expose private SensorEntity sensor;
+	@Expose private final String type = "NEW";
+	@Expose private int sensor_type;
 	
-	public HubNewMsg(SensorEntity sensor) {
-		this.sensor = sensor;
+	public HubNewMsg(String sensor, int t) {
+		this.uuid = sensor;
+		sensor_type = t;
 	}
 
 	@Override
 	public String getType() {
 		return type;
+	}
+
+	@Override
+	public String toString() {
+		return "HubNewMsg [type=" + type + ", uuid=" + uuid + "]";
 	}
 }
