@@ -1,6 +1,12 @@
 package cz.esc.iot.cloudservice.persistance.dao;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoCredential;
+import com.mongodb.MongoTimeoutException;
+import com.mongodb.ServerAddress;
+import java.util.Arrays;
+import static java.util.Arrays.asList;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
@@ -14,8 +20,25 @@ public class MorfiaSetUp {
         morphia.mapPackage("cz.esc.iot.cloudservice.persistance.model");
     }
 
-    // create the Datastore connecting to the default port on the local host
-    private static final Datastore datastore = morphia.createDatastore(new MongoClient( "localhost" , 27017 ), "CloudDB");
+    /*
+    static MongoClient mongoClient = new MongoClient(asList(new ServerAddress("147.32.107.139:27017")),
+            Arrays.asList(MongoCredential.createCredential("pauliada",
+                            "admin",
+                            "j7dpxrIfYjbZIfFtdS1Y".toCharArray())),
+            MongoClientOptions.builder().serverSelectionTimeout(1000).build());
+
+    static {
+        try {
+            mongoClient.getDB("admin").command("ping");
+        } catch (MongoTimeoutException e) {
+            System.exit(512);
+        }
+    }
+    private static final Datastore datastore = morphia.createDatastore(mongoClient, "local");
+     /*/
+     // create the Datastore connecting to the default port on the local host
+     private static final Datastore datastore = morphia.createDatastore(new MongoClient("localhost", 27017), "CloudDB");
+    //*/
 
     static {
         datastore.ensureIndexes();

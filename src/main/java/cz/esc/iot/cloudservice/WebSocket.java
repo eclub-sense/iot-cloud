@@ -19,8 +19,20 @@ import cz.esc.iot.cloudservice.persistance.model.SensorTypeInfo;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
 import cz.esc.iot.cloudservice.registry.WebSocketRegistry;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WebSocket extends WebSocketAdapter {
+    
+    private static Map<String, WebSocket> map = new HashMap<>();
+    
+    public static WebSocket getWebSocketByUuid(String uuid){
+        return map.get(uuid);
+    }
+    
+    public static Map<String, WebSocket> getAllWebSockets(){
+        return map;
+    }
 	
 	private boolean verified = false;
 	private String hubUuid;
@@ -129,6 +141,7 @@ public class WebSocket extends WebSocketAdapter {
 				}
     		}
     		verified = true;
+                map.put(hubUuid, this);
     		
     	} else {
     		getSession().close(1, "Incorrect username or password.");
@@ -138,6 +151,7 @@ public class WebSocket extends WebSocketAdapter {
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
     	WebSocketRegistry.remove(this);
+        map.remove(this.hubUuid);
         super.onWebSocketClose(statusCode,reason);
         System.out.println("Socket Closed: [" + statusCode + "] " + reason);
         System.out.println("len: "+WebSocketRegistry.size());
