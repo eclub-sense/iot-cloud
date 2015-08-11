@@ -4,9 +4,7 @@ import java.io.IOException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.data.Form;
 import org.restlet.data.MediaType;
-import org.restlet.data.Parameter;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
@@ -38,15 +36,14 @@ public class ShareSensor extends ServerResource {
     		try {
     			jsonObject = new JSONObject(json);
     			uuid = (String)jsonObject.get("uuid");
+    			access  = (String)jsonObject.get("access");
     			username = (String)jsonObject.get("username");
     			permission = (String)jsonObject.get("permission");
-    			access  = (String)jsonObject.get("access");
-    		} catch (JSONException e) {
-    			e.printStackTrace();
-    		} catch (NullPointerException e) {
-    			
+    		} catch (NullPointerException | JSONException e) {
+    			System.out.println(e.getMessage());
     		}
 
+    		System.out.println(access);
     		if (access.equals("protected")) {
 	    		UserEntity owner = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(ownername).get();
 	    		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(owner).field("uuid").equal(uuid).get();
@@ -57,9 +54,12 @@ public class ShareSensor extends ServerResource {
 	    			MorfiaSetUp.getDatastore().save(accessEntity);
 	    		}
     		} else if (access.equals("public")) {
+    			System.out.println("A");
     			UserEntity owner = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(ownername).get();
-	    		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(owner).field("uuid").equal(uuid).get();
+    			System.out.println("B");
+    			SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(owner).field("uuid").equal(uuid).get();
 	    		if (sensor != null) {
+	    			System.out.println("C");
 	    			MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).set("access", "public"));
 	    		}
     		}
