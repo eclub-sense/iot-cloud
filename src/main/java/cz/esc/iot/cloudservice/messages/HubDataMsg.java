@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-import cz.esc.iot.cloudservice.persistance.model.Data;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 
 /**
