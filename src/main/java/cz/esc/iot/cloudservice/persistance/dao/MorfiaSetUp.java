@@ -1,6 +1,12 @@
 package cz.esc.iot.cloudservice.persistance.dao;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoCredential;
+import com.mongodb.MongoTimeoutException;
+import com.mongodb.ServerAddress;
+import java.util.Arrays;
+import static java.util.Arrays.asList;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
@@ -14,7 +20,7 @@ public class MorfiaSetUp {
         morphia.mapPackage("cz.esc.iot.cloudservice.persistance.model");
     }
 
-    /*
+    //*
     static MongoClient mongoClient = new MongoClient(asList(new ServerAddress("147.32.107.139:27017")),
             Arrays.asList(MongoCredential.createCredential("pauliada",
                             "admin",
