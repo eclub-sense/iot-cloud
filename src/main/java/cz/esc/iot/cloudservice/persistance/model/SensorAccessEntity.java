@@ -5,18 +5,31 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
+import com.google.gson.annotations.Expose;
+
 @Entity
 public class SensorAccessEntity {
 
     @Id
     private ObjectId id;
     @Reference
-    private UserEntity owner;
+    @Expose private UserEntity owner;
     @Reference
     private UserEntity user;
-    private String permission;
+    @Expose private String permission;
     @Reference
-    private SensorEntity sensor;
+    @Expose private SensorEntity sensor;
+
+    public SensorAccessEntity() {
+    	
+    }
+    
+    public SensorAccessEntity(UserEntity owner, UserEntity user, String permission, SensorEntity sensor) {
+    	this.sensor = sensor;
+    	this.permission = permission;
+    	this.owner = owner;
+    	this.user = user;
+    }
 
     public ObjectId getId() {
         return id;

@@ -5,14 +5,18 @@ import java.util.Objects;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Reference;
+
+import com.google.gson.annotations.Expose;
 
 @Entity
 public class UserEntity {
 
     @Id
     private ObjectId id;
-    private String username;
+    @Indexed(unique = true)
+    @Expose private String username;
     private String password;
     @Reference
     private List<SensorEntity> sensorEntities;

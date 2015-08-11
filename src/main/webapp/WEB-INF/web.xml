@@ -43,6 +43,7 @@
       <url-pattern>/sensor_registration/*</url-pattern>
       <url-pattern>/registered_sensors/*</url-pattern>
       <url-pattern>/registered_hubs/*</url-pattern>
+      <url-pattern>/share_sensor/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
       <role-name>USER</role-name>

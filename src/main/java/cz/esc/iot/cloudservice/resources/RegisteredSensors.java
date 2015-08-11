@@ -50,8 +50,10 @@ public class RegisteredSensors extends ServerResource {
 			AllSensors sensors = new AllSensors();
 			List<SensorEntity> my = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).asList();
 			List<SensorAccessEntity> borrowed = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("user").equal(userEntity).asList();
+			List<SensorEntity> _public = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").asList();
 			sensors.setMy(my);
 			sensors.setBorrowed(borrowed);
+			sensors.set_public(_public);
 			return gson.toJson(sensors);
 		} else if (access == null) {
 			HubEntity hubEntity = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(userEntity).field("uuid").equal(hubID).get();
