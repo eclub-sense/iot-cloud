@@ -1,6 +1,12 @@
 package cz.esc.iot.cloudservice.persistance.dao;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoCredential;
+import com.mongodb.MongoTimeoutException;
+import com.mongodb.ServerAddress;
+import java.util.Arrays;
+import static java.util.Arrays.asList;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
