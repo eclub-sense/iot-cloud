@@ -34,7 +34,7 @@ public class MorfiaSetUp {
             System.exit(512);
         }
     }
-    private static final Datastore datastore = morphia.createDatastore(mongoClient, "local");
+    private static final Datastore datastore = morphia.createDatastore(mongoClient, "zettor");
      /*/
      // create the Datastore connecting to the default port on the local host
      private static final Datastore datastore = morphia.createDatastore(new MongoClient("localhost", 27017), "CloudDB");
