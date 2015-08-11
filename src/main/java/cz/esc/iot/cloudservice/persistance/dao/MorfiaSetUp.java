@@ -23,13 +23,13 @@ public class MorfiaSetUp {
     //*
     static MongoClient mongoClient = new MongoClient(asList(new ServerAddress("147.32.107.139:27017")),
             Arrays.asList(MongoCredential.createCredential("pauliada",
-                            "admin",
+                            "zettor",
                             "j7dpxrIfYjbZIfFtdS1Y".toCharArray())),
             MongoClientOptions.builder().serverSelectionTimeout(1000).build());
 
     static {
         try {
-            mongoClient.getDB("admin").command("ping");
+            mongoClient.getDB("zettor").command("ping");
         } catch (MongoTimeoutException e) {
             System.exit(512);
         }
