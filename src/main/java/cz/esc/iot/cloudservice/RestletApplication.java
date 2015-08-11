@@ -9,6 +9,7 @@ import cz.esc.iot.cloudservice.resources.UserRegistrator;
 import cz.esc.iot.cloudservice.resources.RegisteredHubs;
 import cz.esc.iot.cloudservice.resources.RegisteredSensors;
 import cz.esc.iot.cloudservice.resources.SensorRegistrator;
+import cz.esc.iot.cloudservice.resources.ShareSensor;
 
 public class RestletApplication extends Application {
 	
@@ -22,6 +23,7 @@ public class RestletApplication extends Application {
         router.attach("/registered_hubs", RegisteredHubs.class);
         router.attach("/user_registration", UserRegistrator.class);
         router.attach("/", Homepage.class);
+        router.attach("/share_sensor", ShareSensor.class);
         return router;
     }
 }

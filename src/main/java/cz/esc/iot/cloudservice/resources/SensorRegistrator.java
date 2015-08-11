@@ -45,8 +45,10 @@ public class SensorRegistrator extends ServerResource {
     		try {
     			jsonObject = new JSONObject(json);
     			hub_uuid = (String)jsonObject.get("hub_uuid");
-    		} catch (NullPointerException | JSONException e) {
+    		} catch (JSONException e) {
     			e.printStackTrace();
+    		} catch (NullPointerException e) {
+    			
     		}
     		
 			try {
