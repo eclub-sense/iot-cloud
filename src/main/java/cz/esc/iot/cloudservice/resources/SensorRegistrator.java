@@ -6,10 +6,13 @@ import java.util.Random;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
+import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
+import org.restlet.ext.oauth.AccessTokenServerResource;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,6 +29,11 @@ import cz.esc.iot.cloudservice.registry.WebSocketRegistry;
  * Register new sensor.
  */
 public class SensorRegistrator extends ServerResource {
+	
+	@Get("html")
+	public String g() {
+		return "<h1>Hell</h3>";
+	}
 	
 	@Post
 	public void acceptRepresentation(Representation entity) throws IOException {

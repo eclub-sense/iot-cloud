@@ -17,7 +17,6 @@ import cz.esc.iot.cloudservice.persistance.model.MeasureValue;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 import cz.esc.iot.cloudservice.persistance.model.SensorTypeInfo;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
-import cz.esc.iot.cloudservice.registry.ConnectedHubRegistry;
 import cz.esc.iot.cloudservice.registry.WebSocketRegistry;
 import java.util.HashMap;
 import java.util.List;
@@ -71,7 +70,6 @@ public class WebSocket extends WebSocketAdapter {
         } else {
         	getSession().close(2, "Connection refused.");
         }
-        System.out.println(ConnectedHubRegistry.getInstance().getList());
     }
     
     private void startStoringIntoDb(HubDiscoveredMsg message) {
