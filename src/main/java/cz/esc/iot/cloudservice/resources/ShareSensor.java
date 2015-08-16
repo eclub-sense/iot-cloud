@@ -16,8 +16,6 @@ import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 
 /**
  * Share sensor according to parameter access=public/protected.
- * 
- * @author martin
  */
 public class ShareSensor extends ServerResource {
 
@@ -30,14 +28,14 @@ public class ShareSensor extends ServerResource {
     		
     		JSONObject jsonObject;
     		String uuid = null;
-    		String username = null;
+    		String identifier = null;
     		String permission = null;
     		String access = null;
     		try {
     			jsonObject = new JSONObject(json);
     			uuid = (String)jsonObject.get("uuid");
     			access  = (String)jsonObject.get("access");
-    			username = (String)jsonObject.get("username");
+    			identifier = (String)jsonObject.get("identifier");
     			permission = (String)jsonObject.get("permission");
     		} catch (NullPointerException | JSONException e) {
     			System.out.println(e.getMessage());
@@ -45,9 +43,9 @@ public class ShareSensor extends ServerResource {
 
     		System.out.println(access);
     		if (access.equals("protected")) {
-	    		UserEntity owner = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(ownername).get();
+	    		UserEntity owner = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(ownername).get();
 	    		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(owner).field("uuid").equal(uuid).get();
-	    		UserEntity user = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(username).get();
+	    		UserEntity user = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(identifier).get();
 	    		if (sensor != null && user != null) {
 	    			MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).set("access", "protected"));
 	    			SensorAccessEntity accessEntity = new SensorAccessEntity(owner, user, permission, sensor);
@@ -55,7 +53,7 @@ public class ShareSensor extends ServerResource {
 	    		}
     		} else if (access.equals("public")) {
     			System.out.println("A");
-    			UserEntity owner = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(ownername).get();
+    			UserEntity owner = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(ownername).get();
     			System.out.println("B");
     			SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(owner).field("uuid").equal(uuid).get();
 	    		if (sensor != null) {

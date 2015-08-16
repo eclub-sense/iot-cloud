@@ -16,7 +16,7 @@ public class UserEntity {
     @Id
     private ObjectId id;
     @Indexed(unique = true)
-    @Expose private String username;
+    @Expose private String identifier;
     private String password;
     @Reference
     private List<SensorEntity> sensorEntities;
@@ -34,12 +34,12 @@ public class UserEntity {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setIdentifier(String username) {
+        this.identifier = username;
     }
 
     public String getPassword() {
@@ -70,7 +70,7 @@ public class UserEntity {
     public int hashCode() {
         int hash = 7;
         hash = 89 * hash + Objects.hashCode(this.id);
-        hash = 89 * hash + Objects.hashCode(this.username);
+        hash = 89 * hash + Objects.hashCode(this.identifier);
         hash = 89 * hash + Objects.hashCode(this.password);
         hash = 89 * hash + Objects.hashCode(this.sensorEntities);
         hash = 89 * hash + Objects.hashCode(this.hubEntities);
@@ -89,7 +89,7 @@ public class UserEntity {
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
-        if (!Objects.equals(this.username, other.username)) {
+        if (!Objects.equals(this.identifier, other.identifier)) {
             return false;
         }
         if (!Objects.equals(this.password, other.password)) {
@@ -108,6 +108,6 @@ public class UserEntity {
 
     @Override
     public String toString() {
-        return "UserEntity{" + "id=" + id + ", username=" + username + ", password=" + password + ", sensorEntities=" + sensorEntities + ", hubEntities=" + hubEntities + '}';
+        return "UserEntity{" + "id=" + id + ", identifier=" + identifier + ", password=" + password + ", sensorEntities=" + sensorEntities + ", hubEntities=" + hubEntities + '}';
     }
 }

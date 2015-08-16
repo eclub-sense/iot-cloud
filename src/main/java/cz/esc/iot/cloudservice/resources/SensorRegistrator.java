@@ -6,19 +6,19 @@ import java.util.Random;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
-import org.restlet.ext.oauth.AccessTokenServerResource;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import cz.esc.iot.cloudservice.WebSocket;
 import cz.esc.iot.cloudservice.messages.Postman;
+import cz.esc.iot.cloudservice.oauth2.GoogleUserInfo;
+import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.HubEntity;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
@@ -30,21 +30,21 @@ import cz.esc.iot.cloudservice.registry.WebSocketRegistry;
  */
 public class SensorRegistrator extends ServerResource {
 	
-	@Get("html")
-	public String g() {
-		return "<h1>Hell</h3>";
+	@Get
+	public void g() {
+		System.out.println("b");
 	}
-	
 	@Post
 	public void acceptRepresentation(Representation entity) throws IOException {
-	    if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
-	    	String username = getRequest().getChallengeResponse().getPrincipal().getName();
+		System.out.println("a");
+		if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
+			String userMail = "";//googleUser.getEmail();
     		String json = entity.getText();
     		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     		SensorEntity sensor = gson.fromJson(json, SensorEntity.class);
     		sensor.setData(null);
     		sensor.setAccess("private");
-    		UserEntity user = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(username).get();
+    		UserEntity user = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(userMail).get();
     		List<HubEntity> hubs = user.getHubEntities();
     		WebSocket socket;
     		HubEntity hub;

@@ -29,7 +29,7 @@ public class RegisteredSensors extends ServerResource {
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		switch (path) {
 		case "/registered_sensors" : return registeredSensors(gson, form, user);
-		default : UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(user).get();
+		default : UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(user).get();
 				  return gson.toJson(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("uuid").equal(this.getRequestAttributes().get("uuid")).get());
 		}
 	}
@@ -44,7 +44,7 @@ public class RegisteredSensors extends ServerResource {
 				access = parameter.getValue();
 			}
 		}
-		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(user).get();
+		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(user).get();
 
 		if (access == null && hubID == null) {
 			AllSensors sensors = new AllSensors();

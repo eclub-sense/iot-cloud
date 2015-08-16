@@ -21,8 +21,8 @@ public class RegisteredHubs extends ServerResource {
 		String path = this.getRequest().getResourceRef().getPath();
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		switch (path) {
-		case "/registered_hubs" : return gson.toJson(MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(user).get().getHubEntities());
-		default : UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(user).get();
+		case "/registered_hubs" : return gson.toJson(MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(user).get().getHubEntities());
+		default : UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(user).get();
 		  return gson.toJson(MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(userEntity).field("uuid").equal(this.getRequestAttributes().get("uuid")).get());
 		}
 	}

@@ -115,7 +115,7 @@ public class WebSocket extends WebSocketAdapter {
     	System.out.println(dbUser);
     	System.out.println(hubUuid);
     	
-    	if (dbUser != null && hubUsername.equals(dbUser.getUsername())
+    	if (dbUser != null && hubUsername.equals(dbUser.getIdentifier())
     			&& hubPassword.equals(dbUser.getPassword())) {
     		HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hubUuid).get();
     		

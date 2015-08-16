@@ -30,6 +30,12 @@
   	 <param-name>org.restlet.application</param-name>
   	 <param-value>cz.esc.iot.cloudservice.RestletApplication</param-value>
 	</init-param>
+	
+	<init-param>
+     <param-name>org.restlet.clients</param-name>
+     <param-value>HTTP HTTPS FILE</param-value>
+    </init-param>
+    
 	<load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
