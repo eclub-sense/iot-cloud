@@ -18,6 +18,10 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
+import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 
 public class OAuth2 {
 
@@ -35,7 +39,43 @@ public class OAuth2 {
 		}
 	}
 	
-	public static GoogleUserInfo getUserMail(Request req) throws IOException {
+	public static UserEntity verifyUser(Request req) {
+		Form form = req.getResourceRef().getQueryAsForm();
+		String accessToken = form.getFirstValue("access_token");
+		if (accessToken == null) {
+			return null;
+		}
+		GoogleUserInfo googleUser = null;
+		try {
+			googleUser = OAuth2.getGoogleUser(accessToken);
+		} catch (JsonSyntaxException | IOException e1) {
+			return null;
+		}
+		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(googleUser.getId()).get();
+		if (userEntity == null) {
+			return null;
+		}
+		return userEntity;
+	}
+	
+	public static GoogleUserInfo getGoogleUser(String accessToken) throws JsonSyntaxException, IOException {
+		
+		/*
+		 * Ask for info about user.
+		 */
+		String uri = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken;
+		ClientResource getter = new ClientResource(uri);
+		Representation response = getter.get();
+	
+		Gson gson = new Gson();
+		GoogleUserInfo user = null;
+
+		user = gson.fromJson(response.getText(), GoogleUserInfo.class);
+
+		return user;
+	}
+	
+	public static Token getToken(Request req) throws IOException {
 		
 		/*
 		 * Ask for access token.
@@ -47,22 +87,13 @@ public class OAuth2 {
     	params.code(form.getFirstValue("code"));
     	params.redirectURI("http://localhost:8080/callback");
     	params.grantType(GrantType.authorization_code);
+    	
     	Token token = null;
 		try {
 			token = client.requestToken(params);
 		} catch (OAuthException | IOException | JSONException e) {
 			e.printStackTrace();
 		}
-		String accessToken = token.getAccessToken();
-		
-		/*
-		 * Ask for info about user.
-		 */
-		String uri = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken;
-		ClientResource getter = new ClientResource(uri);
-		Representation response = getter.get();
-
-		Gson gson = new Gson();
-		return gson.fromJson(response.getText(), GoogleUserInfo.class);
+		return token;
 	}
 }

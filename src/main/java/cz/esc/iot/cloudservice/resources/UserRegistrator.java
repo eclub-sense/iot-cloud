@@ -5,9 +5,10 @@ import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 
 public class UserRegistrator {
 	
-	public static void registerUser(String username) {
+	public static void registerUser(String id, String username) {
 		UserEntity user = new UserEntity();
-		user.setIdentifier(username);
+		user.setIdentifier(id);
+		user.addEmail(username);
 		MorfiaSetUp.getDatastore().save(user);
 	}
 }

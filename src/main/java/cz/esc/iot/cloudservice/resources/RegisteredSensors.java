@@ -10,6 +10,7 @@ import org.restlet.resource.ServerResource;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.HubEntity;
 import cz.esc.iot.cloudservice.persistance.model.SensorAccessEntity;
@@ -23,18 +24,23 @@ public class RegisteredSensors extends ServerResource {
 	
 	@Get("json")
 	public String returnList() {
-		String user = this.getRequest().getChallengeResponse().getIdentifier();
-		Form form = getRequest().getResourceRef().getQueryAsForm();
-		String path = this.getRequest().getResourceRef().getPath();
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		
+		// verify user
+		Form form = getRequest().getResourceRef().getQueryAsForm();
+		UserEntity userEntity;
+		if ((userEntity = OAuth2.verifyUser(getRequest())) == null) {
+			return gson.toJson(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").get());
+		}
+		
+		String path = this.getRequest().getResourceRef().getPath();
 		switch (path) {
-		case "/registered_sensors" : return registeredSensors(gson, form, user);
-		default : UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(user).get();
-				  return gson.toJson(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("uuid").equal(this.getRequestAttributes().get("uuid")).get());
+		case "/registered_sensors" : return registeredSensors(gson, form, userEntity);
+		default : return gson.toJson(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("uuid").equal(this.getRequestAttributes().get("uuid")).get());
 		}
 	}
 	
-	private String registeredSensors(Gson gson, Form form, String user) {
+	private String registeredSensors(Gson gson, Form form, UserEntity userEntity) {
 		String hubID = null;
 		String access = null;
 		for (Parameter parameter : form) {
@@ -44,7 +50,6 @@ public class RegisteredSensors extends ServerResource {
 				access = parameter.getValue();
 			}
 		}
-		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(user).get();
 
 		if (access == null && hubID == null) {
 			AllSensors sensors = new AllSensors();

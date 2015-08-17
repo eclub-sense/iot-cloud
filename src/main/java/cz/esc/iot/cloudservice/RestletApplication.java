@@ -7,6 +7,7 @@ import org.restlet.routing.Router;
 
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.resources.Homepage;
+import cz.esc.iot.cloudservice.resources.AccessToken;
 import cz.esc.iot.cloudservice.resources.RegisteredHubs;
 import cz.esc.iot.cloudservice.resources.RegisteredSensors;
 import cz.esc.iot.cloudservice.resources.SensorRegistrator;
@@ -22,20 +23,21 @@ public class RestletApplication extends Application {
     	
     	Router router = new Router(getContext());
     	
-    	OAuthProxy root = new OAuthProxy(getContext(), true);
-		root.setClientId(OAuth2.clientID);
-		root.setClientSecret(OAuth2.clientSecret);
-		root.setRedirectURI("http://localhost:8080/callback");
-		root.setAuthorizationURI("https://accounts.google.com/o/oauth2/auth");
-		root.setTokenURI("https://accounts.google.com/o/oauth2/token");
-		root.setScope(scopes);
-		root.setNext(Homepage.class);
-        router.attach("/", root);
-        router.attach("/callback", Homepage.class);
+    	OAuthProxy proxy = new OAuthProxy(getContext(), true);
+    	proxy.setClientId(OAuth2.clientID);
+    	proxy.setClientSecret(OAuth2.clientSecret);
+    	proxy.setRedirectURI("http://localhost:8080/callback");
+    	proxy.setAuthorizationURI("https://accounts.google.com/o/oauth2/auth");
+    	proxy.setTokenURI("https://accounts.google.com/o/oauth2/token");
+    	proxy.setScope(scopes);
+    	proxy.setNext(AccessToken.class);
+        router.attach("/login", proxy);
+        router.attach("/callback", AccessToken.class);
         
+        router.attach("/", Homepage.class);
         router.attach("/sensor_registration", SensorRegistrator.class);
-        router.attach("/registered_sensors/{uuid}", RegisteredSensors.class);
         router.attach("/registered_sensors", RegisteredSensors.class);
+        router.attach("/registered_sensors/{uuid}", RegisteredSensors.class);
         router.attach("/registered_hubs/{uuid}", RegisteredHubs.class);
         router.attach("/registered_hubs", RegisteredHubs.class);
         router.attach("/share_sensor", ShareSensor.class);

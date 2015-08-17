@@ -63,10 +63,8 @@ public class MorfiaExampleTest {
         
         UserEntity userEntity0 = new UserEntity();
         userEntity0.setIdentifier("user0");
-        userEntity0.setPassword("pass0");
         UserEntity userEntity1 = new UserEntity();
         userEntity1.setIdentifier("user1");
-        userEntity1.setPassword("pass1");
         
         datastore.save(userEntity0, userEntity1);
         

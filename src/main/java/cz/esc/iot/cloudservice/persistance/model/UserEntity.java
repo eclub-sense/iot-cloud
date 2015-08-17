@@ -1,5 +1,6 @@
 package cz.esc.iot.cloudservice.persistance.model;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import org.bson.types.ObjectId;
@@ -17,7 +18,7 @@ public class UserEntity {
     private ObjectId id;
     @Indexed(unique = true)
     @Expose private String identifier;
-    private String password;
+    @Expose private List<String> emails = new LinkedList<>();
     @Reference
     private List<SensorEntity> sensorEntities;
     @Reference
@@ -42,18 +43,14 @@ public class UserEntity {
         this.identifier = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public List<SensorEntity> getSensorEntities() {
         return sensorEntities;
     }
 
+    public void addEmail(String mail) {
+    	emails.add(mail);
+    }
+    
     public void setSensorEntities(List<SensorEntity> sensorEntities) {
         this.sensorEntities = sensorEntities;
     }
@@ -71,7 +68,6 @@ public class UserEntity {
         int hash = 7;
         hash = 89 * hash + Objects.hashCode(this.id);
         hash = 89 * hash + Objects.hashCode(this.identifier);
-        hash = 89 * hash + Objects.hashCode(this.password);
         hash = 89 * hash + Objects.hashCode(this.sensorEntities);
         hash = 89 * hash + Objects.hashCode(this.hubEntities);
         return hash;
@@ -92,9 +88,6 @@ public class UserEntity {
         if (!Objects.equals(this.identifier, other.identifier)) {
             return false;
         }
-        if (!Objects.equals(this.password, other.password)) {
-            return false;
-        }
         if (!Objects.equals(this.sensorEntities, other.sensorEntities)) {
             return false;
         }
@@ -108,6 +101,6 @@ public class UserEntity {
 
     @Override
     public String toString() {
-        return "UserEntity{" + "id=" + id + ", identifier=" + identifier + ", password=" + password + ", sensorEntities=" + sensorEntities + ", hubEntities=" + hubEntities + '}';
+        return "UserEntity{" + "id=" + id + ", identifier=" + identifier + ", sensorEntities=" + sensorEntities + ", hubEntities=" + hubEntities + '}';
     }
 }

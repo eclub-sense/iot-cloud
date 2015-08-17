@@ -6,10 +6,15 @@ import java.net.URISyntaxException;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
+import org.restlet.data.Form;
+import org.restlet.data.Status;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import cz.esc.iot.cloudservice.messages.*;
+import cz.esc.iot.cloudservice.oauth2.GoogleUserInfo;
+import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.Data;
 import cz.esc.iot.cloudservice.persistance.model.HubEntity;
@@ -107,16 +112,23 @@ public class WebSocket extends WebSocketAdapter {
     
     private void verifyConnection(HubMessage message) {
     	System.out.println(message);
-    	String hubUsername = ((HubLoginMsg)message).getUsername();
-    	String hubPassword = ((HubLoginMsg)message).getPassword();
+    	String hubID = ((HubLoginMsg)message).getIdentifier();
+    	String hubAccessToken = ((HubLoginMsg)message).getAccess_token();
     	String hubUuid = ((HubLoginMsg)message).getUuid();
+		
+    	// verify user
+		GoogleUserInfo googleUser = null;
+		try {
+			googleUser = OAuth2.getGoogleUser(hubAccessToken);
+		} catch (JsonSyntaxException | IOException e1) {
+			getSession().close(3, "Forbidden");
+		}
+		UserEntity dbUser = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(hubID).get();
+		if (dbUser == null) {
+			getSession().close(3, "Forbidden");
+		}
     	
-    	UserEntity dbUser = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("username").equal(hubUsername).field("password").equal(hubPassword).get();
-    	System.out.println(dbUser);
-    	System.out.println(hubUuid);
-    	
-    	if (dbUser != null && hubUsername.equals(dbUser.getIdentifier())
-    			&& hubPassword.equals(dbUser.getPassword())) {
+    	if (hubID.equals(googleUser.getId())) {
     		HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hubUuid).get();
     		
     		// hub is new
