@@ -22,6 +22,9 @@ import cz.esc.iot.cloudservice.persistance.model.UserEntity;
  */
 public class RegisteredSensors extends ServerResource {
 	
+	/**
+	 * Identifies user and return his sensors.
+	 */
 	@Get("json")
 	public String returnList() {
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
@@ -30,7 +33,10 @@ public class RegisteredSensors extends ServerResource {
 		Form form = getRequest().getResourceRef().getQueryAsForm();
 		UserEntity userEntity;
 		if ((userEntity = OAuth2.verifyUser(getRequest())) == null) {
-			return gson.toJson(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").get());
+			AllSensors sensors = new AllSensors();
+			List<SensorEntity> _public = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").asList();
+			sensors.set_public(_public);
+			return gson.toJson(sensors);
 		}
 		
 		String path = this.getRequest().getResourceRef().getPath();
@@ -40,6 +46,9 @@ public class RegisteredSensors extends ServerResource {
 		}
 	}
 	
+	/**
+	 * Reads parameters and filter result according to them.
+	 */
 	private String registeredSensors(Gson gson, Form form, UserEntity userEntity) {
 		String hubID = null;
 		String access = null;

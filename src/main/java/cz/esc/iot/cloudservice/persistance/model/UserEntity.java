@@ -97,8 +97,6 @@ public class UserEntity {
         return true;
     }
 
-    
-
     @Override
     public String toString() {
         return "UserEntity{" + "id=" + id + ", identifier=" + identifier + ", sensorEntities=" + sensorEntities + ", hubEntities=" + hubEntities + '}';
