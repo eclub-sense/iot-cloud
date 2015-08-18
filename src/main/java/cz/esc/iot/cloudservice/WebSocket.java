@@ -6,8 +6,6 @@ import java.net.URISyntaxException;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
-import org.restlet.data.Form;
-import org.restlet.data.Status;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

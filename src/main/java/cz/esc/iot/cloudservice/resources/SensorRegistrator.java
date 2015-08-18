@@ -48,6 +48,8 @@ public class SensorRegistrator extends ServerResource {
     		List<HubEntity> hubs = user.getHubEntities();
     		WebSocket socket;
     		HubEntity hub;
+    		
+    		// create JSONObject
     		JSONObject jsonObject;
     		Object hub_uuid = null;
     		try {
@@ -58,13 +60,16 @@ public class SensorRegistrator extends ServerResource {
     		}
     		
 			try {
+				// if hub_id == null, hub which will be associated with registered sensor has to be chosen.
 				if (hub_uuid == null) {
 					hub = chooseHubUuid(hubs);
 					socket = WebSocketRegistry.get(hub.getUuid());
+				// hub has been chosen by user
 				} else {
 					hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hub_uuid).get();
 					socket = WebSocketRegistry.getCloudSocket();
 				}
+				
 				sensor.setHub(hub);
 				sensor.setUser(user);
 				MorfiaSetUp.getDatastore().save(sensor);
