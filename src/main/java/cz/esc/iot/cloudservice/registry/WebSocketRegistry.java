@@ -7,6 +7,7 @@ import cz.esc.iot.cloudservice.WebSocket;
 public class WebSocketRegistry {
 
 	private static ArrayList<WebSocket> sockets = new ArrayList<>();
+	private static WebSocket cloudSocket = null;
 	
 	public static void add(WebSocket s) {
 		sockets.add(s);
@@ -16,6 +17,14 @@ public class WebSocketRegistry {
 		return sockets.size();
 	}
 	
+	public static WebSocket getCloudSocket() {
+		return cloudSocket;
+	}
+
+	public static void setCloudSocket(WebSocket cloudSocket) {
+		WebSocketRegistry.cloudSocket = cloudSocket;
+	}
+
 	public static WebSocket get(String uuid) {
 		for (WebSocket socket : sockets) {
 			if (socket.getHubUuid().equals(uuid)) {

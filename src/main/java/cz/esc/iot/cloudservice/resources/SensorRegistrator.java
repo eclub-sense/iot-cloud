@@ -63,7 +63,7 @@ public class SensorRegistrator extends ServerResource {
 					socket = WebSocketRegistry.get(hub.getUuid());
 				} else {
 					hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hub_uuid).get();
-					socket = null;
+					socket = WebSocketRegistry.getCloudSocket();
 				}
 				sensor.setHub(hub);
 				sensor.setUser(user);
