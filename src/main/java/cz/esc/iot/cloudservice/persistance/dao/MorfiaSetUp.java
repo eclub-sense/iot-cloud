@@ -20,7 +20,7 @@ public class MorfiaSetUp {
         morphia.mapPackage("cz.esc.iot.cloudservice.persistance.model");
     }
 
-    /*
+    //*
     static MongoClient mongoClient = new MongoClient(asList(new ServerAddress("147.32.107.139:27017")),
             Arrays.asList(MongoCredential.createCredential("pauliada",
                             "zettor",
