@@ -19,6 +19,7 @@ public class Postman {
 	public static void sendLoginAck(WebSocket socket, String uuid) {
 		try {
 			socket.getRemote().sendString("{\"type\":\"LOGIN_ACK\",\"uuid\":\"" + uuid + "\"}");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

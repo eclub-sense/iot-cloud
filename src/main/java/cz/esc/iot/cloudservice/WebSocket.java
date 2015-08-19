@@ -8,11 +8,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 import cz.esc.iot.cloudservice.messages.*;
-import cz.esc.iot.cloudservice.oauth2.GoogleUserInfo;
-import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.Data;
 import cz.esc.iot.cloudservice.persistance.model.HubEntity;
@@ -110,23 +107,34 @@ public class WebSocket extends WebSocketAdapter {
     
     private void verifyConnection(HubMessage message) {
     	System.out.println(message);
-    	String hubID = ((HubLoginMsg)message).getIdentifier();
-    	String hubAccessToken = ((HubLoginMsg)message).getAccess_token();
+    	String hubMail = ((HubLoginMsg)message).getMail();
+    	//String hubAccessToken = ((HubLoginMsg)message).getAccess_token();
     	String hubUuid = ((HubLoginMsg)message).getUuid();
 		
     	// verify user
-		GoogleUserInfo googleUser = null;
+		/*GoogleUserInfo googleUser = null;
 		try {
 			googleUser = OAuth2.getGoogleUser(hubAccessToken);
 		} catch (JsonSyntaxException | IOException e1) {
 			getSession().close(3, "Forbidden");
-		}
-		UserEntity dbUser = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(hubID).get();
+		}*/
+    	
+    	if (hubMail.equals("admin") && WebSocketRegistry.getCloudSocket() == null) {
+			HubEntity hub = new HubEntity();
+			hub.setUuid(hubUuid);
+			MorfiaSetUp.getDatastore().save(hub);
+    		this.hubUuid = hubUuid;
+    		WebSocketRegistry.setCloudSocket(this);
+    		Postman.sendLoginAck(this, hubUuid);
+    		return;
+    	}
+		UserEntity dbUser = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("email").contains(hubMail).get();
 		if (dbUser == null) {
 			getSession().close(3, "Forbidden");
 		}
     	
-    	if (hubID.equals(googleUser.getId())) {
+    	
+    	if (dbUser != null) {
     		HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hubUuid).get();
     		
     		// hub is new
@@ -141,6 +149,9 @@ public class WebSocket extends WebSocketAdapter {
         		Postman.sendLoginAck(this, hubUuid);
     		// in case that hub's uuid is already registered in database
     		} else {
+    			if (!hub.getUser().equals(dbUser)) {
+    				getSession().close(3, "Forbidden");
+    			}
         		this.hubUuid = hubUuid;
         		WebSocketRegistry.add(this);
     			Postman.sendLoginAck(this, hubUuid);

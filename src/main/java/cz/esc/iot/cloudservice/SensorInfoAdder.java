@@ -48,5 +48,13 @@ public class SensorInfoAdder {
 		info2 = new SensorTypeInfo(1, "zetta_led", list2, "zetta-led-mock-driver");
 		System.out.println(MorfiaSetUp.getDatastore());
 		MorfiaSetUp.getDatastore().save(info2);
+
+		// Mobile
+		list2.clear();
+		list2.add(new MeasureValue("lattitude", null));
+		list2.add(new MeasureValue("longitude", null));
+		info2 = new SensorTypeInfo(8, "gps", list2, "gps-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
 	}
 }

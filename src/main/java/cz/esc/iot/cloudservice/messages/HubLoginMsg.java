@@ -9,19 +9,17 @@ import com.google.gson.annotations.Expose;
 public class HubLoginMsg extends HubMessage{
 
 	@Expose private static final String type = "LOGIN";
-	@Expose private String identifier;
-	@Expose private String access_token;
+	@Expose private String email;
+	//@Expose private String access_token;
 	
 	@Override
 	public String getType() {
 		return type;
 	}
-	public String getIdentifier() {
-		return identifier;
+	public String getMail() {
+		return email;
 	}
-	public String getAccess_token() {
+	/*public String getAccess_token() {
 		return access_token;
-	}
-	
-
+	}*/
 }
