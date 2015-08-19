@@ -30,7 +30,7 @@ public class OAuth2 {
 	
 	public static void setCredentials() {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(new File("/usr/etc/google_client_credentials")));
+			BufferedReader br = new BufferedReader(new FileReader(new File("/home/z3tt0r/google_client_credentials")));
 			clientID = br.readLine();
 			clientSecret = br.readLine();
 			br.close();
@@ -85,7 +85,7 @@ public class OAuth2 {
     	client.setClientCredentials(OAuth2.clientID, OAuth2.clientSecret);
     	OAuthParameters params = new OAuthParameters();
     	params.code(form.getFirstValue("code"));
-    	params.redirectURI("http://localhost:8080/callback");
+    	params.redirectURI("http://mlha-139.sin.cvut.cz:8080/callback");
     	params.grantType(GrantType.authorization_code);
     	
     	Token token = null;
