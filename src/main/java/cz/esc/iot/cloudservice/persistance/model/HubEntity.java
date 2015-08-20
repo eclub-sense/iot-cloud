@@ -1,6 +1,5 @@
 package cz.esc.iot.cloudservice.persistance.model;
 
-import java.util.List;
 import java.util.Objects;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
@@ -17,8 +16,6 @@ public class HubEntity {
     private ObjectId id;
     @Indexed(unique = true)
     @Expose private String uuid;
-    @Reference
-    @Expose private List<SensorEntity> sensorEntities;
     @Reference
     private UserEntity user;
 
@@ -48,15 +45,7 @@ public class HubEntity {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
-
-    public List<SensorEntity> getSensorEntities() {
-		return sensorEntities;
-	}
-
-	public void setSensorEntities(List<SensorEntity> sensorEntities) {
-		this.sensorEntities = sensorEntities;
-	}
-
+    
 	@Override
     public int hashCode() {
         int hash = 7;

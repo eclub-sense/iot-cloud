@@ -74,8 +74,8 @@ public class SensorRegistrator extends ServerResource {
 				sensor.setHub(hub);
 				sensor.setUser(user);
 				MorfiaSetUp.getDatastore().save(sensor);
-				MorfiaSetUp.getDatastore().update(hub, MorfiaSetUp.getDatastore().createUpdateOperations(HubEntity.class).add("sensorEntities", sensor, true));
-				MorfiaSetUp.getDatastore().update(user, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("sensorEntities", sensor, true));
+				//MorfiaSetUp.getDatastore().update(hub, MorfiaSetUp.getDatastore().createUpdateOperations(HubEntity.class).add("sensorEntities", sensor, true));
+				//MorfiaSetUp.getDatastore().update(user, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("sensorEntities", sensor, true));
 				if (socket != null)
 					Postman.registerSensor(socket, sensor);
 			} catch (Exception e) {

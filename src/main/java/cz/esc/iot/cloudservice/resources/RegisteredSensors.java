@@ -74,7 +74,7 @@ public class RegisteredSensors extends ServerResource {
 			if (hubEntity == null) {
 				return "[]";
 			} else {
-				return gson.toJson(hubEntity.getSensorEntities());
+				return gson.toJson(MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("hub").equal(hubEntity).asList());
 			}
 		} else if (hubID == null) {
 			if (access.equals("my")) {

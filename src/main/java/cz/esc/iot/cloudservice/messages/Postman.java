@@ -27,7 +27,7 @@ public class Postman {
 
 	public static void reregisterAllSensors(WebSocket socket, String uuid) throws IOException {
 		HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(uuid).get();
-		List<SensorEntity> sensors = hub.getSensorEntities();
+		List<SensorEntity> sensors = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("hub").equal(hub).asList();//hub.getSensorEntities();
 		for (SensorEntity sensor : sensors) {
 			registerSensor(socket, sensor);
 		}
