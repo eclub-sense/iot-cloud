@@ -125,9 +125,12 @@ public class WebSocket extends WebSocketAdapter {
 		}*/
     	
     	if (hubMail.equals("admin") && WebSocketRegistry.getCloudSocket() == null) {
-			HubEntity hub = new HubEntity();
-			hub.setUuid(hubUuid);
-			MorfiaSetUp.getDatastore().save(hub);
+			HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hubUuid).get();
+			if (hub == null) {
+				hub = new HubEntity();
+				hub.setUuid(hubUuid);
+				MorfiaSetUp.getDatastore().save(hub);
+			}
     		this.hubUuid = hubUuid;
     		WebSocketRegistry.setCloudSocket(this);
     		Postman.sendLoginAck(this, hubUuid);
