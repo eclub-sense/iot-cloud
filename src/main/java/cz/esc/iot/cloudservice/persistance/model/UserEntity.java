@@ -16,7 +16,7 @@ public class UserEntity {
     @Id
     private ObjectId id;
     @Indexed(unique = true)
-    @Expose private String identifier;
+    private String identifier;
     @Expose private List<String> emails = new LinkedList<>();
 
     public UserEntity() {

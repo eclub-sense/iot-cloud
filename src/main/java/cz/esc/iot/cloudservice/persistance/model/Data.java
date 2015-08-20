@@ -20,7 +20,7 @@ public class Data {
 	@Indexed(expireAfterSeconds = 24*3600) // one day
 	@Expose private Date time;
 	@Reference
-	@Expose private SensorEntity sensor;
+	private SensorEntity sensor;
 	
 	public Data() {
 		super();
