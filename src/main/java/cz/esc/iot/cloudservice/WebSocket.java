@@ -18,6 +18,8 @@ import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 import cz.esc.iot.cloudservice.persistance.model.SensorTypeInfo;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 import cz.esc.iot.cloudservice.registry.WebSocketRegistry;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +69,7 @@ public class WebSocket extends WebSocketAdapter {
         	verifyConnection(message);
         } else if (message.getType().equals("DISCOVERED") && verified == true) {
         	startStoringIntoDb((HubDiscoveredMsg)message);
+        	System.out.println("DISCOVERED: " + ((HubDiscoveredMsg)message).getSensorUuid());
         } else {
         	getSession().close(2, "Connection refused.");
         }
@@ -94,9 +97,9 @@ public class WebSocket extends WebSocketAdapter {
                     	Data data = new Data();
                     	data.setName(value.getName());
                     	data.setValue(measured);
-                    	System.out.println(zettaMsg);
+                    	data.setTime(new Date());
                     	System.out.println(data);
-                    	MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).set("measured", data));
+                    	MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).add("measured", data));
                     }
                 });
             } catch (URISyntaxException ex) {

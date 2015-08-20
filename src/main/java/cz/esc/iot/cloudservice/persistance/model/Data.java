@@ -1,6 +1,9 @@
 package cz.esc.iot.cloudservice.persistance.model;
 
+import java.util.Date;
+
 import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Indexed;
 
 import com.google.gson.annotations.Expose;
 
@@ -9,17 +12,21 @@ public class Data {
 	
 	@Expose private String name;
 	@Expose private String value;
+	@Indexed(expireAfterSeconds = 5)
+	@Expose private Date time;
 	
 	public Data() {
 		super();
 	}
-	
-	public Data(String name, String value) {
-		super();
-		this.name = name;
-		this.value = value;
+
+	public Date getTime() {
+		return time;
 	}
-	
+
+	public void setTime(Date time) {
+		this.time = time;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -35,9 +42,9 @@ public class Data {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Data [name=" + name + ", value=" + value + "]";
+		return "Data [name=" + name + ", value=" + value + ", time=" + time + "]";
 	}
 }

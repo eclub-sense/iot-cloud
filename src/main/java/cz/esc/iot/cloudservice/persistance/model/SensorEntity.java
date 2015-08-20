@@ -3,6 +3,7 @@ package cz.esc.iot.cloudservice.persistance.model;
 import java.util.List;
 import java.util.Objects;
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
@@ -19,6 +20,7 @@ public class SensorEntity {
     @Expose private String uuid;
     @Expose(serialize = false) private String access;
     @Expose private Integer type;
+    @Embedded
     @Expose private List<Data> measured;
     @Reference
     private HubEntity hub;
