@@ -7,6 +7,8 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import org.mongodb.morphia.annotations.Indexed;
 
 @Entity
@@ -21,7 +23,7 @@ public class SensorEntity {
     @Reference
     private HubEntity hub;
     @Reference
-    private UserEntity user;
+    @Expose @SerializedName("owner") private UserEntity user;
 
     public SensorEntity() {
     	super();
