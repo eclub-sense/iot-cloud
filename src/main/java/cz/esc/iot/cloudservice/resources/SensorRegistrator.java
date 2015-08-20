@@ -45,7 +45,7 @@ public class SensorRegistrator extends ServerResource {
     		SensorEntity sensor = gson.fromJson(json, SensorEntity.class);
     		//sensor.setData(null);
     		sensor.setAccess("private");
-    		List<HubEntity> hubs = user.getHubEntities();
+    		List<HubEntity> hubs = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(user).asList(); //user.getHubEntities();
     		WebSocket socket;
     		HubEntity hub;
     		

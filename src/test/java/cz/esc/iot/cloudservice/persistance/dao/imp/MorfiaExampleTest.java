@@ -80,7 +80,7 @@ public class MorfiaExampleTest {
             return;
         }
         
-        Collection<SensorEntity> sensorEntities = tmp.getSensorEntities();
+        Collection<SensorEntity> sensorEntities = datastore.createQuery(SensorEntity.class).field("user").equal(tmp).asList();//tmp.getSensorEntities();
         if(sensorEntities == null){
             System.err.println("Error 1.");
             return;
