@@ -131,7 +131,7 @@ public class WebSocket extends WebSocketAdapter {
     		Postman.sendLoginAck(this, hubUuid);
     		return;
     	}
-		UserEntity dbUser = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("email").contains(hubMail).get();
+		UserEntity dbUser = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("emails").contains(hubMail).get();
 		if (dbUser == null) {
 			getSession().close(3, "Forbidden");
 		}

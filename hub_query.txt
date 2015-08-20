@@ -1,3 +1,3 @@
-{"type":"LOGIN","identifier":"115132541337331958148","access_token":"ya29.0gH-pYEFFVHgngbYHlU7w_LA7pjK_A6z6OeH2y60QTloxyMKpKNhpXsuG4fFQnnlX_Fysw","uuid":"1111"}
+{"type":"LOGIN","email":"mapaclik@gmail.com","uuid":"111"}
 
 {"type":"DISCOVERED","uuid":"1111","sensor_id":"61b4ab75-f854-4801-9e9b-0ea9b19148be","sensor_uuid":"0000000b"}

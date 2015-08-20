@@ -1,1 +1,1 @@
-wscat -c ws://127.0.0.1:8080/events
+wscat -c ws://mlha-139.sin.cvut.cz:1337
