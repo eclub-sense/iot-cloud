@@ -12,10 +12,13 @@ import com.google.gson.GsonBuilder;
 
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
+import cz.esc.iot.cloudservice.persistance.model.Data;
 import cz.esc.iot.cloudservice.persistance.model.HubEntity;
 import cz.esc.iot.cloudservice.persistance.model.SensorAccessEntity;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
+import cz.esc.iot.cloudservice.support.AllSensors;
+import cz.esc.iot.cloudservice.support.SensorAndData;
 
 /**
  * Return list of registered sensors.
@@ -42,8 +45,25 @@ public class RegisteredSensors extends ServerResource {
 		String path = this.getRequest().getResourceRef().getPath();
 		switch (path) {
 		case "/registered_sensors" : return registeredSensors(gson, form, userEntity);
-		default : return gson.toJson(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("uuid").equal(this.getRequestAttributes().get("uuid")).get());
+		default : return sensorAndData(gson, form, userEntity);
 		}
+	}
+	
+	private String sensorAndData(Gson gson, Form form, UserEntity userEntity) {
+		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(this.getRequestAttributes().get("uuid")).get();
+		SensorAndData ret = new SensorAndData();
+		if (sensor == null) {
+		} else if (sensor.getAccess().equals("private") && sensor.getUser().getId().equals(userEntity.getId())) {
+			ret.setSensor(sensor);
+		} else if (sensor.getAccess().equals("protected")) {
+			// TODO verify permission
+		} else {
+			ret.setSensor(sensor);
+		}
+		List<Data> measured = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).asList();
+		ret.setMeasured(measured);
+		return gson.toJson(ret);
+		
 	}
 	
 	/**

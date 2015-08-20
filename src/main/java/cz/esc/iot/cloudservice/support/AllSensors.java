@@ -1,4 +1,4 @@
-package cz.esc.iot.cloudservice.resources;
+package cz.esc.iot.cloudservice.support;
 
 import java.util.List;
 
