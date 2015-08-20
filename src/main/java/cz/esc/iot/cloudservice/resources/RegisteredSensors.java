@@ -34,13 +34,7 @@ public class RegisteredSensors extends ServerResource {
 		
 		// verify user
 		Form form = getRequest().getResourceRef().getQueryAsForm();
-		UserEntity userEntity;
-		if ((userEntity = OAuth2.verifyUser(getRequest())) == null) {
-			AllSensors sensors = new AllSensors();
-			List<SensorEntity> _public = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").asList();
-			sensors.set_public(_public);
-			return gson.toJson(sensors);
-		}
+		UserEntity userEntity = OAuth2.verifyUser(getRequest());
 		
 		String path = this.getRequest().getResourceRef().getPath();
 		switch (path) {
@@ -53,9 +47,10 @@ public class RegisteredSensors extends ServerResource {
 		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(this.getRequestAttributes().get("uuid")).get();
 		SensorAndData ret = new SensorAndData();
 		if (sensor == null) {
-		} else if (sensor.getAccess().equals("private") && sensor.getUser().getId().equals(userEntity.getId())) {
+			return null;
+		} else if (userEntity != null && sensor.getAccess().equals("private") && sensor.getUser().getId().equals(userEntity.getId())) {
 			ret.setSensor(sensor);
-		} else if (sensor.getAccess().equals("protected")) {
+		} else if (userEntity != null && sensor.getAccess().equals("protected")) {
 			// TODO verify permission
 		} else {
 			ret.setSensor(sensor);
@@ -70,6 +65,13 @@ public class RegisteredSensors extends ServerResource {
 	 * Reads parameters and filter result according to them.
 	 */
 	private String registeredSensors(Gson gson, Form form, UserEntity userEntity) {
+		if (userEntity == null) {
+			AllSensors sensors = new AllSensors();
+			List<SensorEntity> _public = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").asList();
+			sensors.set_public(_public);
+			return gson.toJson(sensors);
+		}
+		
 		String hubID = null;
 		String access = null;
 		for (Parameter parameter : form) {
