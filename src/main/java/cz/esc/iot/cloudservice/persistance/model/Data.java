@@ -17,7 +17,7 @@ public class Data {
     private ObjectId id;
 	@Expose private String name;
 	@Expose private String value;
-	@Indexed(expireAfterSeconds = 5)
+	@Indexed(expireAfterSeconds = 24*3600) // one day
 	@Expose private Date time;
 	@Reference
 	@Expose private SensorEntity sensor;
