@@ -43,7 +43,7 @@ public class SensorRegistrator extends ServerResource {
     		String json = entity.getText();
     		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     		SensorEntity sensor = gson.fromJson(json, SensorEntity.class);
-    		sensor.setData(null);
+    		//sensor.setData(null);
     		sensor.setAccess("private");
     		List<HubEntity> hubs = user.getHubEntities();
     		WebSocket socket;

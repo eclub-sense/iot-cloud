@@ -38,14 +38,14 @@ public class SensorInfoAdder {
 		//ZETTA_PHOTOCELL
 		list2.clear();
 		list2.add(new MeasureValue("intensity", null));
-		info2 = new SensorTypeInfo(1, "zetta_photocell", list2, "zetta-photocell-mock-driver");
+		info2 = new SensorTypeInfo(5, "zetta_photocell", list2, "zetta-photocell-mock-driver");
 		System.out.println(MorfiaSetUp.getDatastore());
 		MorfiaSetUp.getDatastore().save(info2);
 		
 		//ZETTA_LED
 		list2.clear();
 		list2.add(new MeasureValue("state", null));
-		info2 = new SensorTypeInfo(1, "zetta_led", list2, "zetta-led-mock-driver");
+		info2 = new SensorTypeInfo(6, "zetta_led", list2, "zetta-led-mock-driver");
 		System.out.println(MorfiaSetUp.getDatastore());
 		MorfiaSetUp.getDatastore().save(info2);
 

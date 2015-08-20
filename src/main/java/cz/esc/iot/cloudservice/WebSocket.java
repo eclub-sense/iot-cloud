@@ -58,13 +58,13 @@ public class WebSocket extends WebSocketAdapter {
 			return;
 		}
         if (message.getType().equals("DATA") && verified == true) {
-        	List<SensorEntity> sensors = ((HubDataMsg)message).getData();
+        	/*List<SensorEntity> sensors = ((HubDataMsg)message).getData();
         	for (SensorEntity s : sensors) {
         		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(s.getUuid()).get();
         		System.out.println(sensor);
         		MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).unset("measured"));
         		MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).addAll("measured", s.getData(), true));
-        	}
+        	}*/
         } else if (message.getType().equals("LOGIN")) {
         	verifyConnection(message);
         } else if (message.getType().equals("DISCOVERED") && verified == true) {
@@ -98,8 +98,10 @@ public class WebSocket extends WebSocketAdapter {
                     	data.setName(value.getName());
                     	data.setValue(measured);
                     	data.setTime(new Date());
+                    	data.setSensor(sensor);
                     	System.out.println(data);
-                    	MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).add("measured", data));
+                    	MorfiaSetUp.getDatastore().save(data);
+                    	//MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).add("measured", data));
                     }
                 });
             } catch (URISyntaxException ex) {

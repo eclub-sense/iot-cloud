@@ -3,7 +3,6 @@ package cz.esc.iot.cloudservice.persistance.model;
 import java.util.List;
 import java.util.Objects;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
@@ -20,8 +19,8 @@ public class SensorEntity {
     @Expose private String uuid;
     @Expose(serialize = false) private String access;
     @Expose private Integer type;
-    @Embedded
-    @Expose private List<Data> measured;
+    //@Reference
+    //private List<Data> measured;
     @Reference
     private HubEntity hub;
     @Reference
@@ -43,9 +42,9 @@ public class SensorEntity {
         return id;
     }
 
-	public List<Data> getData() {
+	/*public List<Data> getData() {
 		return measured;
-	}
+	}*/
 	
 	public String getAccess() {
 		return access;
@@ -54,10 +53,10 @@ public class SensorEntity {
 	public void setAccess(String access) {
 		this.access = access;
 	}
-
+/*
 	public void setData(List<Data> data) {
 		this.measured = data;
-	}
+	}*/
 
 	public void setId(ObjectId id) {
         this.id = id;
@@ -74,14 +73,6 @@ public class SensorEntity {
     public Integer getType() {
         return type;
     }
-
-    public List<Data> getMeasured() {
-		return measured;
-	}
-
-	public void setMeasured(List<Data> measured) {
-		this.measured = measured;
-	}
 
 	public UserEntity getUser() {
 		return user;
@@ -124,6 +115,6 @@ public class SensorEntity {
 
 	@Override
 	public String toString() {
-		return "SensorEntity [id=" + id + ", uuid=" + uuid + ", type=" + type + ", measured=" + measured + "]";
+		return "SensorEntity [id=" + id + ", uuid=" + uuid + ", type=" + type + "]";
 	}
 }

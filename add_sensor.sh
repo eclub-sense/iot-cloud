@@ -1,1 +1,1 @@
-curl -X POST 127.0.0.1:8080/sensor_registration?access_token="$3" -H "Content-Type: application/json" -d '{"uuid":"'$1'","type":"'$2'","secret":"00000000000000000000000000000000000000000000000000000000"}'
+curl -X POST 147.32.107.139:8080/sensor_registration?access_token="$3" -H "Content-Type: application/json" -d '{"uuid":"'$1'","type":"'$2'","secret":"00000000000000000000000000000000000000000000000000000000"}'
