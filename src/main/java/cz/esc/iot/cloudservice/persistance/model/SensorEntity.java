@@ -16,7 +16,7 @@ public class SensorEntity {
     private ObjectId id;
     @Indexed(unique = true)
     @Expose private String uuid;
-    @Expose(serialize = false) private String access;
+    @Expose private String access;
     @Expose private Integer type;
     @Reference
     private HubEntity hub;
