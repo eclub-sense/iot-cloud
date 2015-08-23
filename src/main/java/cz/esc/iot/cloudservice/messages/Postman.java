@@ -16,6 +16,10 @@ import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
  */
 public class Postman {
 
+	/**
+	 * When user is successfully verified after LOGIN message received from hub,
+	 * LOGIN_ACK message is send from zettor. 
+	 */
 	public static void sendLoginAck(WebSocket socket, String uuid) {
 		try {
 			socket.getRemote().sendString("{\"type\":\"LOGIN_ACK\",\"uuid\":\"" + uuid + "\"}");
@@ -25,14 +29,21 @@ public class Postman {
 		}
 	}
 
+	/**
+	 * When hub connects and it's uuid is already in database, all sensors associated with this hub
+	 * in database are registered to it again.
+	 */
 	public static void reregisterAllSensors(WebSocket socket, String uuid) throws IOException {
 		HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(uuid).get();
-		List<SensorEntity> sensors = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("hub").equal(hub).asList();//hub.getSensorEntities();
+		List<SensorEntity> sensors = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("hub").equal(hub).asList();
 		for (SensorEntity sensor : sensors) {
 			registerSensor(socket, sensor);
 		}
 	}
 
+	/**
+	 * Zettor sends NEW message to hub.
+	 */
 	public static void registerSensor(WebSocket socket, SensorEntity sensor) throws IOException {
 		HubNewMsg msg = new HubNewMsg(sensor.getUuid(), sensor.getType());
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();

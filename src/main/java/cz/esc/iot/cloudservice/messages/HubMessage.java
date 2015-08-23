@@ -3,7 +3,7 @@ package cz.esc.iot.cloudservice.messages;
 import com.google.gson.annotations.Expose;
 
 /**
- * Class for messages from hub. Parent class for various messages types.
+ * Class for messages from hub. Parent class for various hub's message types.
  */
 public abstract class HubMessage {
 

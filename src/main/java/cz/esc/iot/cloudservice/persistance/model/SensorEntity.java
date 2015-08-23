@@ -11,6 +11,11 @@ import com.google.gson.annotations.SerializedName;
 
 import org.mongodb.morphia.annotations.Indexed;
 
+/**
+ * Morfia's entity representing sensor. Access variable can be "private" - visible only to owner,
+ * "protected" - visible to owner and to users selected by owner to either read or write or
+ * "public" - visible to everyone. 
+ */
 @Entity
 public class SensorEntity {
 

@@ -13,6 +13,9 @@ import cz.esc.iot.cloudservice.resources.RegisteredSensors;
 import cz.esc.iot.cloudservice.resources.SensorRegistrator;
 import cz.esc.iot.cloudservice.resources.ShareSensor;
 
+/**
+ * Restlet application called when querying whatever url except to /events.
+ */
 public class RestletApplication extends Application {
 	
     @Override
@@ -23,6 +26,10 @@ public class RestletApplication extends Application {
     	
     	Router router = new Router(getContext());
     	
+    	/*
+    	 * When querying /login url, user is redirected to Google
+    	 * authentication servers.
+    	 */
     	OAuthProxy proxy = new OAuthProxy(getContext(), true);
     	proxy.setClientId(OAuth2.clientID);
     	proxy.setClientSecret(OAuth2.clientSecret);
@@ -35,12 +42,17 @@ public class RestletApplication extends Application {
         router.attach("/callback", AccessToken.class);
         
         router.attach("/", Homepage.class);
+        
+        /*
+         * These resources are accessible with valid access token only.
+         */
         router.attach("/sensor_registration", SensorRegistrator.class);
         router.attach("/registered_sensors", RegisteredSensors.class);
         router.attach("/registered_sensors/{uuid}", RegisteredSensors.class);
         router.attach("/registered_hubs/{uuid}", RegisteredHubs.class);
         router.attach("/registered_hubs", RegisteredHubs.class);
         router.attach("/share_sensor", ShareSensor.class);
+        
         return router;
     }
 }

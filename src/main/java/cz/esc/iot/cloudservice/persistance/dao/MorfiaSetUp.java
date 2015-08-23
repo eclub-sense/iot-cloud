@@ -10,6 +10,9 @@ import static java.util.Arrays.asList;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
+/**
+ * Connects to zettor's MongoDB database. Creating Morfia's datastore.
+ */
 public class MorfiaSetUp {
 
     private static final Morphia morphia = new Morphia();

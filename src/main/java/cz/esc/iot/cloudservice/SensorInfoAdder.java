@@ -7,6 +7,9 @@ import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.MeasureValue;
 import cz.esc.iot.cloudservice.persistance.model.SensorTypeInfo;
 
+/**
+ * Java application for filling MongoDB's SensorTypeInfo collection.
+ */
 public class SensorInfoAdder {
 
 	public static void main(String[] args) {

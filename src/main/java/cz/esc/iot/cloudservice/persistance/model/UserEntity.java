@@ -10,6 +10,9 @@ import org.mongodb.morphia.annotations.Indexed;
 
 import com.google.gson.annotations.Expose;
 
+/**
+ * Morfia's entity representing user.
+ */
 @Entity
 public class UserEntity {
 

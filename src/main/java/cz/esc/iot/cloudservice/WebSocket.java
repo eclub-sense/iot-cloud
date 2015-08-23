@@ -17,13 +17,15 @@ import cz.esc.iot.cloudservice.persistance.model.MeasureValue;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 import cz.esc.iot.cloudservice.persistance.model.SensorTypeInfo;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
-import cz.esc.iot.cloudservice.registry.WebSocketRegistry;
+import cz.esc.iot.cloudservice.support.WebSocketRegistry;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+/**
+ * Class listening and handling websocket events.
+ */
 public class WebSocket extends WebSocketAdapter {
     
     private static Map<String, WebSocket> map = new HashMap<>();
@@ -57,6 +59,9 @@ public class WebSocket extends WebSocketAdapter {
 			e.printStackTrace();
 			return;
 		}
+		
+		// Continue according to message type...
+		
         if (message.getType().equals("DATA") && verified == true) {
         	/*List<SensorEntity> sensors = ((HubDataMsg)message).getData();
         	for (SensorEntity s : sensors) {
@@ -75,6 +80,10 @@ public class WebSocket extends WebSocketAdapter {
         }
     }
     
+    /**
+     * When DISCOVERED message is obtained from hub, database starts storing
+     * sensor's data.
+     */
     private void startStoringIntoDb(HubDiscoveredMsg message) {
     	SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(message.getSensorUuid()).get();
     	System.out.println("sen: "+sensor);
@@ -110,6 +119,9 @@ public class WebSocket extends WebSocketAdapter {
     	}
     }
     
+    /**
+     * Verifying user after LOGIN message was obtained.
+     */
     private void verifyConnection(HubMessage message) {
     	System.out.println(message);
     	String hubMail = ((HubLoginMsg)message).getMail();

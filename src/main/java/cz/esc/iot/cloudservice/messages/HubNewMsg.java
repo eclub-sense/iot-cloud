@@ -2,6 +2,10 @@ package cz.esc.iot.cloudservice.messages;
 
 import com.google.gson.annotations.Expose;
 
+/**
+ * Class for type of message which is send from zettor to hub when
+ * new sensor has been registered by user.
+ */
 public class HubNewMsg extends HubMessage {
 	
 	@Expose private final String type = "NEW";

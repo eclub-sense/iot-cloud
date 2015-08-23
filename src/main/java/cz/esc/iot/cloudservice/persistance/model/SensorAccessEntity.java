@@ -7,6 +7,10 @@ import org.mongodb.morphia.annotations.Reference;
 
 import com.google.gson.annotations.Expose;
 
+/**
+ * Morfia's entity where info about sharing is stored. Permission can by
+ * either "read" or "write".
+ */
 @Entity
 public class SensorAccessEntity {
 

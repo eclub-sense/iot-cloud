@@ -15,12 +15,15 @@ import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 
+/**
+ * Class uses received code and exchange it for valid access token.
+ */
 public class AccessToken extends ServerResource {
 
 	@Get("json")
 	public String auth() {
 		
-		// Identify user
+		// get token
 		Token token = null;
 		String accessToken = null;
 		try {
@@ -30,6 +33,7 @@ public class AccessToken extends ServerResource {
 			e1.printStackTrace();
 		}
 
+		// get info about user
 		GoogleUserInfo user = null;
 		try {
 			user = OAuth2.getGoogleUser(accessToken);
@@ -38,7 +42,7 @@ public class AccessToken extends ServerResource {
 			return "";
 		}
 		
-		// Find user in db
+		// find user in db
 		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(user.getId()).get();
 		// if user is not in db, register him
 		if (userEntity == null)

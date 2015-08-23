@@ -21,7 +21,7 @@ import cz.esc.iot.cloudservice.support.AllSensors;
 import cz.esc.iot.cloudservice.support.SensorAndData;
 
 /**
- * Return list of registered sensors.
+ * Return list of registered sensors. Only sensors owned by signed in user are returned.
  */
 public class RegisteredSensors extends ServerResource {
 	
@@ -38,11 +38,18 @@ public class RegisteredSensors extends ServerResource {
 		
 		String path = this.getRequest().getResourceRef().getPath();
 		switch (path) {
+		
+		// returns all user's sensors
 		case "/registered_sensors" : return registeredSensors(gson, form, userEntity);
+		
+		// returns only hub specified by its uuid
 		default : return sensorAndData(gson, form, userEntity);
 		}
 	}
 	
+	/**
+	 * @return Returns JSON where is info about sensor and it's measured data.
+	 */
 	private String sensorAndData(Gson gson, Form form, UserEntity userEntity) {
 		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(this.getRequestAttributes().get("uuid")).get();
 		SensorAndData ret = new SensorAndData();
@@ -82,6 +89,7 @@ public class RegisteredSensors extends ServerResource {
 			}
 		}
 
+		// without parameter
 		if (access == null && hubID == null) {
 			AllSensors sensors = new AllSensors();
 			List<SensorEntity> my = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).asList();
@@ -91,6 +99,8 @@ public class RegisteredSensors extends ServerResource {
 			sensors.setBorrowed(borrowed);
 			sensors.set_public(_public);
 			return gson.toJson(sensors);
+			
+		// parameter hubID
 		} else if (access == null) {
 			HubEntity hubEntity = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(userEntity).field("uuid").equal(hubID).get();
 			if (hubEntity == null) {
@@ -98,12 +108,16 @@ public class RegisteredSensors extends ServerResource {
 			} else {
 				return gson.toJson(MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("hub").equal(hubEntity).asList());
 			}
+			
+		// parameter access
 		} else if (hubID == null) {
 			if (access.equals("my")) {
 				return gson.toJson(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).asList());
 			} else if (access.equals("borrowed")) {
 				return gson.toJson(MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("user").equal(userEntity).asList());
 			}
+			
+		// parameters access and hubID
 		} else {
 			// TODO
 			return null;

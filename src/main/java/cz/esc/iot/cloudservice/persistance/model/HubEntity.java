@@ -9,6 +9,9 @@ import org.mongodb.morphia.annotations.Reference;
 import com.google.gson.annotations.Expose;
 import org.mongodb.morphia.annotations.Indexed;
 
+/**
+ * Morfia's entity representing hub.
+ */
 @Entity
 public class HubEntity {
 

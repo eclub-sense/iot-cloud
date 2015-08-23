@@ -1,5 +1,8 @@
 package cz.esc.iot.cloudservice.messages;
 
+/**
+ * Class for messages which are send through websocket from zetta.
+ */
 public class ZettaMessage {
 
 	private String topic;
@@ -22,5 +25,4 @@ public class ZettaMessage {
 	public String toString() {
 		return "ZettaMessage [topic=" + topic + ", timestamp=" + timestamp + ", data=" + data + "]";
 	}
-	
 }

@@ -1,5 +1,9 @@
 package cz.esc.iot.cloudservice.oauth2;
 
+/**
+ * Instance of this class is made from JSON received from Google after
+ * requiring info about user with valid access token.
+ */
 public class GoogleUserInfo {
 
 	private String id;
@@ -9,6 +13,7 @@ public class GoogleUserInfo {
 	private String given_name;
 	private String family_name;
 	private String picture;
+	
 	public String getId() {
 		return id;
 	}

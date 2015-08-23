@@ -2,6 +2,11 @@ package cz.esc.iot.cloudservice.persistance.model;
 
 import java.util.List;
 
+import cz.esc.iot.cloudservice.unused.ZettaDriver;
+
+/**
+ * Morfia's entity where information about sensor type are stored.
+ */
 public class SensorTypeInfo {
     
     private int type;

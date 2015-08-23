@@ -13,6 +13,10 @@ import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 
+/**
+ * This class connects to zetta-cloud. Then sensor's measured value is send through
+ * websocket into database.
+ */
 public class WebsocketClient extends Endpoint {
 	
     Session userSession = null;

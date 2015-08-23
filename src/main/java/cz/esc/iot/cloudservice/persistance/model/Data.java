@@ -10,6 +10,9 @@ import org.mongodb.morphia.annotations.Reference;
 
 import com.google.gson.annotations.Expose;
 
+/**
+ * Morfia's entity representing one measured value.
+ */
 @Entity
 public class Data {
 	
@@ -17,7 +20,7 @@ public class Data {
     private ObjectId id;
 	@Expose private String name;
 	@Expose private String value;
-	@Indexed(expireAfterSeconds = 24*3600) // one day
+	@Indexed(expireAfterSeconds = 24*3600) // data are stored for one day
 	@Expose private Date time;
 	@Reference
 	private SensorEntity sensor;

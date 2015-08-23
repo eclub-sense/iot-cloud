@@ -1,5 +1,9 @@
 package cz.esc.iot.cloudservice.persistance.model;
 
+/**
+ * Morfia's entity representing information about value measured with sensor.
+ * Used as embeded document in SensorTypeInfo.
+ */
 public class MeasureValue {
 
 	private String name;

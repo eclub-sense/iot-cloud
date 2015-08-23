@@ -2,6 +2,10 @@ package cz.esc.iot.cloudservice.messages;
 
 import com.google.gson.annotations.Expose;
 
+/**
+ * Type of message, which is send by hub when newly registered sensor
+ * has been discovered.
+ */
 public class HubDiscoveredMsg extends HubMessage {
 
 	@Expose private static final String type = "DISCOVERED";

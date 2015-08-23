@@ -23,11 +23,17 @@ import com.google.gson.JsonSyntaxException;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 
+/**
+ * Class for communication with authorisation and token servers.
+ */
 public class OAuth2 {
 
 	public static String clientID;
 	public static String clientSecret;
 	
+	/**
+	 * Sets Google's clientId and clientSecret.
+	 */
 	public static void setCredentials() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File("/home/z3tt0r/google_client_credentials")));
@@ -39,6 +45,11 @@ public class OAuth2 {
 		}
 	}
 	
+	/**
+	 * Find, whether user obtained from Google is registered in
+	 * Zettor's database.
+	 * @return Returns verified user.
+	 */
 	public static UserEntity verifyUser(Request req) {
 		Form form = req.getResourceRef().getQueryAsForm();
 		String accessToken = form.getFirstValue("access_token");
@@ -58,11 +69,12 @@ public class OAuth2 {
 		return userEntity;
 	}
 	
+	/**
+	 * Ask for information about user. Uses received access token for it.
+	 * @return Returns information from Google.
+	 */
 	public static GoogleUserInfo getGoogleUser(String accessToken) throws JsonSyntaxException, IOException {
 		
-		/*
-		 * Ask for info about user.
-		 */
 		String uri = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken;
 		ClientResource getter = new ClientResource(uri);
 		Representation response = getter.get();
@@ -75,11 +87,12 @@ public class OAuth2 {
 		return user;
 	}
 	
+	/**
+	 * Asks Google for access token. Uses code, received as parameter, for it.
+	 * @return Returns valid access token.
+	 */
 	public static Token getToken(Request req) throws IOException {
 		
-		/*
-		 * Ask for access token.
-		 */
 		Form form = req.getResourceRef().getQueryAsForm();
 		AccessTokenClientResource client = new AccessTokenClientResource(new Reference("https://accounts.google.com/o/oauth2/token"));
     	client.setClientCredentials(OAuth2.clientID, OAuth2.clientSecret);

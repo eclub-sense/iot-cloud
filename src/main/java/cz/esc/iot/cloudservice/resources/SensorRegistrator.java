@@ -22,7 +22,7 @@ import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.HubEntity;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
-import cz.esc.iot.cloudservice.registry.WebSocketRegistry;
+import cz.esc.iot.cloudservice.support.WebSocketRegistry;
 
 /**
  * Register new sensor.
@@ -40,12 +40,14 @@ public class SensorRegistrator extends ServerResource {
 				return;
 			}
 			
+			// create SensorEntity instance
     		String json = entity.getText();
     		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     		SensorEntity sensor = gson.fromJson(json, SensorEntity.class);
-    		//sensor.setData(null);
     		sensor.setAccess("private");
-    		List<HubEntity> hubs = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(user).asList(); //user.getHubEntities();
+    		
+    		// gets user's hubs
+    		List<HubEntity> hubs = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(user).asList();
     		WebSocket socket;
     		HubEntity hub;
     		
@@ -60,22 +62,23 @@ public class SensorRegistrator extends ServerResource {
     		}
     		
 			try {
+				
 				// if hub_id == null, hub which will be associated with registered sensor has to be chosen.
 				if (hub_uuid == null) {
 					hub = chooseHubUuid(hubs);
 					socket = WebSocketRegistry.get(hub.getUuid());
-				// hub has been chosen by user
+					
+				// hub has been chosen by user - hub is smartphone
 				} else {
 					hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hub_uuid).get();
 					socket = WebSocketRegistry.getCloudSocket();
 				}
-				//socket = WebSocketRegistry.get(hub.getUuid());
 				
 				sensor.setHub(hub);
 				sensor.setUser(user);
+				
+				// save sensor into database
 				MorfiaSetUp.getDatastore().save(sensor);
-				//MorfiaSetUp.getDatastore().update(hub, MorfiaSetUp.getDatastore().createUpdateOperations(HubEntity.class).add("sensorEntities", sensor, true));
-				//MorfiaSetUp.getDatastore().update(user, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("sensorEntities", sensor, true));
 				if (socket != null)
 					Postman.registerSensor(socket, sensor);
 			} catch (Exception e) {

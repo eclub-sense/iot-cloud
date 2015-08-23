@@ -1,11 +1,12 @@
 package cz.esc.iot.cloudservice.persistance.dao.imp;
 
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
-import cz.esc.iot.cloudservice.persistance.model.ExampleA;
-import cz.esc.iot.cloudservice.persistance.model.ExampleB;
-import cz.esc.iot.cloudservice.persistance.model.ExampleC;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
+import cz.esc.iot.cloudservice.unused.ExampleA;
+import cz.esc.iot.cloudservice.unused.ExampleB;
+import cz.esc.iot.cloudservice.unused.ExampleC;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
