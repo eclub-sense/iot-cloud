@@ -64,12 +64,12 @@ public class OAuth2 {
 		try {
 			if (idToken != null) {
 				googleUser = OAuth2.getGoogleUserFromIDToken(idToken);
-				email = ((GoogleUserInfo)googleUser).getEmail();
-				//id = ((GoogleUserInfo)googleUser).getId();
-			} else if (accessToken != null) {
-				googleUser = OAuth2.getGoogleUserFromAccessToken(accessToken);
 				email = ((GoogleIdToken.Payload)googleUser).getEmail();
 				id = ((GoogleIdToken.Payload)googleUser).getUserId();
+			} else if (accessToken != null) {
+				googleUser = OAuth2.getGoogleUserFromAccessToken(accessToken);
+				email = ((GoogleUserInfo)googleUser).getEmail();
+				//id = ((GoogleUserInfo)googleUser).getUserId();
 			} else
 				return null;
 		} catch (JsonSyntaxException | IOException e1) {
