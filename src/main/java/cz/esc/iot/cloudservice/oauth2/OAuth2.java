@@ -102,13 +102,13 @@ public class OAuth2 {
 	}
 	
 	public static GoogleIdToken.Payload getGoogleUserFromIDToken(String idToken) {
-System.out.println(idToken);
-System.out.println(clientID);
+//System.out.println(idToken);
+//System.out.println(clientID);
 	      Checker checker = new Checker(new String[]{clientID}, clientID);
 	      GoogleIdToken.Payload jwt = checker.check(idToken);
 	      Gson gson = new Gson();
-	System.out.println("jwt: " + jwt);
-	System.out.println(gson.toJson(jwt));
+	//System.out.println("jwt: " + jwt);
+	//System.out.println(gson.toJson(jwt));
 
 	      return jwt;
 	}
