@@ -35,8 +35,8 @@ public class Checker {
                 GoogleIdToken.Payload tempPayload = token.getPayload();
                 if (!tempPayload.getAudience().equals(mAudience))
                     mProblem = "Audience mismatch";
-                else if (!mClientIDs.contains(tempPayload.getAuthorizedParty()))
-                    mProblem = "Client ID mismatch";
+                //else if (!mClientIDs.contains(tempPayload.getAuthorizedParty()))
+                //    mProblem = "Client ID mismatch";
                 else
                     payload = tempPayload;
             }

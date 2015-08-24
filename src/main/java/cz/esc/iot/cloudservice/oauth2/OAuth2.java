@@ -94,7 +94,8 @@ public class OAuth2 {
 	}
 	
 	public static String getGoogleUserFromIDToken(String idToken) {
-
+System.out.println(idToken);
+System.out.println(clientID);
 	      Checker checker = new Checker(new String[]{clientID}, clientID);
 	      GoogleIdToken.Payload jwt = checker.check(idToken);
 	      Gson gson = new Gson();
