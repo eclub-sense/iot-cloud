@@ -3,15 +3,15 @@ package cz.esc.iot.cloudservice.oauth2;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.gson.Gson;
 
 public class Checker {
 
@@ -41,17 +41,20 @@ public class Checker {
         System.out.println("a");
         try {
             GoogleIdToken token = GoogleIdToken.parse(mJFactory, tokenString);
-            mVerifier.getPublicKeysManager().refresh();
             //System.out.println(mVerifier.verify(new Gson().toJson(token)));
             System.out.println("b: " + token);
+            Collection<String> ids = new LinkedList<>();
+            ids.add(OAuth2.clientID);
+            boolean ok = token.verifyAudience(ids);
+            System.out.println(ok);
             if (mVerifier.verify(token)) {
                 GoogleIdToken.Payload tempPayload = token.getPayload();
                 System.out.println("c: " + tempPayload);
                 if (!tempPayload.getAudience().equals(mAudience)) {
                     mProblem = "Audience mismatch";
                 	System.out.println("d");
-                } else if (!mClientIDs.contains(tempPayload.getAuthorizedParty())) {
-                    mProblem = "Client ID mismatch";
+                //} else if (!mClientIDs.contains(tempPayload.getAuthorizedParty())) {
+                  //  mProblem = "Client ID mismatch";
                 } else
                     payload = tempPayload;
             }
