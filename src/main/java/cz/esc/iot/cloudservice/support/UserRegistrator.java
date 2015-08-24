@@ -1,4 +1,4 @@
-package cz.esc.iot.cloudservice.resources;
+package cz.esc.iot.cloudservice.support;
 
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;

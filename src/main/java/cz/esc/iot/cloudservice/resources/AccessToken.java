@@ -14,6 +14,7 @@ import cz.esc.iot.cloudservice.oauth2.GoogleUserInfo;
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
+import cz.esc.iot.cloudservice.support.UserRegistrator;
 
 /**
  * Class uses received code and exchange it for valid access token.
@@ -36,7 +37,7 @@ public class AccessToken extends ServerResource {
 		// get info about user
 		GoogleUserInfo user = null;
 		try {
-			user = OAuth2.getGoogleUser(accessToken);
+			user = OAuth2.getGoogleUserFromAccessToken(accessToken);
 		} catch (JsonSyntaxException | IOException e) {
 			getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN);
 			return "";

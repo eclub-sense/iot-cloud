@@ -24,6 +24,7 @@ import com.google.gson.JsonSyntaxException;
 
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
+import cz.esc.iot.cloudservice.support.UserRegistrator;
 
 /**
  * Class for communication with authorisation and token servers.
@@ -57,20 +58,26 @@ public class OAuth2 {
 		String accessToken = form.getFirstValue("access_token");
 		String idToken = form.getFirstValue("id_token");
 		
-		GoogleUserInfo googleUser = null;
+		Object googleUser = null;
+		String id = null;
+		String email;
 		try {
 			if (idToken != null) {
-				OAuth2.getGoogleUserFromIDToken(idToken); // TODO
+				googleUser = OAuth2.getGoogleUserFromIDToken(idToken);
+				email = ((GoogleUserInfo)googleUser).getEmail();
+				//id = ((GoogleUserInfo)googleUser).getId();
 			} else if (accessToken != null) {
-				googleUser = OAuth2.getGoogleUser(accessToken);
+				googleUser = OAuth2.getGoogleUserFromAccessToken(accessToken);
+				email = ((GoogleIdToken.Payload)googleUser).getEmail();
+				id = ((GoogleIdToken.Payload)googleUser).getUserId();
 			} else
 				return null;
 		} catch (JsonSyntaxException | IOException e1) {
 			return null;
 		}
-		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(googleUser.getId()).get();
-		if (userEntity == null) {
-			return null;
+		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("emails").contains(email).get();
+		if (userEntity == null && googleUser instanceof GoogleIdToken.Payload) {
+			UserRegistrator.registerUser(id, email);
 		}
 		return userEntity;
 	}
@@ -79,7 +86,7 @@ public class OAuth2 {
 	 * Ask for information about user. Uses received access token for it.
 	 * @return Returns information from Google.
 	 */
-	public static GoogleUserInfo getGoogleUser(String accessToken) throws JsonSyntaxException, IOException {
+	public static GoogleUserInfo getGoogleUserFromAccessToken(String accessToken) throws JsonSyntaxException, IOException {
 		
 		String uri = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken;
 		ClientResource getter = new ClientResource(uri);
@@ -93,7 +100,7 @@ public class OAuth2 {
 		return user;
 	}
 	
-	public static String getGoogleUserFromIDToken(String idToken) {
+	public static GoogleIdToken.Payload getGoogleUserFromIDToken(String idToken) {
 System.out.println(idToken);
 System.out.println(clientID);
 	      Checker checker = new Checker(new String[]{clientID}, clientID);
@@ -101,7 +108,8 @@ System.out.println(clientID);
 	      Gson gson = new Gson();
 	System.out.println("jwt: " + jwt);
 	System.out.println(gson.toJson(jwt));
-	      return gson.toJson(jwt);
+
+	      return jwt;
 	}
 	
 	/**

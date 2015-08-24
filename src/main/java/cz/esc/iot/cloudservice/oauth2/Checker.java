@@ -19,7 +19,6 @@ public class Checker {
     private final String mAudience;
     private final GoogleIdTokenVerifier mVerifier;
     private final JsonFactory mJFactory;
-    //private final GooglePublicKeysManager keyManager;
     private String mProblem = "Verification failed. (Time-out?)";
 
     public Checker(String[] clientIDs, String audience) {
@@ -28,26 +27,15 @@ public class Checker {
         NetHttpTransport transport = new NetHttpTransport();
         mJFactory = new GsonFactory();
         mVerifier = new GoogleIdTokenVerifier(transport, mJFactory);
-        //keyManager = new GooglePublicKeysManager(transport, mJFactory);
     }
 
     public GoogleIdToken.Payload check(String tokenString) {
-    	/*try {
-			keyManager.refresh();
-		} catch (GeneralSecurityException | IOException e1) {
-			e1.printStackTrace();
-		}*/
     	GoogleIdToken.Payload payload = null;
         System.out.println("a");
         try {
             GoogleIdToken token = GoogleIdToken.parse(mJFactory, tokenString);
-            //System.out.println(mVerifier.verify(new Gson().toJson(token)));
             System.out.println("b: " + token);
-            /*Collection<String> ids = new LinkedList<>();
-            ids.add(OAuth2.clientID);
-            boolean ok = token.verifyAudience(ids);
-            System.out.println(ok);*/
-            if (mVerifier.verify(token, OAuth2.clientID)) {
+            if (mVerifier.verify(token)) {
                 GoogleIdToken.Payload tempPayload = token.getPayload();
                 System.out.println("c: " + tempPayload);
                 if (!tempPayload.getAudience().equals(mAudience)) {
