@@ -14,7 +14,6 @@ import cz.esc.iot.cloudservice.oauth2.GoogleUserInfo;
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
-import cz.esc.iot.cloudservice.support.UserRegistrator;
 
 /**
  * Class uses received code and exchange it for valid access token.
@@ -47,7 +46,7 @@ public class AccessToken extends ServerResource {
 		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(user.getId()).get();
 		// if user is not in db, register him
 		if (userEntity == null)
-			UserRegistrator.registerUser(user.getId(), user.getEmail());
+			return null; //UserRegistrator.registerUser(user.getId(), user.getEmail());
 		 
 		Gson gson = new Gson();
 		System.out.println(gson.toJson(token));

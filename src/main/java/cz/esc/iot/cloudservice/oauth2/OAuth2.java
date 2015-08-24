@@ -75,6 +75,7 @@ public class OAuth2 {
 		} catch (JsonSyntaxException | IOException e1) {
 			return null;
 		}
+		System.out.println("email: " + email);
 		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("emails").contains(email).get();
 		if (userEntity == null && googleUser instanceof GoogleIdToken.Payload) {
 			UserRegistrator.registerUser(id, email);

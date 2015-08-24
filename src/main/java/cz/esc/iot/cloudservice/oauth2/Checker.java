@@ -3,8 +3,6 @@ package cz.esc.iot.cloudservice.oauth2;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -31,16 +29,13 @@ public class Checker {
 
     public GoogleIdToken.Payload check(String tokenString) {
     	GoogleIdToken.Payload payload = null;
-        System.out.println("a");
+        GoogleIdToken token = null;
         try {
-            GoogleIdToken token = GoogleIdToken.parse(mJFactory, tokenString);
-            System.out.println("b: " + token);
+            token = GoogleIdToken.parse(mJFactory, tokenString);
             if (mVerifier.verify(token)) {
                 GoogleIdToken.Payload tempPayload = token.getPayload();
-                System.out.println("c: " + tempPayload);
                 if (!tempPayload.getAudience().equals(mAudience)) {
                     mProblem = "Audience mismatch";
-                	System.out.println("d");
                 //} else if (!mClientIDs.contains(tempPayload.getAuthorizedParty())) {
                   //  mProblem = "Client ID mismatch";
                 } else
@@ -51,7 +46,8 @@ public class Checker {
         } catch (IOException e) {
             mProblem = "Network problem: " + e.getLocalizedMessage();
         }
-        return payload;
+        return token.getPayload();
+        //return payload;
     }
 
     public String problem() {
