@@ -17,7 +17,9 @@ import org.restlet.ext.oauth.internal.Token;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.gson.Gson;
+
 import com.google.gson.JsonSyntaxException;
 
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
@@ -36,7 +38,7 @@ public class OAuth2 {
 	 */
 	public static void setCredentials() {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(new File("/home/z3tt0r/google_client_credentials")));
+			BufferedReader br = new BufferedReader(new FileReader(new File("/home/z3tt0r/google_client_credentials2")));
 			clientID = br.readLine();
 			clientSecret = br.readLine();
 			br.close();
@@ -53,12 +55,16 @@ public class OAuth2 {
 	public static UserEntity verifyUser(Request req) {
 		Form form = req.getResourceRef().getQueryAsForm();
 		String accessToken = form.getFirstValue("access_token");
-		if (accessToken == null) {
-			return null;
-		}
+		String idToken = form.getFirstValue("id_token");
+		
 		GoogleUserInfo googleUser = null;
 		try {
-			googleUser = OAuth2.getGoogleUser(accessToken);
+			if (idToken != null) {
+				OAuth2.getGoogleUserFromIDToken(idToken); // TODO
+			} else if (accessToken != null) {
+				googleUser = OAuth2.getGoogleUser(accessToken);
+			} else
+				return null;
 		} catch (JsonSyntaxException | IOException e1) {
 			return null;
 		}
@@ -85,6 +91,16 @@ public class OAuth2 {
 		user = gson.fromJson(response.getText(), GoogleUserInfo.class);
 
 		return user;
+	}
+	
+	public static String getGoogleUserFromIDToken(String idToken) {
+
+	      Checker checker = new Checker(new String[]{clientID}, clientID);
+	      GoogleIdToken.Payload jwt = checker.check(idToken);
+	      Gson gson = new Gson();
+	System.out.println("jwt: " + jwt);
+	System.out.println(gson.toJson(jwt));
+	      return gson.toJson(jwt);
 	}
 	
 	/**
