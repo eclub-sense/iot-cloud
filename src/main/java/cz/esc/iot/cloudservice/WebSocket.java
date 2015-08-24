@@ -159,6 +159,9 @@ public class WebSocket extends WebSocketAdapter {
     		String ip = this.getSession().getRemoteAddress().getAddress().toString();
     		int port = this.getSession().getRemoteAddress().getPort();
     		boolean zetta = false;
+    		
+    		System.out.println(ip);
+    		System.out.println(port);
     		if (ip.equals("147.32.107.139") && port == 1337) {
     			zetta = true;
     			System.out.println("\n\n\nzetta-cloud\n\n\n");
