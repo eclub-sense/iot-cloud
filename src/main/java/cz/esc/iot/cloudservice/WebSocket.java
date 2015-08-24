@@ -86,16 +86,16 @@ public class WebSocket extends WebSocketAdapter {
      */
     private void startStoringIntoDb(HubDiscoveredMsg message) {
     	SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(message.getSensorUuid()).get();
-    	System.out.println("sen: "+sensor);
+    	//System.out.println("sen: "+sensor);
     	SensorTypeInfo typeInfo = MorfiaSetUp.getDatastore().createQuery(SensorTypeInfo.class).field("type").equal(sensor.getType()).get();
-    	System.out.println("info: "+typeInfo);
+    	//System.out.println("info: "+typeInfo);
     	// example url: "ws://127.0.0.1:1337/servers/1111/events?topic=photocell%2F3afc5cd4-755f-422d-8585-c8d526af8e85%2Fintensity"
     	for (MeasureValue value : typeInfo.getValues()) {
     		System.out.println(value);
     		String url = "ws://127.0.0.1:1337/servers/" + message.getUuid() + "/" +"events?topic=" 
     		    + sensor.getType() + "%2F" + message.getSensorId() + "%2F" + value.getName();
     		// TODO get first values without ws
-    		System.out.println(url);
+    		//System.out.println(url);
     		try {
                 WebsocketClient clientEndPoint = new WebsocketClient(new URI(url));
                 clientEndPoint.addMsgHandler(new WebsocketClient.MsgHandler() {
@@ -123,7 +123,7 @@ public class WebSocket extends WebSocketAdapter {
      * Verifying user after LOGIN message was obtained.
      */
     private void verifyConnection(HubMessage message) {
-    	System.out.println(message);
+    	//System.out.println(message);
     	String hubMail = ((HubLoginMsg)message).getMail();
     	//String hubAccessToken = ((HubLoginMsg)message).getAccess_token();
     	String hubUuid = ((HubLoginMsg)message).getUuid();
@@ -153,9 +153,16 @@ public class WebSocket extends WebSocketAdapter {
 			getSession().close(3, "Forbidden");
 		}
     	
-    	
     	if (dbUser != null) {
     		HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hubUuid).get();
+    		
+    		String ip = this.getSession().getRemoteAddress().getAddress().toString();
+    		int port = this.getSession().getRemoteAddress().getPort();
+    		boolean zetta = false;
+    		if (ip.equals("147.32.107.139") && port == 1337) {
+    			zetta = true;
+    			System.out.println("\n\n\nzetta-cloud\n\n\n");
+    		}
     		
     		// hub is new
     		if (hub == null) {
@@ -165,7 +172,8 @@ public class WebSocket extends WebSocketAdapter {
     			MorfiaSetUp.getDatastore().save(hub);
         		//MorfiaSetUp.getDatastore().update(dbUser, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("hubEntities", hub, true));
         		this.hubUuid = hubUuid;
-        		WebSocketRegistry.add(this);
+        		if (!zetta)
+        			WebSocketRegistry.add(this);
         		Postman.sendLoginAck(this, hubUuid);
     		// in case that hub's uuid is already registered in database
     		} else {
@@ -173,7 +181,8 @@ public class WebSocket extends WebSocketAdapter {
     				getSession().close(3, "Forbidden");
     			}
         		this.hubUuid = hubUuid;
-        		WebSocketRegistry.add(this);
+        		if(!zetta)
+        			WebSocketRegistry.add(this);
     			Postman.sendLoginAck(this, hubUuid);
         		try {
 					Postman.reregisterAllSensors(this, hubUuid);
