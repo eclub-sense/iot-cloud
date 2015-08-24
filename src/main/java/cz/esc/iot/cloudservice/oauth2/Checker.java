@@ -11,6 +11,7 @@ import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.gson.Gson;
 
 public class Checker {
 
@@ -41,7 +42,7 @@ public class Checker {
         try {
             GoogleIdToken token = GoogleIdToken.parse(mJFactory, tokenString);
             mVerifier.getPublicKeysManager().refresh();
-            System.out.println(mVerifier.verify(token.toString()));
+            //System.out.println(mVerifier.verify(new Gson().toJson(token)));
             System.out.println("b: " + token);
             if (mVerifier.verify(token)) {
                 GoogleIdToken.Payload tempPayload = token.getPayload();
