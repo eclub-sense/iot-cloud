@@ -29,15 +29,19 @@ public class Checker {
 
     public GoogleIdToken.Payload check(String tokenString) {
         GoogleIdToken.Payload payload = null;
+        System.out.println("a");
         try {
             GoogleIdToken token = GoogleIdToken.parse(mJFactory, tokenString);
+            System.out.println("b: " + token);
             if (mVerifier.verify(token)) {
                 GoogleIdToken.Payload tempPayload = token.getPayload();
-                if (!tempPayload.getAudience().equals(mAudience))
+                System.out.println("c: " + tempPayload);
+                if (!tempPayload.getAudience().equals(mAudience)) {
                     mProblem = "Audience mismatch";
+                	System.out.println("d");
                 //else if (!mClientIDs.contains(tempPayload.getAuthorizedParty()))
                 //    mProblem = "Client ID mismatch";
-                else
+                } else
                     payload = tempPayload;
             }
         } catch (GeneralSecurityException e) {
