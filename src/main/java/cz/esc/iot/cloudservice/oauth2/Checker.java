@@ -43,11 +43,11 @@ public class Checker {
             GoogleIdToken token = GoogleIdToken.parse(mJFactory, tokenString);
             //System.out.println(mVerifier.verify(new Gson().toJson(token)));
             System.out.println("b: " + token);
-            Collection<String> ids = new LinkedList<>();
+            /*Collection<String> ids = new LinkedList<>();
             ids.add(OAuth2.clientID);
             boolean ok = token.verifyAudience(ids);
-            System.out.println(ok);
-            if (mVerifier.verify(token)) {
+            System.out.println(ok);*/
+            if (mVerifier.verify(token, OAuth2.clientID)) {
                 GoogleIdToken.Payload tempPayload = token.getPayload();
                 System.out.println("c: " + tempPayload);
                 if (!tempPayload.getAudience().equals(mAudience)) {
