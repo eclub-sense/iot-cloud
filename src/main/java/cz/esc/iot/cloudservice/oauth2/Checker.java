@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
@@ -17,6 +18,7 @@ public class Checker {
     private final String mAudience;
     private final GoogleIdTokenVerifier mVerifier;
     private final JsonFactory mJFactory;
+    //private final GooglePublicKeysManager keyManager;
     private String mProblem = "Verification failed. (Time-out?)";
 
     public Checker(String[] clientIDs, String audience) {
@@ -25,13 +27,21 @@ public class Checker {
         NetHttpTransport transport = new NetHttpTransport();
         mJFactory = new GsonFactory();
         mVerifier = new GoogleIdTokenVerifier(transport, mJFactory);
+        //keyManager = new GooglePublicKeysManager(transport, mJFactory);
     }
 
     public GoogleIdToken.Payload check(String tokenString) {
-        GoogleIdToken.Payload payload = null;
+    	/*try {
+			keyManager.refresh();
+		} catch (GeneralSecurityException | IOException e1) {
+			e1.printStackTrace();
+		}*/
+    	GoogleIdToken.Payload payload = null;
         System.out.println("a");
         try {
             GoogleIdToken token = GoogleIdToken.parse(mJFactory, tokenString);
+            mVerifier.getPublicKeysManager().refresh();
+            System.out.println(mVerifier.verify(token.toString()));
             System.out.println("b: " + token);
             if (mVerifier.verify(token)) {
                 GoogleIdToken.Payload tempPayload = token.getPayload();
@@ -39,8 +49,8 @@ public class Checker {
                 if (!tempPayload.getAudience().equals(mAudience)) {
                     mProblem = "Audience mismatch";
                 	System.out.println("d");
-                //else if (!mClientIDs.contains(tempPayload.getAuthorizedParty()))
-                //    mProblem = "Client ID mismatch";
+                } else if (!mClientIDs.contains(tempPayload.getAuthorizedParty())) {
+                    mProblem = "Client ID mismatch";
                 } else
                     payload = tempPayload;
             }
