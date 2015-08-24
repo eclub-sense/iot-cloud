@@ -48,7 +48,7 @@ public class Postman {
 		HubNewMsg msg = new HubNewMsg(sensor.getUuid(), sensor.getType());
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		socket.getRemote().sendString(gson.toJson(msg));
-		System.out.println(msg);
-		System.out.println(gson.toJson(msg));
+		//System.out.println(msg);
+		//System.out.println(gson.toJson(msg));
 	}
 }

@@ -146,6 +146,7 @@ public class WebSocket extends WebSocketAdapter {
     		this.hubUuid = hubUuid;
     		WebSocketRegistry.setCloudSocket(this);
     		Postman.sendLoginAck(this, hubUuid);
+    		verified = true;
     		return;
     	}
 		UserEntity dbUser = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("emails").contains(hubMail).get();
@@ -195,7 +196,7 @@ public class WebSocket extends WebSocketAdapter {
 				}
     		}
     		verified = true;
-                map.put(hubUuid, this);
+            map.put(hubUuid, this);
     		
     	} else {
     		getSession().close(1, "Incorrect username or password.");
