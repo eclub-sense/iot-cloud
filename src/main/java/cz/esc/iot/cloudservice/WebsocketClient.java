@@ -27,12 +27,12 @@ public class WebsocketClient extends Endpoint {
         	ClientEndpointConfig.Configurator configurator = new ClientEndpointConfig.Configurator() {
         		@Override
         		public void beforeRequest(Map<String,List<String>> headers) {
-        			List<String> user = new LinkedList<>();
+        			/*List<String> user = new LinkedList<>();
         			List<String> password = new LinkedList<>();
         			user.add("admin");
         			password.add("admin");
         	        headers.put("User", user);
-        	        headers.put("Password", password);
+        	        headers.put("Password", password);*/
         	    }
         	};
         	ClientEndpointConfig clientConfig = ClientEndpointConfig.Builder.create()
@@ -41,7 +41,7 @@ public class WebsocketClient extends Endpoint {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, clientConfig, endpointURI);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
