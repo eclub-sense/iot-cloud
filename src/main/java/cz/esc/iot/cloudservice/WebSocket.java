@@ -205,7 +205,10 @@ public class WebSocket extends WebSocketAdapter {
     
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
-    	WebSocketRegistry.remove(this);
+    	if (this.hubUuid.equals("00000000"))
+    		WebSocketRegistry.setCloudSocket(null);
+    	else
+    		WebSocketRegistry.remove(this);
         map.remove(this.hubUuid);
         super.onWebSocketClose(statusCode,reason);
         System.out.println("Socket Closed: [" + statusCode + "] " + reason);

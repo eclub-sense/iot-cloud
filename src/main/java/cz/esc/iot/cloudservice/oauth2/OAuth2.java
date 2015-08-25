@@ -106,7 +106,7 @@ public class OAuth2 {
 //System.out.println(clientID);
 	      Checker checker = new Checker(new String[]{clientID}, clientID);
 	      GoogleIdToken.Payload jwt = checker.check(idToken);
-	      Gson gson = new Gson();
+	      //Gson gson = new Gson();
 	//System.out.println("jwt: " + jwt);
 	//System.out.println(gson.toJson(jwt));
 
