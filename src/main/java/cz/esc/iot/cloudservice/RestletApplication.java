@@ -8,6 +8,7 @@ import org.restlet.routing.Router;
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.resources.Homepage;
 import cz.esc.iot.cloudservice.resources.AccessToken;
+import cz.esc.iot.cloudservice.resources.Css;
 import cz.esc.iot.cloudservice.resources.JavaScript;
 import cz.esc.iot.cloudservice.resources.RegisteredHubs;
 import cz.esc.iot.cloudservice.resources.RegisteredSensors;
@@ -44,6 +45,7 @@ public class RestletApplication extends Application {
         
         router.attach("/", Homepage.class);
         router.attach("/app.js", JavaScript.class);
+        router.attach("/css/style.css", Css.class);
         
         /*
          * These resources are accessible with valid access token only.
