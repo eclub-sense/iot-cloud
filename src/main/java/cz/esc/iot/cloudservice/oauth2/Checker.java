@@ -46,8 +46,8 @@ public class Checker {
         } catch (IOException e) {
             mProblem = "Network problem: " + e.getLocalizedMessage();
         }
-        return token.getPayload(); // not verified!
-        //return payload;
+        //return token.getPayload(); // not verified!
+        return payload;
     }
 
     public String problem() {

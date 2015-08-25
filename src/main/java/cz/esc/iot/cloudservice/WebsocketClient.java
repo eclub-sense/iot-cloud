@@ -39,7 +39,10 @@ public class WebsocketClient extends Endpoint {
         	        .configurator(configurator)
         	        .build();
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+            container.setDefaultMaxSessionIdleTimeout(0);
+            System.out.println("connecting...");
             container.connectToServer(this, clientConfig, endpointURI);
+            System.out.println("connected!");
         } catch (Exception e) {
             e.printStackTrace();
         }
