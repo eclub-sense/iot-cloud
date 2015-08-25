@@ -163,8 +163,7 @@ public class WebSocket extends WebSocketAdapter {
     		boolean zetta = false;
     		
     		System.out.println(ip);
-    		System.out.println(port);
-    		if (ip.equals("147.32.107.139") && port == 1337) {
+    		if (ip.equals("147.32.107.139")) {
     			zetta = true;
     			System.out.println("\n\n\nzetta-cloud\n\n\n");
     		}

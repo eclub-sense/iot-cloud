@@ -54,7 +54,7 @@ public class SensorInfoAdder {
 
 		// Mobile
 		list2.clear();
-		list2.add(new MeasureValue("lattitude", null));
+		list2.add(new MeasureValue("latitude", null));
 		list2.add(new MeasureValue("longitude", null));
 		info2 = new SensorTypeInfo(8, "gps", list2, "gps-driver");
 		System.out.println(MorfiaSetUp.getDatastore());
