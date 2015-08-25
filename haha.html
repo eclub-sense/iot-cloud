@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html ng-app="ESC_WebApp">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Justified Nav Template for Bootstrap</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet">
+    
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <!-- The justified navigation menu is meant for single line per list item.
+           Multiple lines will require custom code not provided by Bootstrap. -->
+      <div class="masthead">
+        <h3 class="text-muted">ZETTOR</h3>
+        <nav>
+          <ul class="nav">
+            <li class="active"><a href="index.html">Home</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-lg-6">
+          <h2>Public sensors</h2>
+          <ul class="list-group">
+        <div class="public_sensors" ng-controller="PublicSensorController as publicSensorCtrl">
+        <li class="list-group-item" ng-repeat="sensor in publicSensorCtrl.sensors">
+            <div class="panel panel-default">
+            <div class="panel-heading">Uuid: {{sensor.uuid}}</div>
+            <div class="panel-body">
+              <p>Access: {{sensor.access}}<br />
+              Type: {{sensor.type}}<br />
+              Index: {{$index}}</p>
+              <p class="text-right"> <a class="btn btn-primary align-right" href ng-click="publicSensorCtrl.showData($index)">More info!</a></p>
+            </div>
+            </div>
+        
+        </li>
+        </div>
+        </ul>
+        </div>
+        <div class="col-lg-6">
+        <h2>Register sensors</h2>
+        <div class="well">
+        <div class="form-group">
+    <!--  Review Form -->
+    <form name="reviewForm" ng-controller="RegistrationController as registrationCtrl"
+          ng-submit="registrationCtrl.register()">
+        <!--  Review Form -->
+        <h4>Register sensor</h4>
+        <fieldset class="form-group">
+       <textarea ng-model="registrationCtrl.registration.uuid" class="form-control"
+                 placeholder="sensor_uuid..." title="Review"></textarea>
+        </fieldset>
+        <fieldset class="form-group">
+        <textarea ng-model="registrationCtrl.registration.hub_uuid" class="form-control"
+                  placeholder="hub_uuid..." title="Review"></textarea>
+        </fieldset>
+        <fieldset class="form-group">
+        <textarea ng-model="registrationCtrl.registration.secret" class="form-control"
+                  placeholder="secret..." title="Review"></textarea>
+        </fieldset>
+        <fieldset class="form-group">
+        <textarea ng-model="reviewCtrl.registration.type" class="form-control"
+                  placeholder="type..." title="Review"></textarea>
+        </fieldset>
+        <fieldset class="form-group">
+        <textarea ng-model="registrationCtrl.registration.s_type" class="form-control"
+                  placeholder="s_type..." title="Review"></textarea>
+        </fieldset>
+
+
+        <fieldset class="form-group">
+            <input type="submit" class="btn btn-primary pull-right" value="Register sensor."/>
+        </fieldset>
+    </form>
+    </div>
+</div>
+        </div>
+      </div>
+
+      <!-- Site footer -->
+      <footer class="footer">
+        <p>&copy; IOT MASTERS 2015</p>
+      </footer>
+
+    </div> 
+  </body>
+</html>
