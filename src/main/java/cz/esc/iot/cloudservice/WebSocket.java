@@ -160,12 +160,11 @@ public class WebSocket extends WebSocketAdapter {
     	if (dbUser != null) {
     		HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hubUuid).get();
     		
-    		String ip = this.getSession().getRemoteAddress().getAddress().toString();
-    		int port = this.getSession().getRemoteAddress().getPort();
+    		String ip = this.getSession().getRemoteAddress().getHostString();
     		boolean zetta = false;
     		
     		System.out.println(ip);
-    		if (ip.equals("147.32.107.139")) {
+    		if (ip.equals("90.183.112.6")) { // zetta-cloud ip
     			zetta = true;
     			System.out.println("\n\n\nzetta-cloud\n\n\n");
     		}
