@@ -30,11 +30,15 @@ public class Checker {
     public GoogleIdToken.Payload check(String tokenString) {
     	GoogleIdToken.Payload payload = null;
         GoogleIdToken token = null;
+        System.out.println("a");
         try {
             token = GoogleIdToken.parse(mJFactory, tokenString);
+            System.out.println("not verified:" + token.getPayload());
             if (mVerifier.verify(token)) {
+            	System.out.println("c");
                 GoogleIdToken.Payload tempPayload = token.getPayload();
                 if (!tempPayload.getAudience().equals(mAudience)) {
+                	System.out.println("d");
                     mProblem = "Audience mismatch";
                 //} else if (!mClientIDs.contains(tempPayload.getAuthorizedParty())) {
                   //  mProblem = "Client ID mismatch";
@@ -46,6 +50,7 @@ public class Checker {
         } catch (IOException e) {
             mProblem = "Network problem: " + e.getLocalizedMessage();
         }
+        System.out.println("e");
         //return token.getPayload(); // not verified!
         return payload;
     }
