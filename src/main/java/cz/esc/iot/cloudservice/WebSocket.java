@@ -95,7 +95,9 @@ public class WebSocket extends WebSocketAdapter {
     		String url = "ws://192.168.200.19:1337/servers/" + message.getUuid() + "/" +"events?topic=" 
     		    + sensor.getType() + "%2F" + message.getSensorId() + "%2F" + value.getName();
     		// TODO get first values without ws
-    		//System.out.println(url);
+    		System.out.println(url);
+    		System.out.println("local: " + this.getSession().getLocalAddress().getHostString());
+    		System.out.println("remote: " + this.getSession().getRemoteAddress().getHostString());
     		try {
                 WebsocketClient clientEndPoint = new WebsocketClient(new URI(url));
                 clientEndPoint.addMsgHandler(new WebsocketClient.MsgHandler() {
