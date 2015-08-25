@@ -164,7 +164,7 @@ public class WebSocket extends WebSocketAdapter {
     		boolean zetta = false;
     		
     		System.out.println(ip);
-    		if (ip.equals("127.0.0.1")) { // zetta-cloud ip
+    		if (ip.equals("147.32.107.139")) { // zetta-cloud ip
     			zetta = true;
     			System.out.println("\n\n\nzetta-cloud\n\n\n");
     		}

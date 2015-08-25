@@ -52,11 +52,100 @@ public class SensorInfoAdder {
 		System.out.println(MorfiaSetUp.getDatastore());
 		MorfiaSetUp.getDatastore().save(info2);
 
-		// Mobile
+		// gps
 		list2.clear();
 		list2.add(new MeasureValue("latitude", null));
 		list2.add(new MeasureValue("longitude", null));
 		info2 = new SensorTypeInfo(8, "gps", list2, "gps-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
+		
+		// accel
+		list2.clear();
+		list2.add(new MeasureValue("x", null));
+		list2.add(new MeasureValue("y", null));
+		list2.add(new MeasureValue("z", null));
+		info2 = new SensorTypeInfo(7, "accelerometer", list2, "accelerometer-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
+		
+		// light sensor
+		list2.clear();
+		list2.add(new MeasureValue("illumination", "lx"));
+		info2 = new SensorTypeInfo(9, "light_sensor", list2, "light_sensor-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
+		
+		// proximity sensor
+		list2.clear();
+		list2.add(new MeasureValue("proximity", "cm"));
+		info2 = new SensorTypeInfo(10, "proximity_sensor", list2, "proximity_sensor-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
+		
+		// magnetometer
+		list2.clear();
+		list2.add(new MeasureValue("x", null));
+		list2.add(new MeasureValue("y", null));
+		list2.add(new MeasureValue("z", null));
+		info2 = new SensorTypeInfo(11, "magnetometer", list2, "magnetometer-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
+		
+		// gyroscope
+		list2.clear();
+		list2.add(new MeasureValue("x", null));
+		list2.add(new MeasureValue("y", null));
+		list2.add(new MeasureValue("z", null));
+		info2 = new SensorTypeInfo(12, "gyroscope", list2, "gyroscope-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
+		
+		// barometer
+		list2.clear();
+		list2.add(new MeasureValue("pressure", "hPa"));
+		info2 = new SensorTypeInfo(13, "barometer", list2, "barometer-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
+		
+		// gravity
+		list2.clear();
+		list2.add(new MeasureValue("x", null));
+		list2.add(new MeasureValue("y", null));
+		list2.add(new MeasureValue("z", null));
+		info2 = new SensorTypeInfo(14, "gravity_sensor", list2, "gravity_sensor-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
+		
+		// linear accel
+		list2.clear();
+		list2.add(new MeasureValue("x", null));
+		list2.add(new MeasureValue("y", null));
+		list2.add(new MeasureValue("z", null));
+		info2 = new SensorTypeInfo(15, "linear_accelerometer", list2, "linear_accelerometer-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
+		
+		// rotation_sensor
+		list2.clear();
+		list2.add(new MeasureValue("x", null));
+		list2.add(new MeasureValue("y", null));
+		list2.add(new MeasureValue("z", null));
+		info2 = new SensorTypeInfo(16, "rotation_sensor", list2, "rotation_sensor-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
+		
+		// humidity_sensor
+		list2.clear();
+		list2.add(new MeasureValue("humidity", "%"));
+		info2 = new SensorTypeInfo(17, "humidity_sensor", list2, "humidity_sensor-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
+		
+		// ambient_thermometer
+		list2.clear();
+		list2.add(new MeasureValue("temperature", "°C"));
+		info2 = new SensorTypeInfo(18, "ambient_thermometer", list2, "ambient_thermometer-driver");
 		System.out.println(MorfiaSetUp.getDatastore());
 		MorfiaSetUp.getDatastore().save(info2);
 	}
