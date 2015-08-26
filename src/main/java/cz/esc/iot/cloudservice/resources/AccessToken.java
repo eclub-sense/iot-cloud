@@ -42,13 +42,13 @@ System.out.println("accessToken: " + accessToken);
 			getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN);
 			return "";
 		}
-		
+		/*
 		// find user in db
 		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(user.getId()).get();
 		// if user is not in db, register him
 		if (userEntity == null)
 			return null; //UserRegistrator.registerUser(user.getId(), user.getEmail());
-		 
+		 */
 		Gson gson = new Gson();
 System.out.println(gson.toJson(token));
 		return gson.toJson(token);

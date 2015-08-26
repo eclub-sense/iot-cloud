@@ -39,7 +39,7 @@ public class OAuth2 {
 	 */
 	public static void setCredentials() {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(new File("/home/z3tt0r/google_client_credentials2")));
+			BufferedReader br = new BufferedReader(new FileReader(new File("/home/z3tt0r/google_client_credentials")));
 			clientID = br.readLine();
 			clientSecret = br.readLine();
 			br.close();
