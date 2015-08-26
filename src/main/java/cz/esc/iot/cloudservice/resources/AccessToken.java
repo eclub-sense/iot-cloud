@@ -22,7 +22,7 @@ public class AccessToken extends ServerResource {
 
 	@Get("json")
 	public String auth() {
-		
+		System.out.println("AcessTOKEN");
 		// get token
 		Token token = null;
 		String accessToken = null;
