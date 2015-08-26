@@ -124,12 +124,14 @@ public class OAuth2 {
     	client.setClientCredentials(OAuth2.clientID, OAuth2.clientSecret);
     	OAuthParameters params = new OAuthParameters();
     	params.code(form.getFirstValue("code"));
-    	params.redirectURI("http://mlha-139.sin.cvut.cz:8080/call");
+    	params.redirectURI("http://mlha-139.sin.cvut.cz:8080/callback");
     	params.grantType(GrantType.authorization_code);
     	
+    	System.out.println("code: "+form.getFirstValue("code"));
     	Token token = null;
 		try {
 			token = client.requestToken(params);
+			System.out.println("token: "+ token);
 		} catch (OAuthException | IOException | JSONException e) {
 			e.printStackTrace();
 		}
