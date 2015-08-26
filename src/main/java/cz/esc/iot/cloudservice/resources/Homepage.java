@@ -6,12 +6,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import org.restlet.ext.oauth.AccessTokenServerResource;
 import org.restlet.ext.oauth.OAuthException;
 import org.restlet.resource.Get;
+import org.restlet.resource.ServerResource;
 
-public class Homepage extends AccessTokenServerResource {
-
+public class Homepage extends ServerResource {
+	
 	@Get("html")
     public String returnList() throws OAuthException {		
 

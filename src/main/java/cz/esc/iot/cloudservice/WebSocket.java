@@ -154,6 +154,7 @@ public class WebSocket extends WebSocketAdapter {
 		UserEntity dbUser = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("emails").contains(hubMail).get();
 		System.out.println(dbUser);
 		if (dbUser == null) {
+			
 			getSession().close(3, "Forbidden");
 		}
     	

@@ -39,7 +39,7 @@ public class OAuth2 {
 	 */
 	public static void setCredentials() {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(new File("/home/z3tt0r/google_client_credentials2")));
+			BufferedReader br = new BufferedReader(new FileReader(new File("/home/z3tt0r/google_client_credentials")));
 			clientID = br.readLine();
 			clientSecret = br.readLine();
 			br.close();
@@ -56,20 +56,20 @@ public class OAuth2 {
 	public static UserEntity verifyUser(Request req) {
 		Form form = req.getResourceRef().getQueryAsForm();
 		String accessToken = form.getFirstValue("access_token");
-		String idToken = form.getFirstValue("id_token");
+		//String idToken = form.getFirstValue("id_token");
 		
 		Object googleUser = null;
 		String id = null;
 		String email;
 		try {
-			if (idToken != null) {
+			/*if (idToken != null) {
 				googleUser = OAuth2.getGoogleUserFromIDToken(idToken);
 				email = ((GoogleIdToken.Payload)googleUser).getEmail();
 				id = ((GoogleIdToken.Payload)googleUser).getUserId();
-			} else if (accessToken != null) {
+			} else*/ if (accessToken != null) {
 				googleUser = OAuth2.getGoogleUserFromAccessToken(accessToken);
 				email = ((GoogleUserInfo)googleUser).getEmail();
-				//id = ((GoogleUserInfo)googleUser).getUserId();
+				id = ((GoogleUserInfo)googleUser).getId();
 			} else
 				return null;
 		} catch (JsonSyntaxException | IOException e1) {
@@ -77,7 +77,7 @@ public class OAuth2 {
 		}
 		System.out.println("email: " + email);
 		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("emails").contains(email).get();
-		if (userEntity == null && googleUser instanceof GoogleIdToken.Payload) {
+		if (userEntity == null) {
 			UserRegistrator.registerUser(id, email);
 		}
 		return userEntity;
