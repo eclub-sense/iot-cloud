@@ -22,17 +22,18 @@ public class AccessToken extends ServerResource {
 
 	@Get("json")
 	public String auth() {
-		System.out.println("TOKEN");
+System.out.println("TOKEN");
 		// get token
 		Token token = null;
 		String accessToken = null;
 		try {
 			token = OAuth2.getToken(getRequest());
+System.out.println("token: "+token);
 			accessToken = token.getAccessToken();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-System.out.println(token);
+System.out.println("accessToken: " + accessToken);
 		// get info about user
 		GoogleUserInfo user = null;
 		try {
@@ -49,7 +50,7 @@ System.out.println(token);
 			return null; //UserRegistrator.registerUser(user.getId(), user.getEmail());
 		 
 		Gson gson = new Gson();
-		System.out.println(gson.toJson(token));
+System.out.println(gson.toJson(token));
 		return gson.toJson(token);
 	}
 }
