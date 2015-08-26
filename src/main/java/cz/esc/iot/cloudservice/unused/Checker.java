@@ -1,4 +1,4 @@
-package cz.esc.iot.cloudservice.oauth2;
+package cz.esc.iot.cloudservice.unused;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;

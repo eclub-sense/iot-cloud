@@ -31,7 +31,7 @@ public class ShareSensor extends ServerResource {
 
 			// verify user
 			UserEntity owner;
-			if ((owner = OAuth2.verifyUser(getRequest())) == null) {
+			if ((owner = OAuth2.findUserInDatabase(getRequest())) == null) {
 				getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN);
 				return;
 			}

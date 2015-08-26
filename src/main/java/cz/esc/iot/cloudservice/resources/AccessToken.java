@@ -22,18 +22,15 @@ public class AccessToken extends ServerResource {
 
 	@Get("json")
 	public String auth() {
-System.out.println("TOKEN");
 		// get token
 		Token token = null;
 		String accessToken = null;
 		try {
 			token = OAuth2.getToken(getRequest());
-System.out.println("token: "+token);
 			accessToken = token.getAccessToken();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-System.out.println("accessToken: " + accessToken);
 		// get info about user
 		GoogleUserInfo user = null;
 		try {
@@ -42,6 +39,8 @@ System.out.println("accessToken: " + accessToken);
 			getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN);
 			return "";
 		}
+		
+		// TODO only for registered users
 		/*
 		// find user in db
 		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("identifier").equal(user.getId()).get();
@@ -50,7 +49,6 @@ System.out.println("accessToken: " + accessToken);
 			return null; //UserRegistrator.registerUser(user.getId(), user.getEmail());
 		 */
 		Gson gson = new Gson();
-System.out.println(gson.toJson(token));
 		return gson.toJson(token);
 	}
 }

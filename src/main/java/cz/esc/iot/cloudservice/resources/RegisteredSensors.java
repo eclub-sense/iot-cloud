@@ -35,7 +35,7 @@ public class RegisteredSensors extends ServerResource {
 		// verify user
 		Form form = getRequest().getResourceRef().getQueryAsForm();
 		
-		UserEntity userEntity = OAuth2.verifyUser(getRequest());
+		UserEntity userEntity = OAuth2.findUserInDatabase(getRequest());
 		
 		String path = this.getRequest().getResourceRef().getPath();
 		switch (path) {

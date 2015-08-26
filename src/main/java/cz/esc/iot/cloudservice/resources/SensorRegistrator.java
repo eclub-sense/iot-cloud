@@ -35,7 +35,7 @@ public class SensorRegistrator extends ServerResource {
 			
 			// verify user
 			UserEntity user;
-			if ((user = OAuth2.verifyUser(getRequest())) == null) {
+			if ((user = OAuth2.findUserInDatabase(getRequest())) == null) {
 				getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN);
 				return;
 			}

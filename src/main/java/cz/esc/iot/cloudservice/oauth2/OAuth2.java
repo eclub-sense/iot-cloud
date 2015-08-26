@@ -24,7 +24,6 @@ import com.google.gson.JsonSyntaxException;
 
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
-import cz.esc.iot.cloudservice.support.UserRegistrator;
 
 /**
  * Class for communication with authorisation and token servers.
@@ -53,32 +52,24 @@ public class OAuth2 {
 	 * Zettor's database.
 	 * @return Returns verified user.
 	 */
-	public static UserEntity verifyUser(Request req) {
+	public static UserEntity findUserInDatabase(Request req) {
 		Form form = req.getResourceRef().getQueryAsForm();
 		String accessToken = form.getFirstValue("access_token");
-		//String idToken = form.getFirstValue("id_token");
 		
-		Object googleUser = null;
-		String id = null;
-		String email;
+		GoogleUserInfo googleUser = null;
 		try {
-			/*if (idToken != null) {
-				googleUser = OAuth2.getGoogleUserFromIDToken(idToken);
-				email = ((GoogleIdToken.Payload)googleUser).getEmail();
-				id = ((GoogleIdToken.Payload)googleUser).getUserId();
-			} else*/ if (accessToken != null) {
+			if (accessToken != null) {
 				googleUser = OAuth2.getGoogleUserFromAccessToken(accessToken);
-				email = ((GoogleUserInfo)googleUser).getEmail();
-				id = ((GoogleUserInfo)googleUser).getId();
 			} else
 				return null;
 		} catch (JsonSyntaxException | IOException e1) {
 			return null;
 		}
-		System.out.println("email: " + email);
-		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("emails").contains(email).get();
+System.out.println("email: " + googleUser.getEmail());
+		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("emails").contains(googleUser.getEmail()).get();
 		if (userEntity == null) {
-			UserRegistrator.registerUser(id, email);
+			// google user is not in zettor's database
+			return null; //UserRegistrator.registerUser(id, email);
 		}
 		return userEntity;
 	}
@@ -99,18 +90,6 @@ public class OAuth2 {
 		user = gson.fromJson(response.getText(), GoogleUserInfo.class);
 
 		return user;
-	}
-	
-	public static GoogleIdToken.Payload getGoogleUserFromIDToken(String idToken) {
-//System.out.println(idToken);
-//System.out.println(clientID);
-	      Checker checker = new Checker(new String[]{clientID}, clientID);
-	      GoogleIdToken.Payload jwt = checker.check(idToken);
-	      //Gson gson = new Gson();
-	System.out.println("\n\njwt: " + jwt + "\n");
-	//System.out.println(gson.toJson(jwt));
-
-	      return jwt;
 	}
 	
 	/**
