@@ -22,7 +22,7 @@ public class AccessToken extends ServerResource {
 
 	@Get("json")
 	public String auth() {
-		System.out.println("AcessTOKEN");
+		System.out.println("TOKEN");
 		// get token
 		Token token = null;
 		String accessToken = null;
@@ -32,7 +32,7 @@ public class AccessToken extends ServerResource {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-
+System.out.println(token);
 		// get info about user
 		GoogleUserInfo user = null;
 		try {

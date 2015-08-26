@@ -124,7 +124,7 @@ public class OAuth2 {
     	client.setClientCredentials(OAuth2.clientID, OAuth2.clientSecret);
     	OAuthParameters params = new OAuthParameters();
     	params.code(form.getFirstValue("code"));
-    	params.redirectURI("http://mlha-139.sin.cvut.cz:8080/callback");
+    	params.redirectURI("http://mlha-139.sin.cvut.cz:8080/call");
     	params.grantType(GrantType.authorization_code);
     	
     	Token token = null;
