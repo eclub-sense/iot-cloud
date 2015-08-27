@@ -103,7 +103,7 @@ System.out.println("email: " + googleUser.getEmail());
     	client.setClientCredentials(OAuth2.clientID, OAuth2.clientSecret);
     	OAuthParameters params = new OAuthParameters();
     	params.code(form.getFirstValue("code"));
-    	params.redirectURI("http://mlha-139.sin.cvut.cz:8080/callback");
+    	params.redirectURI("https://mlha-139.sin.cvut.cz:8082/callback");
     	params.grantType(GrantType.authorization_code);
     	System.out.println("client: "+client);
     	System.out.println("code: "+form.getFirstValue("code"));
