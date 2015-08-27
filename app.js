@@ -5,34 +5,47 @@
         var pub_con = this;
         this.sensors = [];
 
-        this.loadSensors = function (){
+        this.loadSensors = function () {
             $http.get('http://147.32.107.139:8081/registered_sensors')
-                .then(function(response){
+                .then(function (response) {
                     pub_con.sensors = response.data._public;
                 });
         };
 
         this.loadSensors();
 
-        this.showData = function(index){
+        this.showData = function (index) {
             $log.log("Index: " + index);
             //$window.alert("Index: " + index);
             $http.get('http://147.32.107.139:8081/registered_sensors/' + pub_con.sensors[index].uuid)
-                .then(function(response){
+                .then(function (response) {
 
                     var text = "Data:";
 
 
-                    response.data.measured.forEach(function(entry){
+                    response.data.measured.forEach(function (entry) {
                         text += "\n" + entry.name + ": " + entry.value;
                     });
 
 
                     $window.alert(text);
-                }, function(response){
+                }, function (response) {
                     $log.warn("ERROR");
                 });
 
+        };
+    }]);
+
+    app.controller('PrivateSensorController', ['$http', '$log', '$window', function ($http, $log, $window) {
+        this.alertLoggedPerson = function () {
+            var auth2 = gapi.auth2.getAuthInstance();
+            var profile = auth2.currentUser.get().getBasicProfile();
+            console.log(profile);
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail());
+            console.log('ID_token: '+ gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token);
         };
     }]);
 
