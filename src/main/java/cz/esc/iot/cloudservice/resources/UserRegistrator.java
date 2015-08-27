@@ -1,6 +1,7 @@
 package cz.esc.iot.cloudservice.resources;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.json.JSONException;
 import org.restlet.data.MediaType;
@@ -17,6 +18,8 @@ import cz.esc.iot.cloudservice.oauth2.CloudToken;
 import cz.esc.iot.cloudservice.oauth2.GoogleUserInfo;
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
+import cz.esc.iot.cloudservice.persistance.model.AccessToken;
+import cz.esc.iot.cloudservice.persistance.model.RefreshToken;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 
 /**
@@ -32,35 +35,40 @@ public class UserRegistrator extends ServerResource {
 			
 			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 			AccessTokenRequest request = gson.fromJson(json, AccessTokenRequest.class);
-			System.out.println("request: "+request);
 			
-			if (request.getGrant_type() == null || !request.getGrant_type().equals("authorization_code"))
-				return "{\n\"error\":\"Invalid grant type.\",\n\"code\":2\n}";
-			
-			if (request.getClient_id() == null || !request.getClient_id().equals("abeceda"))
-				return "{\n\"error\":\"Invalid client id.\",\n\"code\":3\n}";
-			
-			if (request.getCode() == null)
-				return "{\n\"error\":\"No code received.\",\n\"code\":3\n}";
-					
+			// control request arguments
+			if (request.getGrant_type() == null || request.getClient_id() == null || request.getCode() == null)
+				return "{\n\"error\":\"invalid_request\"}";
+			else if (!request.getGrant_type().equals("authorization_code"))
+				return "{\n\"error\":\"unsupported_grant_type\"\n}";
+			else if (!request.getClient_id().equals("abeceda"))
+				return "{\n\"error\":\"invalid_client\"\n}";
+				
 			// exchange authorisation code for info about user from Google
 			GoogleUserInfo googleUser;
 			try {
 				googleUser = OAuth2.getGoogleUserInfoFromCode(request.getCode());
 			} catch (OAuthException e) {
-				return "{\n\"error\":\"Invalid code.\",\n\"code\":1\n}";
+				return "{\n\"error\":\"invalid_grant\"\n}";
 			}
 	
 			// register user
 			UserEntity newUser = gson.fromJson(json, UserEntity.class);
 			if (newUser.getPassword() == null)
-				return "{\n\"error\":\"No password received.\",\n\"code\":6\n}";
+				return "{\n\"error\":\"invalid_password\"\n}";
 			newUser.setEmail(googleUser.getEmail());
 			MorfiaSetUp.getDatastore().save(newUser);
 			
+			// generate and return token
 			CloudToken token = OAuth2.generateToken();
+			
+			AccessToken accessToken = new AccessToken(token.getAccess_token(), new Date());
+			RefreshToken refreshToken = new RefreshToken(token.getRefresh_token(), new Date());
+			MorfiaSetUp.getDatastore().save(accessToken);
+			MorfiaSetUp.getDatastore().save(refreshToken);
+			
 			return gson.toJson(token);
 		}
-		return "{\n\"error\":\"Invalid request.\",\n\"code\":5\n}";
+		return "{\n\"error\":\"invalid_request\"\n}";
 	}
 }

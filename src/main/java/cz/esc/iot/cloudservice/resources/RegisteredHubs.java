@@ -1,5 +1,6 @@
 package cz.esc.iot.cloudservice.resources;
 
+import org.restlet.data.Form;
 import org.restlet.data.Status;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
@@ -20,20 +21,27 @@ public class RegisteredHubs extends ServerResource {
 	@Get("json")
 	public String returnList() {
 		
+		// get access_token from url parameters
+		Form form = getRequest().getResourceRef().getQueryAsForm();
+		String access_token = form.getFirstValue("access_token");
+		if (access_token == null) {
+			getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+			return "";
+		}
+			
 		// verify user
 		UserEntity user;
-		if ((user = OAuth2.findUserInDatabase(getRequest())) == null) {
-			getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-			return null;
+		if ((user = OAuth2.findUserInDatabase(access_token)) == null) {
+			getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+			return "";
 		}
 		
 		String path = this.getRequest().getResourceRef().getPath();
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-		switch (path) {
 		
+		switch (path) {
 		// returns all user's hubs
 		case "/registered_hubs" : return gson.toJson(MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(user).asList());
-		
 		// returns only hub specified by its uuid
 		default : return gson.toJson(MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(user).field("uuid").equal(this.getRequestAttributes().get("uuid")).get());
 		}

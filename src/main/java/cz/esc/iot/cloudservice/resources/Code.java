@@ -11,7 +11,7 @@ public class Code extends ServerResource {
 		Form form = getRequest().getResourceRef().getQueryAsForm();
 		String code = form.getFirstValue("code");
 		if (code == null)
-			return "{\n\"error\":\"Authorisation code required.\",\n\"code\":1\n}";
+			return "{\n\"error\":\"Authorisation code required.\"\n}";
 		return "{\n\"code\":\"" + code + "\"\n}";
 	}
 }

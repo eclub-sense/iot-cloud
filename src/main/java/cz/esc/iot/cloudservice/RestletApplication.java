@@ -15,6 +15,7 @@ import cz.esc.iot.cloudservice.resources.RegisteredHubs;
 import cz.esc.iot.cloudservice.resources.RegisteredSensors;
 import cz.esc.iot.cloudservice.resources.SensorRegistrator;
 import cz.esc.iot.cloudservice.resources.ShareSensor;
+import cz.esc.iot.cloudservice.resources.TokenRefresher;
 import cz.esc.iot.cloudservice.resources.UserRegistrator;
 
 /**
@@ -54,6 +55,11 @@ public class RestletApplication extends Application {
         router.attach("/callback", Code.class);
         router.attach("/new_token", NewToken.class);
         router.attach("/user_registration", UserRegistrator.class);
+        
+        /*
+         * This resource is accessible with valid refresh token only.
+         */
+        router.attach("/refresh_token", TokenRefresher.class);
         
         /*
          * These resources are accessible with valid access token only.

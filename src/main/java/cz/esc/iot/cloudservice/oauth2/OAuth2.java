@@ -8,8 +8,6 @@ import java.util.Random;
 
 import org.apache.commons.codec.binary.Hex;
 import org.json.JSONException;
-import org.restlet.Request;
-import org.restlet.data.Form;
 import org.restlet.data.Reference;
 import org.restlet.ext.oauth.AccessTokenClientResource;
 import org.restlet.ext.oauth.GrantType;
@@ -20,9 +18,9 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
+import cz.esc.iot.cloudservice.persistance.model.AccessToken;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 
 /**
@@ -52,26 +50,10 @@ public class OAuth2 {
 	 * Zettor's database.
 	 * @return Returns verified user.
 	 */
-	public static UserEntity findUserInDatabase(Request req) {
-		Form form = req.getResourceRef().getQueryAsForm();
-		String accessToken = form.getFirstValue("access_token");
+	public static UserEntity findUserInDatabase(String access_token) {
 		
-		GoogleUserInfo googleUser = null;
-		try {
-			if (accessToken != null) {
-				googleUser = OAuth2.getGoogleUserFromAccessToken(accessToken);
-			} else
-				return null;
-		} catch (JsonSyntaxException | IOException e1) {
-			return null;
-		}
-System.out.println("email: " + googleUser.getEmail());
-		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("emails").contains(googleUser.getEmail()).get();
-		if (userEntity == null) {
-			// google user is not in zettor's database
-			return null; //UserRegistrator.registerUser(id, email);
-		}
-		return userEntity;
+		AccessToken token = MorfiaSetUp.getDatastore().createQuery(AccessToken.class).field("access_token").contains(access_token).get();
+		return token.getUser();
 	}
 	
 	/**

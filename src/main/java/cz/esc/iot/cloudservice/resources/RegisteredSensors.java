@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.restlet.data.Form;
 import org.restlet.data.Parameter;
+import org.restlet.data.Status;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
@@ -30,19 +31,24 @@ public class RegisteredSensors extends ServerResource {
 	 */
 	@Get("json")
 	public String returnList() {
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		
-		// verify user
+		// get access_token from url parameters
 		Form form = getRequest().getResourceRef().getQueryAsForm();
+		String access_token = form.getFirstValue("access_token");
+			
+		// verify user
+		UserEntity userEntity = null;
+		if (access_token != null && (userEntity = OAuth2.findUserInDatabase(access_token)) == null) {
+			getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+			return "";
+		}
 		
-		UserEntity userEntity = OAuth2.findUserInDatabase(getRequest());
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		
 		String path = this.getRequest().getResourceRef().getPath();
 		switch (path) {
-		
 		// returns all user's sensors
 		case "/registered_sensors" : return registeredSensors(gson, form, userEntity);
-		
 		// returns only hub specified by its uuid
 		default : return sensorAndData(gson, form, userEntity);
 		}

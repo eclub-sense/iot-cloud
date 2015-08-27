@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -29,10 +30,18 @@ public class ShareSensor extends ServerResource {
 	public void acceptRepresentation(Representation entity) throws IOException {
 		if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
 
+			// get access_token from url parameters
+			Form form = getRequest().getResourceRef().getQueryAsForm();
+			String access_token = form.getFirstValue("access_token");
+			if (access_token == null) {
+				getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+				return;
+			}
+				
 			// verify user
 			UserEntity owner;
-			if ((owner = OAuth2.findUserInDatabase(getRequest())) == null) {
-				getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+			if ((owner = OAuth2.findUserInDatabase(access_token)) == null) {
+				getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
 				return;
 			}
 			
