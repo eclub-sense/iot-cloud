@@ -28,6 +28,9 @@ public class UserRegistrator extends AccessTokenServerResource {
 		// exchange authorisation code for info about user from Google
 		Form form = getRequest().getResourceRef().getQueryAsForm();
 		String code = form.getFirstValue("code");
+		if (code == null)
+			return "{\"error\":\"Authorisation code required.\"}";
+		
 		GoogleUserInfo googleUser = null;
 		try {
 			googleUser = OAuth2.getGoogleUserInfoFromCode(code);

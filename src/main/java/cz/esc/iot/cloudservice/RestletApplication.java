@@ -14,6 +14,7 @@ import cz.esc.iot.cloudservice.resources.RegisteredHubs;
 import cz.esc.iot.cloudservice.resources.RegisteredSensors;
 import cz.esc.iot.cloudservice.resources.SensorRegistrator;
 import cz.esc.iot.cloudservice.resources.ShareSensor;
+import cz.esc.iot.cloudservice.resources.UserRegistrator;
 
 /**
  * Restlet application called when querying whatever url except to /events.
@@ -43,6 +44,7 @@ public class RestletApplication extends Application {
         router.attach("/login", proxy);
         router.attach("/callback", Login.class);
         
+        router.attach("/user_registration", UserRegistrator.class);
         router.attach("/", Homepage.class);
         router.attach("/app.js", JavaScript.class);
         router.attach("/css/style.css", Css.class);
