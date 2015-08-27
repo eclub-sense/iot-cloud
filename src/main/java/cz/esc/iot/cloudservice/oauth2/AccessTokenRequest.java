@@ -1,12 +1,8 @@
 package cz.esc.iot.cloudservice.oauth2;
 
-import java.io.Serializable;
-
 import com.google.gson.annotations.Expose;
 
-public class AccessTokenRequest implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class AccessTokenRequest {
 	
 	@Expose private String grant_type;
 	@Expose private String code;

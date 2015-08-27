@@ -37,7 +37,7 @@ public class RestletApplication extends Application {
     	OAuthProxy proxy = new OAuthProxy(getContext(), true);
     	proxy.setClientId(OAuth2.clientID);
     	proxy.setClientSecret(OAuth2.clientSecret);
-    	proxy.setRedirectURI("https://mlha-139.sin.cvut.cz:8082/callback");
+    	proxy.setRedirectURI("http://mlha-139.sin.cvut.cz:8080/callback");
     	proxy.setAuthorizationURI("https://accounts.google.com/o/oauth2/auth");
     	proxy.setTokenURI("https://accounts.google.com/o/oauth2/token");
     	proxy.setScope(scopes);
