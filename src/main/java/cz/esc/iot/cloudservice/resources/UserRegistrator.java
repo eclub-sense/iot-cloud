@@ -3,10 +3,10 @@ package cz.esc.iot.cloudservice.resources;
 import java.io.IOException;
 
 import org.json.JSONException;
-import org.restlet.ext.oauth.AccessTokenServerResource;
 import org.restlet.ext.oauth.OAuthException;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
+import org.restlet.resource.ServerResource;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,7 +21,7 @@ import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 /**
  * New UserEntity object is stored into database.
  */
-public class UserRegistrator extends AccessTokenServerResource {
+public class UserRegistrator extends ServerResource {
 	
 	@Post("json")
 	public String newUser(Representation entity) throws IOException, OAuthException, JSONException {
