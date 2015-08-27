@@ -17,9 +17,7 @@ import org.restlet.ext.oauth.internal.Token;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.gson.Gson;
-
 import com.google.gson.JsonSyntaxException;
 
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
@@ -36,7 +34,7 @@ public class OAuth2 {
 	/**
 	 * Sets Google's clientId and clientSecret.
 	 */
-	public static void setCredentials() {
+	public static void setClientCredentials() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File("/home/z3tt0r/google_client_credentials")));
 			clientID = br.readLine();
@@ -78,7 +76,7 @@ System.out.println("email: " + googleUser.getEmail());
 	 * Ask for information about user. Uses received access token for it.
 	 * @return Returns information from Google.
 	 */
-	public static GoogleUserInfo getGoogleUserFromAccessToken(String accessToken) throws JsonSyntaxException, IOException {
+	public static GoogleUserInfo getGoogleUserFromAccessToken(String accessToken) throws IOException {
 		
 		String uri = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken;
 		ClientResource getter = new ClientResource(uri);
@@ -95,25 +93,32 @@ System.out.println("email: " + googleUser.getEmail());
 	/**
 	 * Asks Google for access token. Uses code, received as parameter, for it.
 	 * @return Returns valid access token.
+	 * @throws JSONException 
+	 * @throws OAuthException 
 	 */
-	public static Token getToken(Request req) throws IOException {
+	public static Token exchangeCodeForAccessToken(String code) throws IOException, OAuthException, JSONException {
 		
-		Form form = req.getResourceRef().getQueryAsForm();
 		AccessTokenClientResource client = new AccessTokenClientResource(new Reference("https://accounts.google.com/o/oauth2/token"));
     	client.setClientCredentials(OAuth2.clientID, OAuth2.clientSecret);
     	OAuthParameters params = new OAuthParameters();
-    	params.code(form.getFirstValue("code"));
+    	params.code(code);
     	params.redirectURI("https://mlha-139.sin.cvut.cz:8082/callback");
     	params.grantType(GrantType.authorization_code);
-    	System.out.println("client: "+client);
-    	System.out.println("code: "+form.getFirstValue("code"));
-    	Token token = null;
-		try {
-			token = client.requestToken(params);
-			System.out.println("token: "+ token);
-		} catch (OAuthException | IOException | JSONException e) {
-			e.printStackTrace();
-		}
+    	
+    	Token token = client.requestToken(params);
+
 		return token;
+	}
+	
+	public static GoogleUserInfo getGoogleUserInfoFromCode(String code) throws IOException, OAuthException, JSONException {
+		
+		// exchange code for access token
+		Token token = OAuth2.exchangeCodeForAccessToken(code);
+		String accessToken = token.getAccessToken();
+
+		// get info about user from IDP
+		GoogleUserInfo googleUser = OAuth2.getGoogleUserFromAccessToken(accessToken);
+		
+		return googleUser;
 	}
 }

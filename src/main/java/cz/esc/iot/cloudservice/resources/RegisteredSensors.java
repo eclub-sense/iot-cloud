@@ -56,7 +56,7 @@ public class RegisteredSensors extends ServerResource {
 		SensorAndData ret = new SensorAndData();
 		if (sensor == null) {
 			return null;
-		} else if (userEntity != null && sensor.getAccess().equals("private") && sensor.getUser().getId().equals(userEntity.getId())) {
+		} else if (userEntity != null && sensor.getAccess().equals("private") && sensor.getUser().getEmail().equals(userEntity.getEmail())) {
 			ret.setSensor(sensor);
 		} else if (userEntity != null && sensor.getAccess().equals("protected")) {
 			// TODO verify permission

@@ -7,7 +7,7 @@ import org.restlet.routing.Router;
 
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.resources.Homepage;
-import cz.esc.iot.cloudservice.resources.AccessToken;
+import cz.esc.iot.cloudservice.resources.Login;
 import cz.esc.iot.cloudservice.resources.Css;
 import cz.esc.iot.cloudservice.resources.JavaScript;
 import cz.esc.iot.cloudservice.resources.RegisteredHubs;
@@ -23,7 +23,7 @@ public class RestletApplication extends Application {
     @Override
     public synchronized Restlet createInboundRoot() {
     	
-    	OAuth2.setCredentials();
+    	OAuth2.setClientCredentials();
     	String scopes[] = {"email"};
     	
     	Router router = new Router(getContext());
@@ -39,9 +39,9 @@ public class RestletApplication extends Application {
     	proxy.setAuthorizationURI("https://accounts.google.com/o/oauth2/auth");
     	proxy.setTokenURI("https://accounts.google.com/o/oauth2/token");
     	proxy.setScope(scopes);
-    	proxy.setNext(AccessToken.class);
+    	proxy.setNext(Login.class);
         router.attach("/login", proxy);
-        router.attach("/callback", AccessToken.class);
+        router.attach("/callback", Login.class);
         
         router.attach("/", Homepage.class);
         router.attach("/app.js", JavaScript.class);

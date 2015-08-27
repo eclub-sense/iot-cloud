@@ -10,15 +10,15 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import org.restlet.ext.oauth.AccessTokenServerResource;
 import org.restlet.ext.oauth.OAuthException;
 import org.restlet.resource.Get;
+import org.restlet.resource.ServerResource;
 
 /**
  *
  * @author alf
  */
-public class Css extends AccessTokenServerResource {
+public class Css extends ServerResource {
 
 	@Get()
     public String returnList() throws OAuthException {		

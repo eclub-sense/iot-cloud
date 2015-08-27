@@ -1,8 +1,5 @@
 package cz.esc.iot.cloudservice.persistance.model;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -18,65 +15,68 @@ public class UserEntity {
 
     @Id
     private ObjectId id;
+    @Expose(serialize = false) private String password;
     @Indexed(unique = true)
-    private String identifier;
-    @Expose private List<String> emails = new LinkedList<>();
+    @Expose(deserialize = false) private String email;
 
     public UserEntity() {
     }
 
-    public ObjectId getId() {
-        return id;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public String getIdentifier() {
-        return identifier;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setIdentifier(String username) {
-        this.identifier = username;
-    }
-/*
-    public List<SensorEntity> getSensorEntities() {
-        return sensorEntities;
-    }*/
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void addEmail(String mail) {
-    	emails.add(mail);
-    }
+	@Override
+	public String toString() {
+		return "UserEntity [password=" + password + ", email=" + email + "]";
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.id);
-        hash = 89 * hash + Objects.hashCode(this.identifier);
-        return hash;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final UserEntity other = (UserEntity) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.identifier, other.identifier)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "UserEntity{" + "id=" + id + ", identifier=" + identifier + '}';
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserEntity other = (UserEntity) obj;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
+		return true;
+	}
 }
