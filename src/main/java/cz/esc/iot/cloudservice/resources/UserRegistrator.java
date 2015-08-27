@@ -25,16 +25,21 @@ public class UserRegistrator extends ServerResource {
 	
 	@Post("json")
 	public String newUser(Representation entity) throws IOException, OAuthException, JSONException {
+		System.out.println(entity.getText());
+		System.out.println(getRequest().getEntityAsText());
 		
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		AccessTokenRequest request = gson.fromJson(entity.getText(), AccessTokenRequest.class);
-		
-		if (!request.getGrant_type().equals("authorization_code"))
+		System.out.println(request);
+		if (request.getGrant_type() == null || !request.getGrant_type().equals("authorization_code"))
 			return "{\n\"error\":\"Invalid grant type.\",\n\"code\":2\n}";
 		
-		if (!request.getClient_id().equals("abeceda"))
+		if (request.getClient_id() == null || !request.getClient_id().equals("abeceda"))
 			return "{\n\"error\":\"Invalid client id.\",\n\"code\":3\n}";
 		
+		if (request.getCode() == null)
+			return "{\n\"error\":\"No code received.\",\n\"code\":3\n}";
+				
 		// exchange authorisation code for info about user from Google
 		GoogleUserInfo googleUser;
 		try {
