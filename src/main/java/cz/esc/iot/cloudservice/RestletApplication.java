@@ -7,7 +7,7 @@ import org.restlet.routing.Router;
 
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.resources.Homepage;
-import cz.esc.iot.cloudservice.resources.Login;
+import cz.esc.iot.cloudservice.resources.NewToken;
 import cz.esc.iot.cloudservice.resources.Code;
 import cz.esc.iot.cloudservice.resources.Css;
 import cz.esc.iot.cloudservice.resources.JavaScript;
@@ -41,7 +41,7 @@ public class RestletApplication extends Application {
     	proxy.setAuthorizationURI("https://accounts.google.com/o/oauth2/auth");
     	proxy.setTokenURI("https://accounts.google.com/o/oauth2/token");
     	proxy.setScope(scopes);
-    	proxy.setNext(Login.class);
+    	proxy.setNext(NewToken.class);
         router.attach("/login", proxy);
         
         router.attach("/", Homepage.class);
@@ -52,7 +52,7 @@ public class RestletApplication extends Application {
          * These resources are accessible with valid authentication code only.
          */
         router.attach("/callback", Code.class);
-        router.attach("/new_token", Login.class);
+        router.attach("/new_token", NewToken.class);
         router.attach("/user_registration", UserRegistrator.class);
         
         /*

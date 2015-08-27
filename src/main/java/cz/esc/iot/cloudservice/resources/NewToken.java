@@ -6,7 +6,10 @@ import org.json.JSONException;
 import org.restlet.data.Form;
 import org.restlet.ext.oauth.AccessTokenServerResource;
 import org.restlet.ext.oauth.OAuthException;
+import org.restlet.ext.oauth.internal.Token;
 import org.restlet.resource.Get;
+
+import com.google.gson.Gson;
 
 import cz.esc.iot.cloudservice.oauth2.GoogleUserInfo;
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
@@ -16,7 +19,7 @@ import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 /**
  * Class uses received code and exchange it for valid access token.
  */
-public class Login extends AccessTokenServerResource {
+public class NewToken extends AccessTokenServerResource {
 
 	@Get("json")
 	public String auth() throws IOException, OAuthException, JSONException {
@@ -34,6 +37,8 @@ public class Login extends AccessTokenServerResource {
 		if (userEntity == null)
 			return "{\n\"error\":\"User " + googleUser.getEmail() + " is not registered.\",\n\"code\":2\n}";
 		
-		return "access token";
+		Token token = this.tokens.generateToken(null, new String[]{});
+		
+		return new Gson().toJson(token);
 	}
 }
