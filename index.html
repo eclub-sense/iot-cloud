@@ -1,48 +1,89 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>ESC: IoT</title>
-    <meta charset="UTF-8"></meta>
-  </head>
-  <body style="background-color:white">
-    <h1 style="color:red;font-size:300%"><abbr title="eClub Summer Camp">ESC</abbr>: <abbr title="Internet of Things">IoT</abbr></h1>
-    <hr size="2" style="color:red;" noshade="noshade">
-    <h6><a href="http://browser.zettajs.io/#/overview?url=http:%2F%2F147.32.107.139:1337">Hub_1(Cloud)</a></h6>
+<html ng-app="ESC_WebApp">
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="443649814858-mro16g0khkij6ca25la6m4jcl0evcebt.apps.googleusercontent.com">
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+
+</head>
+<body>
+<div class="g-signin2" data-onsuccess="onSignIn"></div>
+<a href="#" onclick="signOut();">Sign out</a>
+<script>
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+
+        /* TESTING BLOCK */
+        var profile = auth2.currentUser.get().getBasicProfile();
+        console.log(profile);
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail());
+        console.log('ID_token: '+ gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token);
+
+        /* TESTING BLOCK */
+
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+        });
+    }
+</script>
+
+
+<div class="public_sensors" ng-controller="PublicSensorController as publicSensorCtrl">
+    <h2>Public sensors</h2>
     <ul>
-      <li title="Klik 1!"><a href="/registered_sensors/0000000a">Thermometer</a></li>
-      <li title="Klik 2!"><a href="/registered_sensors/0000000c">LED</a></li>
-      <li title="Klik 3!"><a href="/registered_sensors/0000000b">Accelerometer</a></li>
+        <li ng-repeat="sensor in publicSensorCtrl.sensors"><a href ng-click="publicSensorCtrl.showData($index)">
+            <!--{ "uuid": "3f650b6a-b794-4af5-860c-708a9a3c6801", "access": "public", "type": 5, "owner": { "emails": [ "mapaclik@gmail.com" ] } }-->
+            Uuid: {{sensor.uuid}}<br>
+            Access: {{sensor.access}}<br>
+            Type: {{sensor.type}}<br>
+            Index: {{$index}}
+        </a>
+        </li>
     </ul>
-    <h6><a href="/registered_hubs/2309">Hub_2(Android)</a></h6>
-    <ul>
-      <li title="Klik 4!"><a href="/registered_sensors/0">GPS</a></li>
-      <li title="Klik 5!"><a href="javascript:;">THERMOMETER</a></li>
-      <li title="Klik 6!"><a href="javascript:;">LED</a></li>
-      <li title="Klik 7!"><a href="/registered_sensors/102">ACCELEROMETER</a></li>
-      <li title="Klik 8!"><a href="javascript:;">BUILTIN</a></li>
-      <li title="Klik 9!"><a href="/registered_sensors/105">LIGHT</a></li>
-      <li title="Klik 10!"><a href="/registered_sensors/104">PROXIMITY</a></li>
-      <li title="Klik 11!"><a href="/registered_sensors/108">MAGNETOMETER</a></li>
-      <li title="Klik 12!"><a href="javascript:;">GYROSCOPE</a></li>
-      <li title="Klik 13!"><a href="javascript:;">PRESSURE</a></li>
-      <li title="Klik 14!"><a href="/registered_sensors/101">GRAVITY</a></li>
-      <li title="Klik 15!"><a href="/registered_sensors/112">LINEAR_ACCELEROMETER</a></li>
-      <li title="Klik 16!"><a href="/registered_sensors/111">ROTATION</a></li>
-      <li title="Klik 17!"><a href="/registered_sensors/103">HUMIDITY</a></li>
-      <li title="Klik 18!"><a href="javascript:;">AMBIENT_THERMOMETER</a></li>
-    </ul>
-    <h6>Hub_3(Free slot)</h6>
-    <ul>
-      <li title="Klik 7!"><a href="javascript:;">Thing_A</a></li>
-      <li title="Klik 8!"><a href="javascript:;">Thing_B</a></li>
-      <li title="Klik 9!"><a href="javascript:;">Thing_C</a></li>
-    </ul>
-    <h6>Links:</h6>
-    <p><a href="/registered_sensors">All sensors.</a>
-      <br><a href="/registered_hubs">All hubs.</a></p>
-      <audio controls>
-        <source src="twe.mp3" type="audio/mpeg">
-          Your browser does not support the audio tag.
-      </audio>
-  </body>
+</div>
+<div class="private_sensors" ng-controller="PrivateSensorController as privateSensorCtrl">
+    <h2>Private sensors</h2>
+    <a href ng-click="privateSensorCtrl.alertLoggedPerson()">Log logged person</a>
+</div>
+<div class="form">
+    <!--  Review Form -->
+    <form name="reviewForm" ng-controller="RegistrationController as registrationCtrl"
+          ng-submit="registrationCtrl.register()">
+        <!--  Review Form -->
+        <h4>Register sensor</h4>
+        <fieldset class="form-group">
+       <textarea ng-model="registrationCtrl.registration.uuid" class="form-control"
+                 placeholder="sensor_uuid..." title="Review"></textarea>
+        </fieldset>
+        <fieldset class="form-group">
+        <textarea ng-model="registrationCtrl.registration.hub_uuid" class="form-control"
+                  placeholder="hub_uuid..." title="Review"></textarea>
+        </fieldset>
+        <fieldset class="form-group">
+        <textarea ng-model="registrationCtrl.registration.secret" class="form-control"
+                  placeholder="secret..." title="Review"></textarea>
+        </fieldset>
+        <fieldset class="form-group">
+        <textarea ng-model="reviewCtrl.registration.type" class="form-control"
+                  placeholder="type..." title="Review"></textarea>
+        </fieldset>
+        <fieldset class="form-group">
+        <textarea ng-model="registrationCtrl.registration.s_type" class="form-control"
+                  placeholder="s_type..." title="Review"></textarea>
+        </fieldset>
+
+
+        <fieldset class="form-group">
+            <input type="submit" class="btn btn-primary pull-right" value="Register sensor."/>
+        </fieldset>
+    </form>
+</div>
+</body>
 </html>

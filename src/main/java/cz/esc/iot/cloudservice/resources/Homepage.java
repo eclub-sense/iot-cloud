@@ -15,18 +15,13 @@ public class Homepage extends ServerResource {
 	@Get("html")
     public String returnList() throws OAuthException {		
 
-        String fileName = "haha.html";
-        StringBuilder sb = new StringBuilder();
-
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(fileName),
-                    Charset.defaultCharset());
-            for (String line : lines) {
-                sb.append(line);
-            }
+        String fileName = "index.html";
+try {
+       
+            return new String(Files.readAllBytes(Paths.get(fileName)));
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return sb.toString();
     }
 }
