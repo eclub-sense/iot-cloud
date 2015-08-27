@@ -1,10 +1,12 @@
 package cz.esc.iot.cloudservice.oauth2;
 
+import com.google.gson.annotations.Expose;
+
 public class AccessTokenRequest {
 	
-	private String grant_type;
-	private String code;
-	private String client_id;
+	@Expose private String grant_type;
+	@Expose private String code;
+	@Expose private String client_id;
 	
 	public AccessTokenRequest() {
 		super();

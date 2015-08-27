@@ -27,15 +27,11 @@ public class UserRegistrator extends ServerResource {
 	@Post("json")
 	public String newUser(Representation entity) throws IOException, OAuthException, JSONException {
 		if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
-			String json = entity.getText();
-			System.out.println("entity:" +json);
-			System.out.println("entity:" +entity.getText());
-			System.out.println("entity:" +getRequest().getEntity().getText());
-			System.out.println("entity:" +getRequest().getEntityAsText());
 			
-			Gson gson1 = new Gson();
+			String json = entity.getText();
+			
 			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-			AccessTokenRequest request = gson1.fromJson(json, AccessTokenRequest.class);
+			AccessTokenRequest request = gson.fromJson(json, AccessTokenRequest.class);
 			System.out.println("request: "+request);
 			
 			if (request.getGrant_type() == null || !request.getGrant_type().equals("authorization_code"))
