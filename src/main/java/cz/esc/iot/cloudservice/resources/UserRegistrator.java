@@ -33,13 +33,12 @@ public class UserRegistrator extends AccessTokenServerResource {
 		
 		GoogleUserInfo googleUser = OAuth2.getGoogleUserInfoFromCode(code);
 
-		
 		// register user
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		UserEntity newUser = gson.fromJson(entity.getText(), UserEntity.class);
 		newUser.setEmail(googleUser.getEmail());
 		MorfiaSetUp.getDatastore().save(newUser);
 		
-		return "access token";
+		return "token";
 	}
 }
