@@ -24,17 +24,12 @@ public class JavaScript extends AccessTokenServerResource {
     public String returnList() throws OAuthException {		
 
         String fileName = "app.js";
-        StringBuilder sb = new StringBuilder();
-
         try {
-            List<String> lines = Files.readAllLines(Paths.get(fileName),
-                    Charset.defaultCharset());
-            for (String line : lines) {
-                sb.append(line);
-            }
+       
+            return new String(Files.readAllBytes(Paths.get(fileName)));
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return sb.toString();
     }
 }
