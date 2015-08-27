@@ -19,25 +19,20 @@ import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 public class Login extends AccessTokenServerResource {
 
 	@Get("json")
-	public String auth() throws IOException {
+	public String auth() throws IOException, OAuthException, JSONException {
 
 		// exchange authorisation code for info about user from Google
 		Form form = getRequest().getResourceRef().getQueryAsForm();
 		String code = form.getFirstValue("code");
 		if (code == null)
-			return "{\"error\":\"Authorisation code required.\"}";
+			return "{\n\"error\":\"Authorisation code required.\",\n\"code\":1\n}";
 		
-		GoogleUserInfo googleUser = null;
-		try {
-			googleUser = OAuth2.getGoogleUserInfoFromCode(code);
-		} catch (JSONException | OAuthException e) {
-			return "{\"error\":\"Cannot receive access token.\"}";
-		}
+		GoogleUserInfo googleUser = OAuth2.getGoogleUserInfoFromCode(code);
 		
 		// find user in db
 		UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("email").equal(googleUser.getEmail()).get();
 		if (userEntity == null)
-			return "{\"error\":\"User " + googleUser.getEmail() + " is not registered.\"}";
+			return "{\n\"error\":\"User " + googleUser.getEmail() + " is not registered.\",\n\"code\":2\n}";
 		
 		return "access token";
 	}
