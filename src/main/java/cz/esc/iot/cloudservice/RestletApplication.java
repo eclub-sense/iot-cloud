@@ -8,6 +8,7 @@ import org.restlet.routing.Router;
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.resources.Homepage;
 import cz.esc.iot.cloudservice.resources.Login;
+import cz.esc.iot.cloudservice.resources.Code;
 import cz.esc.iot.cloudservice.resources.Css;
 import cz.esc.iot.cloudservice.resources.JavaScript;
 import cz.esc.iot.cloudservice.resources.RegisteredHubs;
@@ -42,12 +43,17 @@ public class RestletApplication extends Application {
     	proxy.setScope(scopes);
     	proxy.setNext(Login.class);
         router.attach("/login", proxy);
-        router.attach("/callback", UserRegistrator.class);
         
-        router.attach("/user_registration", UserRegistrator.class);
         router.attach("/", Homepage.class);
         router.attach("/app.js", JavaScript.class);
         router.attach("/css/style.css", Css.class);
+        
+        /*
+         * These resources are accessible with valid authentication code only.
+         */
+        router.attach("/callback", Code.class);
+        router.attach("/new_token", Login.class);
+        router.attach("/user_registration", UserRegistrator.class);
         
         /*
          * These resources are accessible with valid access token only.

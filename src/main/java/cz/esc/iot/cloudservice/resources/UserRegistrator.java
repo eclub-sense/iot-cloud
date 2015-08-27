@@ -7,7 +7,7 @@ import org.restlet.data.Form;
 import org.restlet.ext.oauth.AccessTokenServerResource;
 import org.restlet.ext.oauth.OAuthException;
 import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,8 +22,8 @@ import cz.esc.iot.cloudservice.persistance.model.UserEntity;
  */
 public class UserRegistrator extends AccessTokenServerResource {
 	
-	@Get("json")
-	public String newUser() throws IOException, OAuthException, JSONException {
+	@Post("json")
+	public String newUser(Representation entity) throws IOException, OAuthException, JSONException {
 		
 		// exchange authorisation code for info about user from Google
 		Form form = getRequest().getResourceRef().getQueryAsForm();
@@ -35,13 +35,9 @@ public class UserRegistrator extends AccessTokenServerResource {
 
 		
 		// register user
-		//Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-		Form headers = (Form) getRequest().getAttributes().get("org.restlet.http.headers");
-		String password = headers.getFirstValue("Secret");
-		System.out.println("PSW: "+password);
-		UserEntity newUser = new UserEntity();//gson.fromJson(getRequest(), UserEntity.class);
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		UserEntity newUser = gson.fromJson(entity.getText(), UserEntity.class);
 		newUser.setEmail(googleUser.getEmail());
-		newUser.setPassword(password);
 		MorfiaSetUp.getDatastore().save(newUser);
 		
 		return "access token";
