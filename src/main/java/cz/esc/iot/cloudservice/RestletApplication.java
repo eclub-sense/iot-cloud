@@ -42,7 +42,7 @@ public class RestletApplication extends Application {
     	proxy.setScope(scopes);
     	proxy.setNext(Login.class);
         router.attach("/login", proxy);
-        router.attach("/callback", Login.class);
+        router.attach("/callback", UserRegistrator.class);
         
         router.attach("/user_registration", UserRegistrator.class);
         router.attach("/", Homepage.class);
