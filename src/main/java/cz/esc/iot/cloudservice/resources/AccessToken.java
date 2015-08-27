@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.restlet.data.Status;
 import org.restlet.ext.oauth.internal.Token;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
 import com.google.gson.Gson;
@@ -20,8 +21,16 @@ import cz.esc.iot.cloudservice.persistance.model.UserEntity;
  */
 public class AccessToken extends ServerResource {
 
+	@Post("json")
+	public String auth2() {
+		System.out.println("POST: "+ getRequest().getEntityAsText());
+		return "{}";
+	}
+	
 	@Get("json")
 	public String auth() {
+
+System.out.println("GET: "+ getRequest().getEntityAsText());
 		// get token
 		Token token = null;
 		String accessToken = null;
