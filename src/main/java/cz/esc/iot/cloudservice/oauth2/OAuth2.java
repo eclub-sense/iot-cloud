@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Random;
 
+import org.apache.commons.codec.binary.Hex;
 import org.json.JSONException;
 import org.restlet.Request;
 import org.restlet.data.Form;
@@ -120,5 +122,16 @@ System.out.println("email: " + googleUser.getEmail());
 		GoogleUserInfo googleUser = OAuth2.getGoogleUserFromAccessToken(accessToken);
 		
 		return googleUser;
+	}
+	
+	public static CloudToken generateToken() {		
+		Random random = new Random();
+
+        byte[] accessToken = new byte[40];
+        byte[] refreshToken = new byte[40];
+        random.nextBytes(accessToken);
+        random.nextBytes(refreshToken);
+
+        return new CloudToken(String.valueOf(Hex.encodeHex(accessToken)), String.valueOf(Hex.encodeHex(refreshToken)));
 	}
 }

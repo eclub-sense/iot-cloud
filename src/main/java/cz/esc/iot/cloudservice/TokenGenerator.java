@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
+import org.apache.commons.codec.binary.Hex;
 import org.restlet.engine.util.Base64;
 
 
@@ -11,16 +12,14 @@ public class TokenGenerator {
 
 	public static void main(String args[]) {
 		for(int i = 0; i < 100; i++) {
-			Random randomGenerator = new Random();
-			int rand = randomGenerator.nextInt(Integer.MAX_VALUE);
-			String random = String.valueOf(rand);
-			
-			String creationDate = new Date().toString();
-			
-			String keySource = "mapaclik@gmail.com" + creationDate + random;
-			
-			String token = Base64.encode(keySource.getBytes(), false);
-			System.out.println(token);
+			Random random = new Random();
+			int len = 40;
+
+	        byte[] token = new byte[len];
+	        random.nextBytes(token);
+	        String strToken = String.valueOf(Hex.encodeHex(token));
+
+			System.out.println(strToken);
 		}
 	}
 }
