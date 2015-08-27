@@ -25,12 +25,12 @@ public class UserRegistrator extends ServerResource {
 	
 	@Post("json")
 	public String newUser(Representation entity) throws IOException, OAuthException, JSONException {
-		System.out.println(entity.getText());
-		System.out.println(getRequest().getEntityAsText());
+		System.out.println("entity:" +entity.getText());
 		
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		AccessTokenRequest request = gson.fromJson(entity.getText(), AccessTokenRequest.class);
-		System.out.println(request);
+		System.out.println("request: "+request);
+		
 		if (request.getGrant_type() == null || !request.getGrant_type().equals("authorization_code"))
 			return "{\n\"error\":\"Invalid grant type.\",\n\"code\":2\n}";
 		
