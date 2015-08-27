@@ -52,7 +52,9 @@ public class UserRegistrator extends ServerResource {
 			}
 	
 			// register user
-			UserEntity newUser = gson.fromJson(entity.getText(), UserEntity.class);
+			UserEntity newUser = gson.fromJson(json, UserEntity.class);
+			if (newUser.getPassword() == null)
+				return "{\n\"error\":\"No password received.\",\n\"code\":6\n}";
 			newUser.setEmail(googleUser.getEmail());
 			MorfiaSetUp.getDatastore().save(newUser);
 			
