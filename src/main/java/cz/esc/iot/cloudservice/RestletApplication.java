@@ -4,6 +4,7 @@ import org.restlet.Application;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
+import org.restlet.data.LocalReference;
 import org.restlet.ext.oauth.OAuthProxy;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
@@ -52,7 +53,8 @@ public class RestletApplication extends Application {
         
         router.attach("/api", Swagger.class);
         router.attach("/api.json", API.class);
-        Directory directory = new Directory(getContext(), "file:////resources/");
+        
+        Directory directory = new Directory(getContext(), LocalReference.createFileReference("/home/z3tt0r/resources/"));
         router.attach("/resources/", directory);
         
         router.attach("/", Homepage.class);
