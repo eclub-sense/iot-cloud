@@ -3,6 +3,8 @@
  
 <Configure id="Server" class="org.eclipse.jetty.server.Server">
  
+  <Set name="resourceBase"><SystemProperty name="jetty.home" default="."/>/resources/</Set>
+  
   <Set name="connectors">
     <Array type="org.eclipse.jetty.server.Connector">
       <Item>
