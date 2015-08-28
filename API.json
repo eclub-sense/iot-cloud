@@ -1,0 +1,571 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "eClub IoT Cloud API",
+        "version": "1.0.0"
+    },
+    "host": "mlha-139.sin.cvut.cz:8082",
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/user_registration": {
+            "post": {
+                "description": "Registers user and returns access token. Requires authorization code which user has to obtain from Google.\n",
+                "parameters": [
+                    {
+                        "name": "json",
+                        "in": "body",
+                        "description": "JSON as described in 4.1.3 of OAuth 2.0 specification + additional password.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NewUserJson"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Authorization server"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User is registrated and access token is returned.",
+                        "schema": {
+                            "$ref": "#/definitions/Token"
+                        }
+                    },
+                    "400": {
+                        "description": "Errors as described in 5.2 of OAuth 2.0 specification + *\"invalid_password\"*.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/new_token": {
+            "post": {
+                "description": "Returns new access token. Requires authorization code which user has to obtain from Google.\n",
+                "parameters": [
+                    {
+                        "name": "json",
+                        "in": "body",
+                        "description": "JSON as described in 4.1.3 of OAuth 2.0 specification.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NewTokenJson"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Authorization server"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Access token is returned.",
+                        "schema": {
+                            "$ref": "#/definitions/Token"
+                        }
+                    },
+                    "400": {
+                        "description": "Errors as described in 5.2 of OAuth 2.0 specification + *\"unregistered_user\"*.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/refresh_token": {
+            "get": {
+                "description": "Returns new access token. Requires valid refresh token.\n",
+                "parameters": [
+                    {
+                        "name": "refresh_token",
+                        "in": "query",
+                        "description": "Refresh token received from cloud previously.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "grant_type",
+                        "in": "query",
+                        "description": "Has to be \"refresh_token\".",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Authorization server"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "New token is successfully returned.",
+                        "schema": {
+                            "$ref": "#/definitions/Token"
+                        }
+                    },
+                    "400": {
+                        "description": "Errors as described in 5.2 of OAuth 2.0 specification.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "get": {
+                "description": "Redirects user to Google, where he can log in. Returns authorization code from Google.\n",
+                "tags": [
+                    "Authorization server"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "New token is successfully returned.",
+                        "schema": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "description": "Authorization ode from Google."
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/sensor_registration": {
+            "post": {
+                "description": "Registers sensor.\n",
+                "parameters": [
+                    {
+                        "name": "access_token",
+                        "in": "query",
+                        "description": "Access token received from cloud previously.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "json",
+                        "in": "body",
+                        "description": "New sensor to be registered.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NewSensorJson"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Resource server"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sensor is registered."
+                    },
+                    "401": {
+                        "description": "Invalid access token or unregistered user."
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/registered_sensors": {
+            "get": {
+                "summary": "User's sensors.",
+                "description": "Returns a list of user's sensors, filtered according to parameters. In returned JSON are 3 lists.\nList of user's private sensors, list of borrowed sensors and list of public sensors.\nIf there is no access token in url query, only public sensors are returned.\n",
+                "parameters": [
+                    {
+                        "name": "access_token",
+                        "in": "query",
+                        "description": "Access token received from cloud previously.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "hubID",
+                        "in": "query",
+                        "description": "Only sensors associated with given hub's uuid are returned.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "access",
+                        "in": "query",
+                        "description": "Values can be my, borrowed or public.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Resource server"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User's registered sensors.",
+                        "schema": {
+                            "$ref": "#/definitions/AllSensors"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid access token or unregistered user."
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/registered_sensors/{uuid}": {
+            "get": {
+                "description": "Returns information about sensor with given uuid and it's measured values. In future, parameter enabling filtering data according to age should be added.\n",
+                "parameters": [
+                    {
+                        "name": "access_token",
+                        "in": "query",
+                        "description": "Access token received from cloud previously.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "Uuid of choosen sensor.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Resource server"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Concrete sensor and it's measured data.",
+                        "schema": {
+                            "$ref": "#/definitions/SensorAndData"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid access token or unregistered user."
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/share_sensor": {
+            "post": {
+                "description": "Shares owned sensor. Sensor can be shared with everybody (access = public) or with concrete person (access = protected).\n",
+                "parameters": [
+                    {
+                        "name": "access_token",
+                        "in": "query",
+                        "description": "Access token received from cloud previously.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "json",
+                        "in": "body",
+                        "description": "JSON with sharing information.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ShareSensorJson"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Resource server"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sensor is shared successfully."
+                    },
+                    "401": {
+                        "description": "Invalid access token or unregistered user."
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/registered_hubs": {
+            "get": {
+                "description": "Returns a list of user's hubs.\n",
+                "parameters": [
+                    {
+                        "name": "access_token",
+                        "in": "query",
+                        "description": "Access token received from cloud previously.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Resource server"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of user's registered hubs.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Hub"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid access token or unregistered user."
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/registered_hubs/{uuid}": {
+            "get": {
+                "description": "Returns info about hub with given uuid. Now it returns only uuid (it's for nothing), later there will be also at least status (online/offline).\n",
+                "parameters": [
+                    {
+                        "name": "access_token",
+                        "in": "query",
+                        "description": "Access token received from cloud previously.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "Uuid of choosen hub.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Resource server"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Information about hub with this uuid.",
+                        "schema": {
+                            "$ref": "#/definitions/Hub"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid access token or unregistered user."
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Token": {
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "token_type": {
+                    "type": "string"
+                },
+                "expires_in": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "One hour."
+                }
+            }
+        },
+        "Error": {
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "description": "Error code as described in 5.2 of OAuth 2.0 specification + *\"unregistered_user\"* and *\"invalid_password\"*."
+                }
+            }
+        },
+        "NewUserJson": {
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "description": "Password choosen by new user."
+                },
+                "code": {
+                    "type": "string",
+                    "description": "Code obtained from Google previously. Cloud will exchange it for access token to Google's API."
+                },
+                "client_id": {
+                    "type": "string",
+                    "description": "Temporarily must be \"abeceda\"."
+                },
+                "grant_type": {
+                    "type": "string",
+                    "description": "Must be \"authorization_code\"."
+                }
+            }
+        },
+        "NewTokenJson": {
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "Code obtained from Google previously. Cloud will exchange it for access token to Google's API."
+                },
+                "client_id": {
+                    "type": "string",
+                    "description": "Temporarily must be \"abeceda\"."
+                },
+                "grant_type": {
+                    "type": "string",
+                    "description": "Must be \"authorization_code\"."
+                }
+            }
+        },
+        "NewSensorJson": {
+            "properties": {
+                "uuid": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "secret": {
+                    "type": "string"
+                }
+            }
+        },
+        "ShareSensorJson": {
+            "properties": {
+                "uuid": {
+                    "type": "string"
+                },
+                "access": {
+                    "type": "string",
+                    "description": "Either protected or public."
+                },
+                "permission": {
+                    "type": "string",
+                    "description": "Either read or write (only for access = protected, otherwise permission is not included in request)."
+                },
+                "email": {
+                    "type": "string",
+                    "description": "Email of user with who owner will share sensor (only for access = protected, otherwise email is not included in request"
+                }
+            }
+        },
+        "Hub": {
+            "properties": {
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "AllSensors": {
+            "properties": {
+                "_my": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Sensor"
+                    }
+                },
+                "_borrowed": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/SensorAccess"
+                    }
+                },
+                "_public": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Sensor"
+                    }
+                }
+            }
+        },
+        "SensorAccess": {
+            "properties": {
+                "permission": {
+                    "type": "string",
+                    "description": "Either read or write."
+                },
+                "sensor": {
+                    "$ref": "#/definitions/Sensor"
+                }
+            }
+        },
+        "Sensor": {
+            "properties": {
+                "uuid": {
+                    "type": "string"
+                },
+                "access": {
+                    "type": "string",
+                    "description": "private/protected/public"
+                },
+                "type": {
+                    "type": "number",
+                    "format": "integer"
+                },
+                "owner": {
+                    "$ref": "#/definitions/User"
+                }
+            }
+        },
+        "SensorAndData": {
+            "properties": {
+                "sensor": {
+                    "$ref": "#/definitions/Sensor"
+                },
+                "measured": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Data"
+                    }
+                }
+            }
+        },
+        "Data": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                },
+                "time": {
+                    "description": "java.util.Date"
+                }
+            }
+        },
+        "User": {
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
