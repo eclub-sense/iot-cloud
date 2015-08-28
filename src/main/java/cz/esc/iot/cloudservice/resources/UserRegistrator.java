@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.json.JSONException;
 import org.restlet.data.MediaType;
+import org.restlet.data.Status;
 import org.restlet.ext.oauth.OAuthException;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
@@ -37,25 +38,32 @@ public class UserRegistrator extends ServerResource {
 			AccessTokenRequest request = gson.fromJson(json, AccessTokenRequest.class);
 			
 			// control request arguments
-			if (request.getGrant_type() == null || request.getClient_id() == null || request.getCode() == null)
+			if (request.getGrant_type() == null || request.getClient_id() == null || request.getCode() == null) {
+				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return "{\n\"error\":\"invalid_request\"}";
-			else if (!request.getGrant_type().equals("authorization_code"))
+			} else if (!request.getGrant_type().equals("authorization_code")) {
+				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return "{\n\"error\":\"unsupported_grant_type\"\n}";
-			else if (!request.getClient_id().equals("abeceda"))
+			} else if (!request.getClient_id().equals("abeceda")) {
+				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return "{\n\"error\":\"invalid_client\"\n}";
-				
+			}
+			
 			// exchange authorisation code for info about user from Google
 			GoogleUserInfo googleUser;
 			try {
 				googleUser = OAuth2.getGoogleUserInfoFromCode(request.getCode());
 			} catch (OAuthException e) {
+				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return "{\n\"error\":\"invalid_grant\"\n}";
 			}
 	
 			// register user
 			UserEntity newUser = gson.fromJson(json, UserEntity.class);
-			if (newUser.getPassword() == null)
+			if (newUser.getPassword() == null) {
+				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return "{\n\"error\":\"invalid_password\"\n}";
+			}
 			newUser.setEmail(googleUser.getEmail());
 			MorfiaSetUp.getDatastore().save(newUser);
 			
@@ -69,6 +77,7 @@ public class UserRegistrator extends ServerResource {
 			
 			return gson.toJson(token);
 		}
+		getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 		return "{\n\"error\":\"invalid_request\"\n}";
 	}
 }

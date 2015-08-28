@@ -8,6 +8,7 @@ import org.restlet.routing.Router;
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.resources.Homepage;
 import cz.esc.iot.cloudservice.resources.NewToken;
+import cz.esc.iot.cloudservice.resources.API;
 import cz.esc.iot.cloudservice.resources.Code;
 import cz.esc.iot.cloudservice.resources.Css;
 import cz.esc.iot.cloudservice.resources.JavaScript;
@@ -46,6 +47,7 @@ public class RestletApplication extends Application {
         router.attach("/login", proxy);
         
         router.attach("/", Homepage.class);
+        router.attach("/api", API.class);
         router.attach("/app.js", JavaScript.class);
         router.attach("/css/style.css", Css.class);
         

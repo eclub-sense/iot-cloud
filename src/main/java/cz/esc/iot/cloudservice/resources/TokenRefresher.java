@@ -3,6 +3,7 @@ package cz.esc.iot.cloudservice.resources;
 import java.util.Date;
 
 import org.restlet.data.Form;
+import org.restlet.data.Status;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
@@ -25,14 +26,19 @@ public class TokenRefresher extends ServerResource {
 		Form form = getRequest().getResourceRef().getQueryAsForm();
 		String refresh_token = form.getFirstValue("refresh_token");
 		String grant_type = form.getFirstValue("grant_type");
-		if (refresh_token == null || grant_type == null )
+		if (refresh_token == null || grant_type == null ) {
+			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			return "{\n\"error\":\"invalid_request\"\n}";
-		if (!grant_type.equals("refresh_token"))
+		} else if (!grant_type.equals("refresh_token")) {
+			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			return "{\n\"error\":\"unsupported_grant_type\"\n}";
+		}
 		
 		RefreshToken refresh = MorfiaSetUp.getDatastore().find(RefreshToken.class).field("refresh_token").equal(refresh_token).get();
-		if(refresh == null)
+		if(refresh == null) {
+			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			return "{\n\"error\":\"invalid_grant\"\n}";
+		}
 		
 		// generate new token
 		CloudToken token = OAuth2.generateToken();

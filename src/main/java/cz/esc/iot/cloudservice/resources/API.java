@@ -1,29 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.esc.iot.cloudservice.resources;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import org.restlet.ext.oauth.AccessTokenServerResource;
+
 import org.restlet.ext.oauth.OAuthException;
 import org.restlet.resource.Get;
+import org.restlet.resource.ServerResource;
 
-/**
- *
- * @author alf
- */
-public class JavaScript extends AccessTokenServerResource {
+public class API extends ServerResource {
 
-    @Get()
+	@Get("json")
     public String returnList() throws OAuthException {		
 
-        String fileName = "app.js";
+        String fileName = "API.json";
         try {
-       
             return new String(Files.readAllBytes(Paths.get(fileName)));
         } catch (IOException e) {
             e.printStackTrace();

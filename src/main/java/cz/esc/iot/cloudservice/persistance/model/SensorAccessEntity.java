@@ -17,7 +17,7 @@ public class SensorAccessEntity {
     @Id
     private ObjectId id;
     @Reference
-    @Expose private UserEntity owner;
+    private UserEntity owner;
     @Reference
     private UserEntity user;
     @Expose private String permission;
