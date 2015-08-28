@@ -20,7 +20,7 @@ import org.restlet.resource.ServerResource;
  */
 public class Css extends ServerResource {
 
-	@Get()
+	@Get
     public String returnList() throws OAuthException {		
 
         String fileName = "css/style.css";
