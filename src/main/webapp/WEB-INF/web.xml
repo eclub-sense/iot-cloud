@@ -36,7 +36,7 @@
 	
 	<init-param>
      <param-name>org.restlet.clients</param-name>
-     <param-value>FILE HTTP HTTPS</param-value>
+     <param-value>HTTP HTTPS CLAP</param-value>
     </init-param>
     
 	<load-on-startup>1</load-on-startup>
