@@ -16,7 +16,7 @@ import cz.esc.iot.cloudservice.resources.RegisteredHubs;
 import cz.esc.iot.cloudservice.resources.RegisteredSensors;
 import cz.esc.iot.cloudservice.resources.SensorRegistrator;
 import cz.esc.iot.cloudservice.resources.ShareSensor;
-import cz.esc.iot.cloudservice.resources.Static;
+import cz.esc.iot.cloudservice.resources.Resources;
 import cz.esc.iot.cloudservice.resources.Swagger;
 import cz.esc.iot.cloudservice.resources.TokenRefresher;
 import cz.esc.iot.cloudservice.resources.UserRegistrator;
@@ -50,7 +50,7 @@ public class RestletApplication extends Application {
         
         router.attach("/", Homepage.class);
         router.attach("/api", Swagger.class);
-        router.attach("/*", Static.class);
+        router.attach("/resources/*", Resources.class);
         router.attach("/api.json", API.class);
         router.attach("/app.js", JavaScript.class);
         router.attach("/css/style.css", Css.class);

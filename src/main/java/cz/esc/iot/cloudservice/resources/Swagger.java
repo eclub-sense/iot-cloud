@@ -13,7 +13,7 @@ public class Swagger extends ServerResource {
 	@Get("html")
     public String returnList() throws OAuthException {
 		
-		String fileName = "/home/z3tt0r/resources/api.html";
+		String fileName = "/home/z3tt0r/swagger/api.html";
 		
         try {
             return new String(Files.readAllBytes(Paths.get(fileName)));

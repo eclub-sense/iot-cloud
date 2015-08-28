@@ -8,14 +8,15 @@ import org.restlet.ext.oauth.OAuthException;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
-public class Static extends ServerResource {
+public class Resources extends ServerResource {
 	
 	@Get
     public String returnList() throws OAuthException {
 		
 		String path = this.getRequest().getResourceRef().getPath();
-		String fileName = "/home/z3tt0r/resources"+path;
-			
+		String fileName = "/home/z3tt0r"+path;
+		System.out.println(fileName);
+		
 	    try {
 	        return new String(Files.readAllBytes(Paths.get(fileName)));
 	    } catch (IOException e) {
