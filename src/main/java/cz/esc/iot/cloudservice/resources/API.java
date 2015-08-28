@@ -15,7 +15,7 @@ public class API extends ServerResource {
 
 		String path = this.getRequest().getResourceRef().getPath();
 		
-		if (path.equals("api.json")) {
+		if (path.equals("/api.json")) {
 	        String fileName = "API.json";
 	        try {
 	            return new String(Files.readAllBytes(Paths.get(fileName)));
