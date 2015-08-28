@@ -10,17 +10,11 @@ import org.restlet.resource.ServerResource;
 
 public class Swagger extends ServerResource {
 
-	@Get
+	@Get("html")
     public String returnList() throws OAuthException {
 		
-		String path = this.getRequest().getResourceRef().getPath();
-		String fileName = null;
+		String fileName = "/home/z3tt0r/resources/api.html";
 		
-		if (path.equals("/api"))
-			fileName = "/home/z3tt0r/swagger/index.html";
-		else
-			fileName = "/home/z3tt0r/swagger"+path;
-			
         try {
             return new String(Files.readAllBytes(Paths.get(fileName)));
         } catch (IOException e) {
