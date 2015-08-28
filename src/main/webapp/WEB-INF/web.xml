@@ -10,6 +10,28 @@
     <param-name>log4jConfigLocation</param-name>
     <param-value>/WEB-INF/classes/log4j.properties</param-value>
   </context-param>
+  
+  <servlet-mapping>   
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.html</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>default</servlet-name>
+	<url-pattern>*.jpg</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+	<url-pattern>*.png</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.css</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>default</servlet-name>
+	<url-pattern>*.js</url-pattern>
+  </servlet-mapping>
+
   <servlet>
     <servlet-name>websocket</servlet-name>
     <servlet-class>cz.esc.iot.cloudservice.EventServlet</servlet-class>
@@ -41,10 +63,5 @@
   <servlet-mapping>
     <servlet-name>http</servlet-name>
     <url-pattern>/*</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
- 	<servlet-name>default</servlet-name>
- 	<url-pattern>/resources/*</url-pattern>
   </servlet-mapping>
 </web-app>
