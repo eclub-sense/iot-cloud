@@ -48,6 +48,7 @@ public class RestletApplication extends Application {
         router.attach("/login", proxy);
         
         router.attach("/", Homepage.class);
+        router.attach("/api", Swagger.class);
         router.attach("/api/*", Swagger.class);
         router.attach("/api.json", API.class);
         router.attach("/app.js", JavaScript.class);
