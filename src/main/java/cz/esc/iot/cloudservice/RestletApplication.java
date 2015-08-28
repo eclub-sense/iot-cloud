@@ -54,9 +54,10 @@ public class RestletApplication extends Application {
         router.attach("/api", Swagger.class);
         router.attach("/api.json", API.class);
         
-        Directory directory = new Directory(getContext(), "file://home/z3tt0r/resources/");
+        Directory directory = new Directory(getContext(), "file:///home/z3tt0r/resources/");
         directory.setDeeplyAccessible(true);
-        router.attach("/resources", directory);
+        directory.setListingAllowed(true);
+        router.attach("/resources/", directory);
         
         router.attach("/", Homepage.class);
         router.attach("/app.js", JavaScript.class);
