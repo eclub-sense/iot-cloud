@@ -48,12 +48,15 @@ public class RestletApplication extends Application {
     	proxy.setNext(NewToken.class);
         router.attach("/login", proxy);
         
-        router.attach("/", Homepage.class);
         router.attach("/api", Swagger.class);
         router.attach("/api.json", API.class);
+        Directory directory = new Directory(getContext(), "file:///home/z3tt0r/resources/");
+        router.attach("/resources/", directory);
+        
+        router.attach("/", Homepage.class);
         router.attach("/app.js", JavaScript.class);
         router.attach("/css/style.css", Css.class);
-        
+
         /*
          * These resources are accessible with valid authentication code only.
          */
