@@ -48,6 +48,7 @@ public class RestletApplication extends Application {
         
         router.attach("/", Homepage.class);
         router.attach("/api", API.class);
+        router.attach("/api.json", API.class);
         router.attach("/app.js", JavaScript.class);
         router.attach("/css/style.css", Css.class);
         

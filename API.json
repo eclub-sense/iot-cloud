@@ -15,6 +15,7 @@
     "paths": {
         "/user_registration": {
             "post": {
+                "summary": "Registers user and returns access token.",
                 "description": "Registers user and returns access token. Requires authorization code which user has to obtain from Google.\n",
                 "parameters": [
                     {
@@ -51,6 +52,7 @@
         },
         "/new_token": {
             "post": {
+                "summary": "Returns new access token.",
                 "description": "Returns new access token. Requires authorization code which user has to obtain from Google.\n",
                 "parameters": [
                     {
@@ -87,6 +89,7 @@
         },
         "/refresh_token": {
             "get": {
+                "summary": "Exchanges refresh token for access token.",
                 "description": "Returns new access token. Requires valid refresh token.\n",
                 "parameters": [
                     {
@@ -128,6 +131,7 @@
         },
         "/login": {
             "get": {
+                "summary": "Authenticates user by Google and returns authentication code.",
                 "description": "Redirects user to Google, where he can log in. Returns authorization code from Google.\n",
                 "tags": [
                     "Authorization server"
@@ -152,6 +156,7 @@
         },
         "/sensor_registration": {
             "post": {
+                "summary": "Registers sensor.",
                 "description": "Registers sensor.\n",
                 "parameters": [
                     {
@@ -235,6 +240,7 @@
         },
         "/registered_sensors/{uuid}": {
             "get": {
+                "summary": "Concrete sensor and it's measured data.",
                 "description": "Returns information about sensor with given uuid and it's measured values. In future, parameter enabling filtering data according to age should be added.\n",
                 "parameters": [
                     {
@@ -273,6 +279,7 @@
         },
         "/share_sensor": {
             "post": {
+                "summary": "Shares sensor.",
                 "description": "Shares owned sensor. Sensor can be shared with everybody (access = public) or with concrete person (access = protected).\n",
                 "parameters": [
                     {
@@ -310,6 +317,7 @@
         },
         "/registered_hubs": {
             "get": {
+                "summary": "List of registered hubs.",
                 "description": "Returns a list of user's hubs.\n",
                 "parameters": [
                     {
@@ -344,6 +352,7 @@
         },
         "/registered_hubs/{uuid}": {
             "get": {
+                "summary": "Concrete hub.",
                 "description": "Returns info about hub with given uuid. Now it returns only uuid (it's for nothing), later there will be also at least status (online/offline).\n",
                 "parameters": [
                     {
