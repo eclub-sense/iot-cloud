@@ -22,7 +22,6 @@ import cz.esc.iot.cloudservice.resources.RegisteredHubs;
 import cz.esc.iot.cloudservice.resources.RegisteredSensors;
 import cz.esc.iot.cloudservice.resources.SensorRegistrator;
 import cz.esc.iot.cloudservice.resources.ShareSensor;
-import cz.esc.iot.cloudservice.resources.Swagger;
 import cz.esc.iot.cloudservice.resources.TokenRefresher;
 import cz.esc.iot.cloudservice.resources.UserRegistrator;
 
@@ -53,11 +52,7 @@ public class RestletApplication extends Application {
     	proxy.setNext(NewToken.class);
         router.attach("/login", proxy);
         
-        router.attach("/api", Swagger.class);
         router.attach("/api.json", API.class);
-        
-        Directory directory = new Directory(getContext(), "clap:////home/z3tt0r/iot-cloud/src/main/resources/swagger/");
-        router.attach("/swagger", directory);
         
         router.attach("/", Homepage.class);
         router.attach("/app.js", JavaScript.class);
