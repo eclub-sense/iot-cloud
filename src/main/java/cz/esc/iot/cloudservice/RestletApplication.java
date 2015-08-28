@@ -1,10 +1,12 @@
 package cz.esc.iot.cloudservice;
 
 import org.restlet.Application;
+import org.restlet.Client;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.LocalReference;
+import org.restlet.data.Protocol;
 import org.restlet.ext.oauth.OAuthProxy;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
@@ -54,7 +56,7 @@ public class RestletApplication extends Application {
         router.attach("/api", Swagger.class);
         router.attach("/api.json", API.class);
         
-        Directory directory = new Directory(getContext(), "file:///home/z3tt0r/swagger/");
+        Directory directory = new Directory(getContext(), "clap:///home/z3tt0r/swagger/");
         directory.setDeeplyAccessible(true);
         directory.setListingAllowed(true);
         router.attach("/swagger/", directory);
