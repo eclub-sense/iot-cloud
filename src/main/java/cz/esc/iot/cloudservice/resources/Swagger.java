@@ -8,12 +8,12 @@ import org.restlet.ext.oauth.OAuthException;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
-public class API extends ServerResource {
+public class Swagger extends ServerResource {
 
-	@Get("json")
+	@Get("html")
     public String returnList() throws OAuthException {		
-		
-        String fileName = "API.json";
+
+		String fileName = "/home/z3tt0r/swagger/index.html";
         try {
             return new String(Files.readAllBytes(Paths.get(fileName)));
         } catch (IOException e) {
