@@ -17,7 +17,7 @@ public class RefreshToken {
     private ObjectId id;
 	@Expose private String refresh_token;
 	@Indexed(expireAfterSeconds = 90) // 14 days
-	@Expose private Date time;
+	@Expose private final Date time = new Date();
 	@Expose(deserialize = false) private int refreshCounter = 0; // refresh_token is deleted from database when refreshCounter == 5
 	@Reference
 	private UserEntity user;
@@ -25,9 +25,9 @@ public class RefreshToken {
 	public RefreshToken() {
 		super();
 	}
-	public RefreshToken(String rt, Date t) {
+	public RefreshToken(String rt, UserEntity u) {
 		refresh_token = rt;
-		time = t;
+		user = u;
 	}
 	public String getRefresh_token() {
 		return refresh_token;
@@ -43,9 +43,6 @@ public class RefreshToken {
 	}
 	public Date getTime() {
 		return time;
-	}
-	public void setTime(Date time) {
-		this.time = time;
 	}
 	public UserEntity getUser() {
 		return user;

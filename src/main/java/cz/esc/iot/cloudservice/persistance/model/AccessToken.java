@@ -17,16 +17,16 @@ public class AccessToken {
     private ObjectId id;
 	@Expose private String access_token;
 	@Indexed(expireAfterSeconds = 30) // one hour
-	@Expose private Date time;
+	@Expose private final Date time = new Date();
 	@Reference
 	private UserEntity user;
 	
 	public AccessToken() {
 		super();
 	}
-	public AccessToken(String at, Date d) {
+	public AccessToken(String at, UserEntity u) {
 		access_token = at;
-		time = d;
+		user = u;
 	}
 	public String getAccess_token() {
 		return access_token;
@@ -36,9 +36,6 @@ public class AccessToken {
 	}
 	public Date getTime() {
 		return time;
-	}
-	public void setTime(Date time) {
-		this.time = time;
 	}
 	public UserEntity getUser() {
 		return user;

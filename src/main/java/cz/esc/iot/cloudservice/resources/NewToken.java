@@ -70,8 +70,8 @@ public class NewToken extends ServerResource {
 			MorfiaSetUp.getDatastore().delete(MorfiaSetUp.getDatastore().createQuery(AccessToken.class).field("user").equal(userEntity));
 			MorfiaSetUp.getDatastore().delete(MorfiaSetUp.getDatastore().createQuery(RefreshToken.class).field("user").equal(userEntity));
 			
-			AccessToken accessToken = new AccessToken(token.getAccess_token(), new Date());
-			RefreshToken refreshToken = new RefreshToken(token.getRefresh_token(), new Date());
+			AccessToken accessToken = new AccessToken(token.getAccess_token(), userEntity);
+			RefreshToken refreshToken = new RefreshToken(token.getRefresh_token(), userEntity);
 			MorfiaSetUp.getDatastore().save(accessToken);
 			MorfiaSetUp.getDatastore().save(refreshToken);
 			

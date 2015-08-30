@@ -56,7 +56,7 @@ public class TokenRefresher extends ServerResource {
 			MorfiaSetUp.getDatastore().delete(MorfiaSetUp.getDatastore().createQuery(RefreshToken.class).field("user").equal(refresh.getUser()));
 		
 		// save new access token to database
-		MorfiaSetUp.getDatastore().save(new AccessToken(token.getAccess_token(), new Date()));
+		MorfiaSetUp.getDatastore().save(new AccessToken(token.getAccess_token(), refresh.getUser()));
 		
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		return gson.toJson(token);

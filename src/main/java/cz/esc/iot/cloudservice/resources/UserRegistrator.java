@@ -70,8 +70,8 @@ public class UserRegistrator extends ServerResource {
 			// generate and return token
 			CloudToken token = OAuth2.generateToken();
 			
-			AccessToken accessToken = new AccessToken(token.getAccess_token(), new Date());
-			RefreshToken refreshToken = new RefreshToken(token.getRefresh_token(), new Date());
+			AccessToken accessToken = new AccessToken(token.getAccess_token(), newUser);
+			RefreshToken refreshToken = new RefreshToken(token.getRefresh_token(), newUser);
 			MorfiaSetUp.getDatastore().save(accessToken);
 			MorfiaSetUp.getDatastore().save(refreshToken);
 			
