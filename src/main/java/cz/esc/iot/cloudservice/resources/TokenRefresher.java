@@ -49,7 +49,7 @@ public class TokenRefresher extends ServerResource {
 		// update refresh token in database...
 		int newCount = refresh.getRefreshCounter() + 1;
 		// ...if token has been refreshed less than 10 times,...
-		if (newCount < 10)
+		if (newCount < 2)
 			MorfiaSetUp.getDatastore().update(refresh, MorfiaSetUp.getDatastore().createUpdateOperations(RefreshToken.class).set("refreshCounter", newCount).set("refresh_token", token.getRefresh_token()));
 		// ...else, refresh token is deleted from database
 		else

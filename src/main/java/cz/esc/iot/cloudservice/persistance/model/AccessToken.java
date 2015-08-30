@@ -16,11 +16,14 @@ public class AccessToken {
     @Id
     private ObjectId id;
 	@Expose private String access_token;
-	@Indexed(expireAfterSeconds = 3600) // one hour
+	@Indexed(expireAfterSeconds = 30) // one hour
 	@Expose private Date time;
 	@Reference
 	private UserEntity user;
 	
+	public AccessToken() {
+		super();
+	}
 	public AccessToken(String at, Date d) {
 		access_token = at;
 		time = d;
