@@ -1,7 +1,6 @@
 package cz.esc.iot.cloudservice.resources;
 
 import java.io.IOException;
-import java.util.Date;
 
 import org.json.JSONException;
 import org.restlet.data.MediaType;
@@ -22,6 +21,7 @@ import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.AccessToken;
 import cz.esc.iot.cloudservice.persistance.model.RefreshToken;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
+import cz.esc.iot.cloudservice.support.ErrorJson;
 
 /**
  * Class uses received code and exchange it for valid access token.
@@ -30,22 +30,21 @@ public class NewToken extends ServerResource {
 
 	@Post("json")
 	public String auth(Representation entity) throws IOException, JSONException {
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
 			String json = entity.getText();
-			
-			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 			AccessTokenRequest request = gson.fromJson(json, AccessTokenRequest.class);
 
 			// control request arguments
 			if (request.getGrant_type() == null || request.getClient_id() == null || request.getCode() == null) {
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				return "{\n\"error\":\"invalid_request\"}";
+				return gson.toJson(new ErrorJson("invalid_request"));
 			} else if (!request.getGrant_type().equals("authorization_code")) {
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				return "{\n\"error\":\"unsupported_grant_type\"\n}";
+				return gson.toJson(new ErrorJson("unsupported_grant_type"));
 			} else if (!request.getClient_id().equals("abeceda")) {
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				return "{\n\"error\":\"invalid_client\"\n}";
+				return gson.toJson(new ErrorJson("invalid_client"));
 			}
 					
 			// exchange authorisation code for info about user from Google
@@ -54,14 +53,14 @@ public class NewToken extends ServerResource {
 				googleUser = OAuth2.getGoogleUserInfoFromCode(request.getCode());
 			} catch (OAuthException e) {
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				return "{\n\"error\":\"invalid_grant\"\n}";
+				return gson.toJson(new ErrorJson("invalid_grant"));
 			}
 			
 			// find user in db
 			UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("email").equal(googleUser.getEmail()).get();
 			if (userEntity == null) {
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				return "{\n\"error\":\"unregistered_user\"\n}";
+				return gson.toJson(new ErrorJson("unregistered_user"));
 			}
 			
 			// generate and return token
@@ -78,6 +77,6 @@ public class NewToken extends ServerResource {
 			return gson.toJson(token);
 		}
 		getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		return "{\n\"error\":\"invalid_request\"\n}";
+		return gson.toJson(new ErrorJson("invalid_request"));
 	}
 }
