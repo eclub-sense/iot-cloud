@@ -10,12 +10,17 @@ public class HubLoginMsg extends HubMessage{
 
 	@Expose private static final String type = "LOGIN";
 	@Expose private String email;
+	@Expose private String password;
 	
 	@Override
 	public String getType() {
 		return type;
 	}
-	public String getMail() {
+	public String getEmail() {
 		return email;
 	}
+	public String getPassword() {
+		return password;
+	}
+	
 }

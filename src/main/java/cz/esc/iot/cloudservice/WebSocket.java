@@ -126,9 +126,10 @@ public class WebSocket extends WebSocketAdapter {
      */
     private void verifyConnection(HubMessage message) {
     	//System.out.println(message);
-    	String hubMail = ((HubLoginMsg)message).getMail();
+    	String hubMail = ((HubLoginMsg)message).getEmail();
     	//String hubAccessToken = ((HubLoginMsg)message).getAccess_token();
     	String hubUuid = ((HubLoginMsg)message).getUuid();
+    	String hubPassword = ((HubLoginMsg)message).getPassword();
 		
     	// verify user
 		/*GoogleUserInfo googleUser = null;
@@ -151,10 +152,9 @@ public class WebSocket extends WebSocketAdapter {
     		verified = true;
     		return;
     	}
-		UserEntity dbUser = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("emails").contains(hubMail).get();
+		UserEntity dbUser = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("email").equal(hubMail).field("password").equal(hubPassword).get();
 		System.out.println(dbUser);
 		if (dbUser == null) {
-			
 			getSession().close(3, "Forbidden");
 		}
     	
