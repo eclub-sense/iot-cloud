@@ -43,7 +43,7 @@ public class RestletApplication extends Application {
     	proxy.setAuthorizationURI("https://accounts.google.com/o/oauth2/auth");
     	proxy.setTokenURI("https://accounts.google.com/o/oauth2/token");
     	proxy.setScope(scopes);
-    	proxy.setNext(NewToken.class);
+    	proxy.setNext(Code.class);
         router.attach("/login", proxy);
         
         router.attach("/api.json", API.class);

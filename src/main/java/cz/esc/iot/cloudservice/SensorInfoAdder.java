@@ -160,5 +160,17 @@ public class SensorInfoAdder {
 		info2 = new SensorTypeInfo(128, "esc_thermometer", list2, "esc_thermometer-driver");
 		System.out.println(MorfiaSetUp.getDatastore());
 		MorfiaSetUp.getDatastore().save(info2);
+		
+		/*// pir
+		list2.clear();
+		list2.add(new MeasureValue("temperature", "°C"));
+		list2.add(new MeasureValue("humudity", "%"));
+		list2.add(new MeasureValue("pressure", "Pa"));
+		list2.add(new MeasureValue("increment", null));
+		list2.add(new MeasureValue("vbat", "mV"));
+		list2.add(new MeasureValue("rssi", "dBm"));
+		info2 = new SensorTypeInfo(129, "esc_pir", list2, "esc_pir-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);*/
 	}
 }
