@@ -1,14 +1,8 @@
 package cz.esc.iot.cloudservice;
 
 import org.restlet.Application;
-import org.restlet.Client;
-import org.restlet.Request;
-import org.restlet.Response;
 import org.restlet.Restlet;
-import org.restlet.data.LocalReference;
-import org.restlet.data.Protocol;
 import org.restlet.ext.oauth.OAuthProxy;
-import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
 
 import cz.esc.iot.cloudservice.oauth2.OAuth2;

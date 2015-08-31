@@ -16,7 +16,7 @@ public class RefreshToken {
     @Id
     private ObjectId id;
 	@Expose private String refresh_token;
-	@Indexed(expireAfterSeconds = 90) // 14 days
+	@Indexed(expireAfterSeconds = 14*24*3600) // 14 days
 	@Expose private final Date time = new Date();
 	@Expose(deserialize = false) private int refreshCounter = 0; // refresh_token is deleted from database when refreshCounter == 5
 	@Reference

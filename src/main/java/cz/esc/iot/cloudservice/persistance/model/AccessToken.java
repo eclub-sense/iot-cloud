@@ -16,7 +16,7 @@ public class AccessToken {
     @Id
     private ObjectId id;
 	@Expose private String access_token;
-	@Indexed(expireAfterSeconds = 30) // one hour
+	@Indexed(expireAfterSeconds = 3600) // one hour
 	@Expose private final Date time = new Date();
 	@Reference
 	private UserEntity user;
