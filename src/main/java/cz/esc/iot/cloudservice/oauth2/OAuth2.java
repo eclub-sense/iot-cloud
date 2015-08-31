@@ -86,7 +86,7 @@ public class OAuth2 {
     	client.setClientCredentials(OAuth2.clientID, OAuth2.clientSecret);
     	OAuthParameters params = new OAuthParameters();
     	params.code(code);
-    	//params.redirectURI("https://mlha-139.sin.cvut.cz:8082/callback");
+    	params.redirectURI("https://mlha-139.sin.cvut.cz:8082/callback");
     	params.grantType(GrantType.authorization_code);
     	
     	Token token = client.requestToken(params);

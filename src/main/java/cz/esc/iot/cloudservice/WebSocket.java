@@ -161,15 +161,6 @@ public class WebSocket extends WebSocketAdapter {
     	if (dbUser != null) {
     		HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hubUuid).get();
     		
-    		String ip = this.getSession().getRemoteAddress().getHostString();
-    		boolean zetta = false;
-    		
-    		System.out.println(ip);
-    		if (ip.equals("147.32.107.139")) { // zetta-cloud ip
-    			zetta = true;
-    			System.out.println("\n\n\nzetta-cloud\n\n\n");
-    		}
-    		
     		// hub is new
     		if (hub == null) {
     			hub = new HubEntity();
@@ -178,7 +169,7 @@ public class WebSocket extends WebSocketAdapter {
     			MorfiaSetUp.getDatastore().save(hub);
         		//MorfiaSetUp.getDatastore().update(dbUser, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("hubEntities", hub, true));
         		this.hubUuid = hubUuid;
-        		if (!zetta)
+        		//if (!hubUuid[0] != 'm')
         			WebSocketRegistry.add(this);
         		Postman.sendLoginAck(this, hubUuid);
     		// in case that hub's uuid is already registered in database
@@ -187,7 +178,7 @@ public class WebSocket extends WebSocketAdapter {
     				getSession().close(3, "Forbidden");
     			}
         		this.hubUuid = hubUuid;
-        		if(!zetta)
+        		//if(!zetta)
         			WebSocketRegistry.add(this);
     			Postman.sendLoginAck(this, hubUuid);
         		try {
