@@ -216,5 +216,17 @@
 			<artifactId>google-api-services-oauth2</artifactId>
 			<version>v2-rev93-1.20.0</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlets</artifactId>
+			<version>9.3.2.v20150730</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-util</artifactId>
+			<version>9.3.2.v20150730</version>
+		</dependency>
+
     </dependencies>
 </project>
