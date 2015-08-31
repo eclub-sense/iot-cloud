@@ -107,7 +107,7 @@ public class SensorRegistrator extends ServerResource {
 		if (hubs.size() == 0) throw new Exception("No hub is connected. Can not connect new sensor anywhere.");
 		int random = randomGenerator.nextInt(hubs.size());
 		int first = random;
-		while (WebSocketRegistry.get(entities[random].getUuid()) == null) {
+		while (WebSocketRegistry.get(entities[random].getUuid()) == null || entities[random].getUuid().charAt(0) == 'm') {	
 			random = (random +1) % (WebSocketRegistry.size());
 			if (random == first) throw new Exception("No hub is connected. Can not connect new sensor anywhere.");
 		}

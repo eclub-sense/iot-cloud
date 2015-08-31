@@ -169,7 +169,7 @@ public class WebSocket extends WebSocketAdapter {
     			MorfiaSetUp.getDatastore().save(hub);
         		//MorfiaSetUp.getDatastore().update(dbUser, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("hubEntities", hub, true));
         		this.hubUuid = hubUuid;
-        		//if (!hubUuid[0] != 'm')
+        		if (hubUuid.charAt(0) != 'm')
         			WebSocketRegistry.add(this);
         		Postman.sendLoginAck(this, hubUuid);
     		// in case that hub's uuid is already registered in database
@@ -178,7 +178,7 @@ public class WebSocket extends WebSocketAdapter {
     				getSession().close(3, "Forbidden");
     			}
         		this.hubUuid = hubUuid;
-        		//if(!zetta)
+        		if(hubUuid.charAt(0) != 'm')
         			WebSocketRegistry.add(this);
     			Postman.sendLoginAck(this, hubUuid);
         		try {
