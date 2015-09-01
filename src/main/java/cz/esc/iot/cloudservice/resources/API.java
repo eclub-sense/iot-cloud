@@ -10,7 +10,7 @@ import org.restlet.resource.ServerResource;
 
 public class API extends ServerResource {
 
-	@Get("json")
+	@Get("html")
     public String returnList() throws OAuthException {		
 		
         String fileName = "api.html";
