@@ -14,6 +14,15 @@
   <servlet-mapping>
     <servlet-name>default</servlet-name>
     <url-pattern>/css/*</url-pattern>
+    <url-pattern>/images/*</url-pattern>
+    <url-pattern>/fonts/*</url-pattern>
+    <url-pattern>/lang/*</url-pattern>
+    <url-pattern>/lib/*</url-pattern>
+    <url-pattern>/swagger-ui.js</url-pattern>
+    <url-pattern>/swagger-ui.min.js</url-pattern>
+    <url-pattern>/o2c.html</url-pattern>
+    <url-pattern>/API.json</url-pattern>
+    <url-pattern>/API.yaml</url-pattern>
   </servlet-mapping>
   
   <servlet>

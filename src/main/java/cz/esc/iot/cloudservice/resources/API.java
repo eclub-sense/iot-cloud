@@ -13,7 +13,7 @@ public class API extends ServerResource {
 	@Get("json")
     public String returnList() throws OAuthException {		
 		
-        String fileName = "API.json";
+        String fileName = "api.html";
         try {
             return new String(Files.readAllBytes(Paths.get(fileName)));
         } catch (IOException e) {
