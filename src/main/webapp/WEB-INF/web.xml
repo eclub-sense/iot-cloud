@@ -21,8 +21,8 @@
     <url-pattern>/swagger-ui.js</url-pattern>
     <url-pattern>/swagger-ui.min.js</url-pattern>
     <url-pattern>/o2c.html</url-pattern>
-    <url-pattern>/API.json</url-pattern>
-    <url-pattern>/API.yaml</url-pattern>
+    <url-pattern>/api.json</url-pattern>
+    <url-pattern>/api.yaml</url-pattern>
   </servlet-mapping>
   
   <servlet>
