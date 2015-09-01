@@ -459,7 +459,8 @@
                     "type": "string"
                 },
                 "type": {
-                    "type": "string"
+                    "type": "number",
+                    "format": "integer"
                 },
                 "secret": {
                     "type": "string"
@@ -549,6 +550,19 @@
                     "$ref": "#/definitions/Sensor"
                 },
                 "measured": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DataList"
+                    }
+                }
+            }
+        },
+        "DataList": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "items": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/Data"
