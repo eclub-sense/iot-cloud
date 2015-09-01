@@ -32,9 +32,8 @@ public class RestletApplication extends Application {
     	OAuth2.setClientCredentials();
     	String scopes[] = {"email"};
     	
-    	getConnectorService().getClientProtocols().add(Protocol.FILE);
-
     	Router router = new Router(getContext());
+    	getConnectorService().getClientProtocols().add(Protocol.FILE);
     	
     	/*
     	 * When querying /login url, user is redirected to Google
