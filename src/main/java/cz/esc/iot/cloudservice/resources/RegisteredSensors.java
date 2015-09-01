@@ -38,7 +38,9 @@ public class RegisteredSensors extends ServerResource {
 			
 		// verify user
 		UserEntity userEntity = null;
-		if (access_token != null && (userEntity = OAuth2.findUserInDatabase(access_token)) == null) {
+		
+		if (access_token == null) {
+		} else if ((userEntity = OAuth2.findUserInDatabase(access_token)) == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
 			return "";
 		}
