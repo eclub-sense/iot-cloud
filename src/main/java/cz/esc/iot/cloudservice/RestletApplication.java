@@ -52,7 +52,11 @@ public class RestletApplication extends Application {
         router.attach("/api.json", API.class);
         
         router.attach("/", Homepage.class);
-        router.attach("/css/", new Directory(getContext(), "file://src/main/resources/css/"));
+        
+        Directory dir = new Directory(getContext(), "file://src/main/resources/css/");
+        dir.setIndexName("css.css");
+        router.attach("/css/", dir);
+        
         router.attach("/app.js", JavaScript.class);
         router.attach("/css/style.css", Css.class);
 
