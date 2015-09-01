@@ -30,7 +30,8 @@ public class RestletApplication extends Application {
     	
     	OAuth2.setClientCredentials();
     	String scopes[] = {"email"};
-    	
+    	System.out.println(getContext().getClientDispatcher());
+
     	Router router = new Router(getContext());
     	
     	/*
@@ -44,7 +45,7 @@ public class RestletApplication extends Application {
     	proxy.setAuthorizationURI("https://accounts.google.com/o/oauth2/auth");
     	proxy.setTokenURI("https://accounts.google.com/o/oauth2/token");
     	proxy.setScope(scopes);
-    	proxy.setNext(Code.class);
+    	//proxy.setNext(Code.class);
         router.attach("/login", proxy);
         
         router.attach("/api.json", API.class);
