@@ -86,7 +86,7 @@ public class OAuth2 {
     	OAuthParameters params = new OAuthParameters();
     	params.code(code);
     	params.grantType(GrantType.authorization_code);
-    	//params.redirectURI("http://localhost:3000/callback");
+    	params.redirectURI("http://localhost:3000/callback");
     	Token token = client.requestToken(params);
 
 		return token;
