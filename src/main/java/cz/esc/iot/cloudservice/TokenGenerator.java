@@ -1,12 +1,8 @@
 package cz.esc.iot.cloudservice;
 
-import java.util.Date;
 import java.util.Random;
-import java.util.UUID;
 
 import org.apache.commons.codec.binary.Hex;
-import org.restlet.engine.util.Base64;
-
 
 public class TokenGenerator {
 

@@ -3,6 +3,7 @@ package cz.esc.iot.cloudservice;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.ext.oauth.OAuthProxy;
+import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
 
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
@@ -49,6 +50,7 @@ public class RestletApplication extends Application {
         router.attach("/api.json", API.class);
         
         router.attach("/", Homepage.class);
+        router.attach("/css/", new Directory(getContext(), "file:///home/zEtt0r/css/"));
         router.attach("/app.js", JavaScript.class);
         router.attach("/css/style.css", Css.class);
 
