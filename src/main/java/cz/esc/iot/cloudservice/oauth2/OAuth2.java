@@ -52,7 +52,7 @@ public class OAuth2 {
 	 */
 	public static UserEntity findUserInDatabase(String access_token) {
 		
-		AccessToken token = MorfiaSetUp.getDatastore().createQuery(AccessToken.class).field("access_token").contains(access_token).get();
+		AccessToken token = MorfiaSetUp.getDatastore().createQuery(AccessToken.class).field("access_token").equal(access_token).get();
 		return token.getUser();
 	}
 	
@@ -86,10 +86,8 @@ public class OAuth2 {
     	client.setClientCredentials(OAuth2.clientID, OAuth2.clientSecret);
     	OAuthParameters params = new OAuthParameters();
     	params.code(code);
-    	//params.redirectURI("https://mlha-139.sin.cvut.cz:8082/callback");
-    	//params.redirectURI("storagerelay://http://localhost:63342");
     	params.grantType(GrantType.authorization_code);
-    	
+    	//params.
     	Token token = client.requestToken(params);
 
 		return token;
