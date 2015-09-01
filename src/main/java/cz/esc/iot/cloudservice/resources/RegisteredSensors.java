@@ -15,10 +15,13 @@ import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.Data;
 import cz.esc.iot.cloudservice.persistance.model.HubEntity;
+import cz.esc.iot.cloudservice.persistance.model.MeasureValue;
 import cz.esc.iot.cloudservice.persistance.model.SensorAccessEntity;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
+import cz.esc.iot.cloudservice.persistance.model.SensorTypeInfo;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 import cz.esc.iot.cloudservice.support.AllSensors;
+import cz.esc.iot.cloudservice.support.DataList;
 import cz.esc.iot.cloudservice.support.SensorAndData;
 
 /**
@@ -71,8 +74,12 @@ public class RegisteredSensors extends ServerResource {
 		} else {
 			ret.setSensor(sensor);
 		}
-		List<Data> measured = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).asList();
-		ret.setMeasured(measured);
+
+		SensorTypeInfo info = MorfiaSetUp.getDatastore().createQuery(SensorTypeInfo.class).field("type").equal(sensor.getType()).get();
+		for (MeasureValue value : info.getValues()) {
+			List<Data> list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).asList();
+			ret.addDataList(new DataList(value.getName(), list));
+		}
 		return gson.toJson(ret);
 		
 	}

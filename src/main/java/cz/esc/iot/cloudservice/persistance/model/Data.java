@@ -18,7 +18,7 @@ public class Data {
 	
     @Id
     private ObjectId id;
-	@Expose private String name;
+	private String name;
 	@Expose private String value;
 	@Indexed(expireAfterSeconds = 24*3600) // data are stored for one day
 	@Expose private Date time;

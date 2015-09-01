@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-import cz.esc.iot.cloudservice.persistance.model.Data;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 
 /**
@@ -14,7 +13,7 @@ import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 public class SensorAndData {
 
 	@Expose private SensorEntity sensor;
-	@Expose private List<Data> measured;
+	@Expose private List<DataList> measured;
 	
 	public SensorEntity getSensor() {
 		return sensor;
@@ -22,10 +21,13 @@ public class SensorAndData {
 	public void setSensor(SensorEntity sensor) {
 		this.sensor = sensor;
 	}
-	public List<Data> getMeasured() {
+	public List<DataList> getMeasured() {
 		return measured;
 	}
-	public void setMeasured(List<Data> measured) {
+	public void setMeasured(List<DataList> measured) {
 		this.measured = measured;
+	}
+	public void addDataList(DataList list) {
+		measured.add(list);
 	}
 }
