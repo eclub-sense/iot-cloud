@@ -1,5 +1,6 @@
 package cz.esc.iot.cloudservice.support;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -13,7 +14,7 @@ import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 public class SensorAndData {
 
 	@Expose private SensorEntity sensor;
-	@Expose private List<DataList> measured;
+	@Expose private List<DataList> measured = new LinkedList<>();
 	
 	public SensorEntity getSensor() {
 		return sensor;
