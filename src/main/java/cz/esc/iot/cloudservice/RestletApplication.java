@@ -2,6 +2,7 @@ package cz.esc.iot.cloudservice;
 
 import org.restlet.Application;
 import org.restlet.Restlet;
+import org.restlet.data.Protocol;
 import org.restlet.ext.oauth.OAuthProxy;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
@@ -30,7 +31,8 @@ public class RestletApplication extends Application {
     	
     	OAuth2.setClientCredentials();
     	String scopes[] = {"email"};
-    	System.out.println(getContext().getClientDispatcher());
+    	
+    	getConnectorService().getClientProtocols().add(Protocol.FILE);
 
     	Router router = new Router(getContext());
     	
