@@ -23,6 +23,7 @@ public class HubEntity {
     private UserEntity user;
 
     public HubEntity() {
+    	super();
     }
 
     public ObjectId getId() {

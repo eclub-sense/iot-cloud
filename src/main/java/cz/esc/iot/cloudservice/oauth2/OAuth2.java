@@ -81,12 +81,13 @@ public class OAuth2 {
 	 * @throws OAuthException 
 	 */
 	public static Token exchangeCodeForAccessToken(String code) throws IOException, OAuthException, JSONException {
-		AccessTokenClientResource client = new AccessTokenClientResource(new Reference("https://accounts.google.com/o/oauth2/token"));
+		//"https://accounts.google.com/o/oauth2/token"));
+		AccessTokenClientResource client = new AccessTokenClientResource(new Reference("https://www.googleapis.com/oauth2/v3/token"));//https://accounts.google.com/o/oauth2/token"));
     	client.setClientCredentials(OAuth2.clientID, OAuth2.clientSecret);
     	OAuthParameters params = new OAuthParameters();
     	params.code(code);
     	params.grantType(GrantType.authorization_code);
-    	params.redirectURI("http://localhost:3000/callback");
+    	//params.redirectURI("http://localhost:3000/callback");
     	Token token = client.requestToken(params);
 
 		return token;
