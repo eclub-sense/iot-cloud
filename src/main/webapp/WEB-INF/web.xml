@@ -11,6 +11,11 @@
     <param-value>/WEB-INF/classes/log4j.properties</param-value>
   </context-param>
   
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.css</url-pattern>
+  </servlet-mapping>
+  
   <servlet>
     <servlet-name>websocket</servlet-name>
     <servlet-class>cz.esc.iot.cloudservice.EventServlet</servlet-class>
