@@ -37,12 +37,15 @@ public class NewToken extends ServerResource {
 
 			// control request arguments
 			if (request.getGrant_type() == null || request.getClient_id() == null || request.getCode() == null) {
+				System.out.println("error 1");
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("invalid_request"));
 			} else if (!request.getGrant_type().equals("authorization_code")) {
+				System.out.println("error 2");
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("unsupported_grant_type"));
 			} else if (!request.getClient_id().equals("dat") && !request.getClient_id().equals("michal") && !request.getClient_id().equals("adam")) {
+				System.out.println("error 3");
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("invalid_client"));
 			}
@@ -53,6 +56,7 @@ public class NewToken extends ServerResource {
 				googleUser = OAuth2.getGoogleUserInfoFromCode(request.getCode(), request.getClient_id());
 			} catch (OAuthException e) {
 				e.printStackTrace();
+				System.out.println("error 4");
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("invalid_grant"));
 			}
@@ -60,6 +64,7 @@ public class NewToken extends ServerResource {
 			// find user in db
 			UserEntity userEntity = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("email").equal(googleUser.getEmail()).get();
 			if (userEntity == null) {
+				System.out.println("error 5");
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("unregistered_user"));
 			}
@@ -77,6 +82,7 @@ public class NewToken extends ServerResource {
 			
 			return gson.toJson(token);
 		}
+		System.out.println("error 6");
 		getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 		return gson.toJson(new ErrorJson("invalid_request"));
 	}

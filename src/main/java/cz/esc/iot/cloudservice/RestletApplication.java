@@ -46,7 +46,7 @@ public class RestletApplication extends Application {
     	proxy.setScope(scopes);
     	//proxy.setNext(Code.class);
         router.attach("/login", proxy);
-        
+    	
         router.attach("/", Homepage.class);
         router.attach("/api", API.class);
         router.attach("/app.js", JavaScript.class);
@@ -55,7 +55,7 @@ public class RestletApplication extends Application {
         /*
          * These resources are accessible with valid authentication code only.
          */
-        router.attach("/callback", Code.class);
+        //router.attach("/callback", Code.class);
         router.attach("/new_token", NewToken.class);
         router.attach("/user_registration", UserRegistrator.class);
         
