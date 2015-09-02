@@ -94,8 +94,7 @@ public class OAuth2 {
 	 * @throws Exception 
 	 */
 	public static Token exchangeCodeForAccessToken(String code, String client_id) throws OAuthException, IOException, JSONException {
-		//"https://accounts.google.com/o/oauth2/token"));
-		
+
 		String callback = "";
 		switch(client_id) {
 		case "dat":
@@ -108,7 +107,8 @@ public class OAuth2 {
 			callback = "http://localhost:3000/callback";
 		}
 		
-		AccessTokenClientResource client = new AccessTokenClientResource(new Reference("https://www.googleapis.com/oauth2/v3/token"));//https://accounts.google.com/o/oauth2/token"));
+		//https://accounts.google.com/o/oauth2/token
+		AccessTokenClientResource client = new AccessTokenClientResource(new Reference("https://www.googleapis.com/oauth2/v3/token"));
     	client.setClientCredentials(OAuth2.clientID, OAuth2.clientSecret);
     	OAuthParameters params = new OAuthParameters();
     	params.code(code);

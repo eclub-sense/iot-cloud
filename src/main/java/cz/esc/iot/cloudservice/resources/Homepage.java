@@ -13,7 +13,7 @@ public class Homepage extends ServerResource {
 	@Get("html")
     public String returnList() throws OAuthException {		
 
-        String fileName = "index.html";
+        String fileName = "g2.html";
         try {
             return new String(Files.readAllBytes(Paths.get(fileName)));
         } catch (IOException e) {
