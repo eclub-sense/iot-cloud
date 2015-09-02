@@ -29,7 +29,7 @@
 <script>
     $('#signinButton').click(function() {
         // signInCallback defined in step 6.
-        auth2.grantOfflineAccess({'redirect_uri': 'postmessage'}).then(signInCallback);
+        auth2.grantOfflineAccess({'redirect_uri': 'https://mlha-139.sin.cvut.cz:8082/callback'}).then(signInCallback);
     });
 </script>
 <div id="result"></div>
