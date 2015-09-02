@@ -1,5 +1,7 @@
 package cz.esc.iot.cloudservice.resources;
 
+import java.util.List;
+
 import org.restlet.data.Form;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
@@ -16,8 +18,13 @@ public class Code extends ServerResource {
 	@Get("json")
 	public String code() {
 		Reference url = getRequest().getResourceRef();
-		String path = url.getPath();
+		String path = url.getQuery();
 		System.out.println("path" + path);
+		System.out.println(url.getExtensions());
+		System.out.println(url.getRelativePart());
+		List<String> seg = url.getSegments();
+		for (String a : seg)
+			System.out.println(a);
 		String split[] = path.split("&");
 		for (String a : split)
 			System.out.println(a);
