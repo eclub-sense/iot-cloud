@@ -57,6 +57,7 @@ public class OAuth2 {
 		return token.getUser();
 	}
 	
+	
 	public static GoogleIdToken.Payload getGoogleUserFromIdToken(String idToken) {
 	      Checker checker = new Checker(new String[]{clientID}, clientID);
 	      GoogleIdToken.Payload jwt = checker.check(idToken);
@@ -88,28 +89,43 @@ public class OAuth2 {
 	 * Asks Google for access token. Uses code, received as parameter, for it.
 	 * @return Returns valid access token.
 	 * @throws JSONException 
+	 * @throws IOException 
 	 * @throws OAuthException 
+	 * @throws Exception 
 	 */
-	public static Token exchangeCodeForAccessToken(String code, boolean redirect) throws IOException, OAuthException, JSONException {
+	public static Token exchangeCodeForAccessToken(String code, String client_id) throws OAuthException, IOException, JSONException {
 		//"https://accounts.google.com/o/oauth2/token"));
+		
+		String callback = "";
+		switch(client_id) {
+		case "dat":
+			callback = null;
+			break;
+		case "adam":
+			callback = "https://mlha-139.sin.cvut.cz:8082/callback";
+			break;
+		case "michal":
+			callback = "http://localhost:3000/callback";
+		}
+		
 		AccessTokenClientResource client = new AccessTokenClientResource(new Reference("https://www.googleapis.com/oauth2/v3/token"));//https://accounts.google.com/o/oauth2/token"));
     	client.setClientCredentials(OAuth2.clientID, OAuth2.clientSecret);
     	OAuthParameters params = new OAuthParameters();
     	params.code(code);
     	params.grantType(GrantType.authorization_code);
     	
-    	if (redirect)
-    		params.redirectURI("http://localhost:3000/callback");
+    	if (callback != null)
+    		params.redirectURI(callback);
     	
     	Token token = client.requestToken(params);
 
 		return token;
 	}
 	
-	public static GoogleUserInfo getGoogleUserInfoFromCode(String code, boolean redirect) throws IOException, OAuthException, JSONException {
+	public static GoogleUserInfo getGoogleUserInfoFromCode(String code, String client_id) throws IOException, OAuthException, JSONException {
 		
 		// exchange code for access token
-		Token token = OAuth2.exchangeCodeForAccessToken(code, redirect);
+		Token token = OAuth2.exchangeCodeForAccessToken(code, client_id);
 		String accessToken = token.getAccessToken();
 
 		// get info about user from IDP
