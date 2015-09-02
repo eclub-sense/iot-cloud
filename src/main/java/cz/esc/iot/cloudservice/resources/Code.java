@@ -17,18 +17,11 @@ public class Code extends ServerResource {
 
 	@Get("json")
 	public String code() {
-		Reference url = getRequest().getResourceRef();
-		String path = url.getQuery();
-		System.out.println("path" + path);
-		System.out.println(url.getExtensions());
-		System.out.println(url.getRelativePart());
-		List<String> seg = url.getSegments();
-		for (String a : seg)
-			System.out.println(a);
-		String split[] = path.split("&");
-		for (String a : split)
-			System.out.println(a);
-		
+
+		System.out.println(getRequest().getAttributes());
+		System.out.println(getRequest().getRootRef());
+		System.out.println(getRequest().getReferrerRef());
+		System.out.println(getRequest().getResourceRef());
 		String code = null;
 		if (code == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
