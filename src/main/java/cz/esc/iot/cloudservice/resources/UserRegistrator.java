@@ -53,6 +53,7 @@ public class UserRegistrator extends ServerResource {
 			try {
 				googleUser = OAuth2.getGoogleUserInfoFromCode(request.getCode(), request.getClient_id());
 			} catch (OAuthException e) {
+				e.printStackTrace();
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("invalid_grant"));
 			}
