@@ -101,7 +101,7 @@ public class OAuth2 {
 			callback = null;
 			break;
 		case "adam":
-			callback = "https://mlha-139.sin.cvut.cz:8082/callback";
+			callback = "postmessage";//"https://mlha-139.sin.cvut.cz:8082/callback";
 			break;
 		case "michal":
 			callback = "http://localhost:3000/callback";
