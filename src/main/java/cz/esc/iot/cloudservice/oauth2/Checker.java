@@ -1,4 +1,4 @@
-package cz.esc.iot.cloudservice.unused;
+package cz.esc.iot.cloudservice.oauth2;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -28,21 +28,16 @@ public class Checker {
     }
 
     public GoogleIdToken.Payload check(String tokenString) {
-    	GoogleIdToken.Payload payload = null;
-        GoogleIdToken token = null;
-        //System.out.println("a");
+        GoogleIdToken.Payload payload = null;
         try {
-            token = GoogleIdToken.parse(mJFactory, tokenString);
-            //System.out.println("not verified:" + token.getPayload());
+            GoogleIdToken token = GoogleIdToken.parse(mJFactory, tokenString);
             if (mVerifier.verify(token)) {
-            	//System.out.println("c");
                 GoogleIdToken.Payload tempPayload = token.getPayload();
-                if (!tempPayload.getAudience().equals(mAudience)) {
-                	//System.out.println("d");
+                if (!tempPayload.getAudience().equals(mAudience))
                     mProblem = "Audience mismatch";
-                //} else if (!mClientIDs.contains(tempPayload.getAuthorizedParty())) {
-                  //  mProblem = "Client ID mismatch";
-                } else
+                else if (!mClientIDs.contains(tempPayload.getAuthorizedParty()))
+                    mProblem = "Client ID mismatch";
+                else
                     payload = tempPayload;
             }
         } catch (GeneralSecurityException e) {
@@ -50,8 +45,6 @@ public class Checker {
         } catch (IOException e) {
             mProblem = "Network problem: " + e.getLocalizedMessage();
         }
-        //System.out.println("e");
-        //return token.getPayload(); // not verified!
         return payload;
     }
 

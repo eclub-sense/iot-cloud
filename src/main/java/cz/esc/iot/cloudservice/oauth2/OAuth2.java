@@ -17,6 +17,7 @@ import org.restlet.ext.oauth.internal.Token;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.gson.Gson;
 
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
@@ -56,6 +57,15 @@ public class OAuth2 {
 		return token.getUser();
 	}
 	
+	public static GoogleIdToken.Payload getGoogleUserFromIdToken(String idToken) {
+	      Checker checker = new Checker(new String[]{clientID}, clientID);
+	      GoogleIdToken.Payload jwt = checker.check(idToken);
+	      
+	System.out.println("\nid: " + idToken);
+	System.out.println("\njwt: " + jwt);
+	      return jwt;
+	}
+	
 	/**
 	 * Ask for information about user. Uses received access token for it.
 	 * @return Returns information from Google.
@@ -80,23 +90,26 @@ public class OAuth2 {
 	 * @throws JSONException 
 	 * @throws OAuthException 
 	 */
-	public static Token exchangeCodeForAccessToken(String code) throws IOException, OAuthException, JSONException {
+	public static Token exchangeCodeForAccessToken(String code, boolean redirect) throws IOException, OAuthException, JSONException {
 		//"https://accounts.google.com/o/oauth2/token"));
 		AccessTokenClientResource client = new AccessTokenClientResource(new Reference("https://www.googleapis.com/oauth2/v3/token"));//https://accounts.google.com/o/oauth2/token"));
     	client.setClientCredentials(OAuth2.clientID, OAuth2.clientSecret);
     	OAuthParameters params = new OAuthParameters();
     	params.code(code);
     	params.grantType(GrantType.authorization_code);
-    	//params.redirectURI("http://localhost:3000/callback");
+    	
+    	if (redirect)
+    		params.redirectURI("http://localhost:3000/callback");
+    	
     	Token token = client.requestToken(params);
 
 		return token;
 	}
 	
-	public static GoogleUserInfo getGoogleUserInfoFromCode(String code) throws IOException, OAuthException, JSONException {
+	public static GoogleUserInfo getGoogleUserInfoFromCode(String code, boolean redirect) throws IOException, OAuthException, JSONException {
 		
 		// exchange code for access token
-		Token token = OAuth2.exchangeCodeForAccessToken(code);
+		Token token = OAuth2.exchangeCodeForAccessToken(code, redirect);
 		String accessToken = token.getAccessToken();
 
 		// get info about user from IDP

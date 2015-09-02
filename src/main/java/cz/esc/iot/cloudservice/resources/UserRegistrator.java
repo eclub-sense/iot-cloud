@@ -43,15 +43,17 @@ public class UserRegistrator extends ServerResource {
 			} else if (!request.getGrant_type().equals("authorization_code")) {
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("unsupported_grant_type"));
-			} else if (!request.getClient_id().equals("abeceda")) {
+			} else if (!request.getClient_id().equals("android") && !request.getClient_id().equals("javascript")) {
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("invalid_client"));
 			}
 			
+			boolean redirect = (request.getClient_id().equals("android")) ? false : true;
+			
 			// exchange authorisation code for info about user from Google
 			GoogleUserInfo googleUser;
 			try {
-				googleUser = OAuth2.getGoogleUserInfoFromCode(request.getCode());
+				googleUser = OAuth2.getGoogleUserInfoFromCode(request.getCode(), redirect);
 			} catch (OAuthException e) {
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("invalid_grant"));

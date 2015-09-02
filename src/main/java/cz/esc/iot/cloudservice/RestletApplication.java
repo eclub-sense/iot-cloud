@@ -4,12 +4,12 @@ import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.data.Protocol;
 import org.restlet.ext.oauth.OAuthProxy;
-import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
 
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.resources.Homepage;
 import cz.esc.iot.cloudservice.resources.NewToken;
+import cz.esc.iot.cloudservice.resources.NewTokenId;
 import cz.esc.iot.cloudservice.resources.API;
 import cz.esc.iot.cloudservice.resources.Code;
 import cz.esc.iot.cloudservice.resources.Css;
@@ -42,18 +42,15 @@ public class RestletApplication extends Application {
     	OAuthProxy proxy = new OAuthProxy(getContext(), true);
     	proxy.setClientId(OAuth2.clientID);
     	proxy.setClientSecret(OAuth2.clientSecret);
-    	proxy.setRedirectURI("https://mlha-139.sin.cvut.cz:8082/callback");
+    	proxy.setRedirectURI("http://localhost:3000/callback");
     	proxy.setAuthorizationURI("https://accounts.google.com/o/oauth2/auth");
     	proxy.setTokenURI("https://accounts.google.com/o/oauth2/token");
     	proxy.setScope(scopes);
     	//proxy.setNext(Code.class);
         router.attach("/login", proxy);
         
-        router.attach("/api", API.class);
-        
         router.attach("/", Homepage.class);
-        
-        
+        router.attach("/api", API.class);
         router.attach("/app.js", JavaScript.class);
         router.attach("/css/style.css", Css.class);
 
@@ -63,6 +60,11 @@ public class RestletApplication extends Application {
         router.attach("/callback", Code.class);
         router.attach("/new_token", NewToken.class);
         router.attach("/user_registration", UserRegistrator.class);
+        
+        /*
+         * Accessible with valid id token.
+         */
+        router.attach("new_token_id", NewTokenId.class);
         
         /*
          * This resource is accessible with valid refresh token only.
