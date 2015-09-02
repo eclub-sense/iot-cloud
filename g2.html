@@ -29,7 +29,7 @@
 <script>
     $('#signinButton').click(function() {
         // signInCallback defined in step 6.
-        auth2.grantOfflineAccess({'redirect_uri': 'https://mlha-139.sin.cvut.cz:8082/callback'}).then(signInCallback);
+        auth2.grantOfflineAccess({'redirect_uri': 'postmessage'}).then(signInCallback);
     });
 </script>
 <div id="result"></div>
@@ -43,16 +43,21 @@
             $('#signinButton').attr('style', 'display: none');
 
             // Send the code to the server
-//            $.ajax({
-//                type: 'POST',
-//                url: 'http://example.com/storeauthcode',
-//                contentType: 'application/octet-stream; charset=utf-8',
-//                success: function(result) {
-//                    // Handle or verify the server response.
-//                },
-//                processData: false,
-//                data: authResult['code']
-//            });
+            $.ajax({
+                type: 'POST',
+                url: 'https://mlha-139.sin.cvut.cz:8082/user_registration',
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function(result) {
+                    // Handle or verify the server response.
+                    console.log(result);
+                },
+                processData: false,
+                data: {
+                    client_id: "dat",
+                    grant_type: "authorization_code",
+                    code: authResult['code'],
+                password: "1234"}
+            });
         } else {
             // There was an error.
         }
