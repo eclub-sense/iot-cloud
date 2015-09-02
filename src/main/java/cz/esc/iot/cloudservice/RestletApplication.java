@@ -55,7 +55,7 @@ public class RestletApplication extends Application {
         /*
          * These resources are accessible with valid authentication code only.
          */
-        //router.attach("/callback", Code.class);
+        router.attach("/callback", Code.class);
         router.attach("/new_token", NewToken.class);
         router.attach("/user_registration", UserRegistrator.class);
         

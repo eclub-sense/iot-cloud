@@ -16,6 +16,7 @@ public class Code extends ServerResource {
 	public String code() {
 		Form form = getRequest().getResourceRef().getQueryAsForm();
 		String code = form.getFirstValue("code");
+		System.out.println("code: "+code);
 		if (code == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
