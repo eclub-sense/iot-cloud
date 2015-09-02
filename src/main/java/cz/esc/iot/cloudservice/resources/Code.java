@@ -18,10 +18,9 @@ public class Code extends ServerResource {
 	@Get("json")
 	public String code() {
 
-		System.out.println(getRequest().getAttributes());
-		System.out.println(getRequest().getRootRef());
-		System.out.println(getRequest().getReferrerRef());
-		System.out.println(getRequest().getResourceRef());
+		System.out.println(getRequest().getRootRef().getFragment());
+		System.out.println(getRequest().getReferrerRef().getFragment());
+		System.out.println(getRequest().getResourceRef().getFragment());
 		String code = null;
 		if (code == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
