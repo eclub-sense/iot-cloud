@@ -33,7 +33,6 @@ public class UserRegistrator extends ServerResource {
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
 			String json = entity.getText();
-			
 			AccessTokenRequest request = gson.fromJson(json, AccessTokenRequest.class);
 			
 			// control request arguments
@@ -43,7 +42,8 @@ public class UserRegistrator extends ServerResource {
 			} else if (!request.getGrant_type().equals("authorization_code")) {
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("unsupported_grant_type"));
-			} else if (!request.getClient_id().equals("dat") && !request.getClient_id().equals("michal") && !request.getClient_id().equals("adam")) {
+			} else if (!request.getClient_id().equals("dat") && !request.getClient_id().equals("michal")
+					&& !request.getClient_id().equals("adam") && !request.getClient_id().equals("login")) {
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("invalid_client"));
 			}

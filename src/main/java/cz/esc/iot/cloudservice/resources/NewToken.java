@@ -37,15 +37,13 @@ public class NewToken extends ServerResource {
 
 			// control request arguments
 			if (request.getGrant_type() == null || request.getClient_id() == null || request.getCode() == null) {
-				System.out.println("error 1");
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("invalid_request"));
 			} else if (!request.getGrant_type().equals("authorization_code")) {
-				System.out.println("error 2");
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("unsupported_grant_type"));
-			} else if (!request.getClient_id().equals("dat") && !request.getClient_id().equals("michal") && !request.getClient_id().equals("adam")) {
-				System.out.println("error 3");
+			} else if (!request.getClient_id().equals("dat") && !request.getClient_id().equals("michal")
+					&& !request.getClient_id().equals("adam") && !request.getClient_id().equals("login")) {
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				return gson.toJson(new ErrorJson("invalid_client"));
 			}

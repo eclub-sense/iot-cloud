@@ -8,7 +8,6 @@ import org.restlet.routing.Router;
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.resources.Homepage;
 import cz.esc.iot.cloudservice.resources.NewToken;
-import cz.esc.iot.cloudservice.resources.NewTokenId;
 import cz.esc.iot.cloudservice.resources.API;
 import cz.esc.iot.cloudservice.resources.Code;
 import cz.esc.iot.cloudservice.resources.Css;
@@ -58,11 +57,6 @@ public class RestletApplication extends Application {
         router.attach("/callback", Code.class);
         router.attach("/new_token", NewToken.class);
         router.attach("/user_registration", UserRegistrator.class);
-        
-        /*
-         * Accessible with valid id token.
-         */
-        router.attach("new_token_id", NewTokenId.class);
         
         /*
          * This resource is accessible with valid refresh token only.

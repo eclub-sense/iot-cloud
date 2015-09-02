@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.AccessToken;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
+import cz.esc.iot.cloudservice.unused.Checker;
 
 /**
  * Class for communication with authorisation and token servers.
@@ -101,10 +102,13 @@ public class OAuth2 {
 			callback = null;
 			break;
 		case "adam":
-			callback = "postmessage";//"https://mlha-139.sin.cvut.cz:8082/callback";
+			callback = "postmessage";
 			break;
 		case "michal":
 			callback = "http://localhost:3000/callback";
+			break;
+		case "login":
+			callback = "https://mlha-139.sin.cvut.cz:8082/callback";
 		}
 		
 		//https://accounts.google.com/o/oauth2/token

@@ -429,7 +429,7 @@
                 },
                 "client_id": {
                     "type": "string",
-                    "description": "Temporarily must be \"abeceda\"."
+                    "description": "Temporarily must be \"dat\". \"michal\", \"adam\" (according to platform) or \"login\" when authorization code was received by GET on /login."
                 },
                 "grant_type": {
                     "type": "string",
@@ -445,7 +445,7 @@
                 },
                 "client_id": {
                     "type": "string",
-                    "description": "Temporarily must be \"abeceda\"."
+                    "description": "Temporarily must be \"dat\". \"michal\", \"adam\" (according to platform) or \"login\" when authorization code was received by GET on /login."
                 },
                 "grant_type": {
                     "type": "string",
@@ -572,9 +572,6 @@
         },
         "Data": {
             "properties": {
-                "name": {
-                    "type": "string"
-                },
                 "value": {
                     "type": "string"
                 },
