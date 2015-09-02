@@ -2,7 +2,6 @@ package cz.esc.iot.cloudservice;
 
 import org.restlet.Application;
 import org.restlet.Restlet;
-import org.restlet.data.Protocol;
 import org.restlet.ext.oauth.OAuthProxy;
 import org.restlet.routing.Router;
 
@@ -33,7 +32,6 @@ public class RestletApplication extends Application {
     	String scopes[] = {"email"};
     	
     	Router router = new Router(getContext());
-    	getConnectorService().getClientProtocols().add(Protocol.FILE);
     	
     	/*
     	 * When querying /login url, user is redirected to Google
@@ -48,7 +46,7 @@ public class RestletApplication extends Application {
     	proxy.setScope(scopes);
     	//proxy.setNext(Code.class);
         router.attach("/login", proxy);
-        
+    	
         router.attach("/", Homepage.class);
         router.attach("/api", API.class);
         router.attach("/app.js", JavaScript.class);
