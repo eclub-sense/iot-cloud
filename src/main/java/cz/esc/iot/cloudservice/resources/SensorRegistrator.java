@@ -71,9 +71,9 @@ public class SensorRegistrator extends ServerResource {
     		}
     		
 			try {
-                            System.out.println("\n\n");
-				                        System.out.println(hub_uuid);
-                                                        System.out.println("\n\n");
+                            System.out.println("\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
+                            System.out.println(hub_uuid);
+                            System.out.println("\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
 				// if hub_id == null, hub which will be associated with registered sensor has to be chosen.
 				if (hub_uuid == null) {
 					hub = chooseHubUuid(hubs);
