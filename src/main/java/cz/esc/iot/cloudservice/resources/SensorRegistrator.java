@@ -32,6 +32,7 @@ public class SensorRegistrator extends ServerResource {
 	
 	@Post
 	public void acceptRepresentation(Representation entity) throws IOException {
+            System.out.println("AHOJ________________________AHOJ");
 		if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
 			
 			// get access_token from url parameters
