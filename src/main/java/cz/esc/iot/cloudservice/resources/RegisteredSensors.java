@@ -66,11 +66,14 @@ public class RegisteredSensors extends ServerResource {
 	private String sensorAndData(Gson gson, Form form, UserEntity userEntity) {
 		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(this.getRequestAttributes().get("uuid")).get();
 		SensorAndData ret = new SensorAndData();
+		boolean setData = false;
+		
 		if (sensor == null) {
 			return null;
 		} else if (userEntity != null && sensor.getAccess().equals("private") && sensor.getUser().getId().equals(userEntity.getId())) {
 			ret.setSensor(sensor);
 			ret.setOrigin("my");
+			setData = true;
 		} else if (userEntity != null && sensor.getAccess().equals("protected")) {
 			if (sensor.getUser().getId().equals(userEntity.getId())) {
 				ret.setSensor(sensor);
@@ -85,16 +88,20 @@ public class RegisteredSensors extends ServerResource {
 				ret.setOrigin("borrowed");
 				ret.setPermission(access.getPermission());
 			}
-		} else {
+			setData = true;
+		} else if (sensor.getAccess().equals("public")) {
 			ret.setOrigin("public");
 			ret.setSensor(sensor);
+			setData = true;
 		}
-
-		SensorTypeInfo info = MorfiaSetUp.getDatastore().createQuery(SensorTypeInfo.class).field("type").equal(sensor.getType()).get();
-		for (MeasureValue value : info.getValues()) {
-			List<Data> list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).asList();
-			String ws = "ws://mlha-139.sin.cvut.cz:1337/servers/" + sensor.getHub().getUuid() + "/" + "events?topic=" + sensor.getType() + "%2F" + sensor.getUuid() + "%2F" + value.getName();
-			ret.addDataList(new DataList(value.getName(), list, ws));
+		
+		if (setData) {
+			SensorTypeInfo info = MorfiaSetUp.getDatastore().createQuery(SensorTypeInfo.class).field("type").equal(sensor.getType()).get();
+			for (MeasureValue value : info.getValues()) {
+				List<Data> list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).asList();
+				String ws = "ws://mlha-139.sin.cvut.cz:1337/servers/" + sensor.getHub().getUuid() + "/" + "events?topic=" + sensor.getType() + "%2F" + sensor.getUuid() + "%2F" + value.getName();
+				ret.addDataList(new DataList(value.getName(), list, ws));
+			}
 		}
 		return gson.toJson(ret);
 	}
