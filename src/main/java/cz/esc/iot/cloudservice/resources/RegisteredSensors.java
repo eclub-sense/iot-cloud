@@ -70,6 +70,7 @@ public class RegisteredSensors extends ServerResource {
 			return null;
 		} else if (userEntity != null && sensor.getAccess().equals("private") && sensor.getUser().getId().equals(userEntity.getId())) {
 			ret.setSensor(sensor);
+			ret.setOrigin("my");
 		} else if (userEntity != null && sensor.getAccess().equals("protected")) {
 			SensorAccessEntity access = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("sensor").equal(sensor).field("user").equal(userEntity).get();
 			if (access == null) {
@@ -77,16 +78,17 @@ public class RegisteredSensors extends ServerResource {
 				return "";
 			}
 			ret.setSensor(sensor);
+			ret.setOrigin("borrowed");
 			ret.setPermission(access.getPermission());
-		} else {
+		} else if (sensor.getAccess().equals("public")) {
+			ret.setOrigin("public");
 			ret.setSensor(sensor);
 		}
 
 		SensorTypeInfo info = MorfiaSetUp.getDatastore().createQuery(SensorTypeInfo.class).field("type").equal(sensor.getType()).get();
 		for (MeasureValue value : info.getValues()) {
 			List<Data> list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).asList();
-			String ws = "ws://mlha-139.sin.cvut.cz:1337/servers/" + sensor.getHub().getUuid() + "/" +"events?topic=" 
-	    		    + sensor.getType() + "%2F" + sensor.getUuid() + "%2F" + value.getName();
+			String ws = "ws://mlha-139.sin.cvut.cz:1337/servers/" + sensor.getHub().getUuid() + "/" + "events?topic=" + sensor.getType() + "%2F" + sensor.getUuid() + "%2F" + value.getName();
 			ret.addDataList(new DataList(value.getName(), list, ws));
 		}
 		return gson.toJson(ret);

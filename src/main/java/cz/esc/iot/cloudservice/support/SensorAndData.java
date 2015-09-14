@@ -13,10 +13,17 @@ import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
  */
 public class SensorAndData {
 
+	@Expose private String origin;
 	@Expose private String permission;
 	@Expose private SensorEntity sensor;
 	@Expose private List<DataList> measured = new LinkedList<>();
 	
+	public String getOrigin() {
+		return origin;
+	}
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
 	public String getPermission() {
 		return permission;
 	}
