@@ -25,6 +25,7 @@ public class SensorEntity {
     @Expose private String uuid;
     @Expose private String access;
     @Expose private Integer type;
+    @Expose private String description;
     @Reference
     private HubEntity hub;
     @Reference
@@ -41,11 +42,15 @@ public class SensorEntity {
 	public void setHub(HubEntity hub) {
 		this.hub = hub;
 	}
-
-	public ObjectId getId() {
-        return id;
-    }
 	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public String getAccess() {
 		return access;
 	}

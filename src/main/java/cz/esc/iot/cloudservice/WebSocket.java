@@ -169,9 +169,11 @@ public class WebSocket extends WebSocketAdapter {
     			MorfiaSetUp.getDatastore().save(hub);
         		//MorfiaSetUp.getDatastore().update(dbUser, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("hubEntities", hub, true));
         		this.hubUuid = hubUuid;
-        		if (hubUuid.charAt(0) != 'm')
+        		if (hubUuid.charAt(0) != 'm') {
         			WebSocketRegistry.add(this);
-        		Postman.sendLoginAck(this, hubUuid);
+        			Postman.sendLoginAck(this, hubUuid);
+        		} else
+        			Postman.sendLoginAck(WebSocketRegistry.getCloudSocket(), hubUuid);
     		// in case that hub's uuid is already registered in database
     		} else {
     			if (!hub.getUser().equals(dbUser)) {
