@@ -66,7 +66,7 @@ public class ShareSensor extends ServerResource {
     		// protected mode
     		if (access.equals("protected")) {
 	    		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(owner).field("uuid").equal(uuid).get();
-	    		UserEntity user = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("emails").contains(email).get();
+	    		UserEntity user = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("email").equal(email).get();
 	    		if (sensor != null && user != null) {
 	    			MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).set("access", "protected"));
 	    			SensorAccessEntity accessEntity = new SensorAccessEntity(owner, user, permission, sensor);
