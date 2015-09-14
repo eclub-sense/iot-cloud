@@ -85,7 +85,7 @@ public class RegisteredSensors extends ServerResource {
 				ret.setOrigin("borrowed");
 				ret.setPermission(access.getPermission());
 			}
-		} else if (sensor.getAccess().equals("public")) {
+		} else {
 			ret.setOrigin("public");
 			ret.setSensor(sensor);
 		}

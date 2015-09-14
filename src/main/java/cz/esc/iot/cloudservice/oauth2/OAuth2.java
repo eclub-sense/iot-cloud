@@ -55,6 +55,9 @@ public class OAuth2 {
 	public static UserEntity findUserInDatabase(String access_token) {
 		
 		AccessToken token = MorfiaSetUp.getDatastore().createQuery(AccessToken.class).field("access_token").equal(access_token).get();
+		if (token == null) {
+			return null;
+		}
 		return token.getUser();
 	}
 	
