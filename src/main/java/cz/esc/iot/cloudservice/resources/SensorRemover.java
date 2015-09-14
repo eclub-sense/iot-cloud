@@ -20,7 +20,7 @@ import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 import cz.esc.iot.cloudservice.support.WebSocketRegistry;
 
 
-public class SensorRemover  extends ServerResource {
+public class SensorRemover extends ServerResource {
 	
 	@Delete
 	public void acceptRepresentation(Representation entity) throws IOException {
@@ -53,12 +53,15 @@ public class SensorRemover  extends ServerResource {
     			System.out.println(e.getMessage());
     		}
 			
+    		// finds sensor in database
 			SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(uuid).get();
 
-			if((sensor != null) && (!sensor.getUser().getId().equals(user.getId()))) {
+			System.out.println("sensor: "+sensor);
+			
+			if ((sensor != null) && (!sensor.getUser().getId().equals(user.getId()))) {
 				getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
 				return;
-			} else if(sensor == null) {
+			} else if (sensor == null) {
 				getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
 				return;
 			}
