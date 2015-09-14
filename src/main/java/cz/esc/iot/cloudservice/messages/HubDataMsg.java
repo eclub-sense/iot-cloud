@@ -12,7 +12,7 @@ import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
  */
 public class HubDataMsg extends HubMessage {
 	
-	@Expose private static final String type = "DATA";
+	@Expose private final String type = "DATA";
 	@Expose private List<SensorEntity> data;
 	
 	public List<SensorEntity> getData() {
@@ -26,6 +26,6 @@ public class HubDataMsg extends HubMessage {
 
 	@Override
 	public String getType() {
-		return type;
+		return "DATA";
 	}
 }

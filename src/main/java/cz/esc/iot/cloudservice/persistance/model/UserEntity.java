@@ -26,6 +26,10 @@ public class UserEntity {
 		return password;
 	}
 
+	public ObjectId getId() {
+		return id;
+	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}

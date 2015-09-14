@@ -32,7 +32,6 @@ public class SensorRegistrator extends ServerResource {
 	
 	@Post
 	public void acceptRepresentation(Representation entity) throws IOException {
-            System.out.println("AHOJ________________________AHOJ");
 		if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
 			
 			// get access_token from url parameters
@@ -72,9 +71,6 @@ public class SensorRegistrator extends ServerResource {
     		}
     		
 			try {
-                            System.out.println("\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
-                            System.out.println(hub_uuid);
-                            System.out.println("\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
 				// if hub_id == null, hub which will be associated with registered sensor has to be chosen.
 				if (hub_uuid == null) {
 					hub = chooseHubUuid(hubs);
@@ -84,8 +80,10 @@ public class SensorRegistrator extends ServerResource {
 				// hub has been chosen by user - hub is smartphone
 				} else {
 					hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hub_uuid).get();
-//					socket = WebSocketRegistry.getCloudSocket();
-					socket = WebSocketRegistry.get((String)hub_uuid);
+					if (((String)hub_uuid).charAt(0) == 'm')
+						socket = WebSocketRegistry.getCloudSocket();
+					else
+						socket = WebSocketRegistry.get((String)hub_uuid);
 				}
 				
 				sensor.setHub(hub);

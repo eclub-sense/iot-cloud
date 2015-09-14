@@ -51,4 +51,10 @@ public class Postman {
 		//System.out.println(msg);
 		//System.out.println(gson.toJson(msg));
 	}
+	
+	public static void deleteSensor(WebSocket socket, SensorEntity sensor) throws IOException {
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		HubDeleteMsg msg = new HubDeleteMsg(sensor.getUuid());
+		socket.getRemote().sendString(gson.toJson(msg));
+	}
 }

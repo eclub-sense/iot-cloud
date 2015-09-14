@@ -15,6 +15,7 @@ import cz.esc.iot.cloudservice.resources.JavaScript;
 import cz.esc.iot.cloudservice.resources.RegisteredHubs;
 import cz.esc.iot.cloudservice.resources.RegisteredSensors;
 import cz.esc.iot.cloudservice.resources.SensorRegistrator;
+import cz.esc.iot.cloudservice.resources.SensorRemover;
 import cz.esc.iot.cloudservice.resources.ShareSensor;
 import cz.esc.iot.cloudservice.resources.TokenRefresher;
 import cz.esc.iot.cloudservice.resources.UserRegistrator;
@@ -72,6 +73,7 @@ public class RestletApplication extends Application {
         router.attach("/registered_hubs/{uuid}", RegisteredHubs.class);
         router.attach("/registered_hubs", RegisteredHubs.class);
         router.attach("/share_sensor", ShareSensor.class);
+        router.attach("/delete_sensor", SensorRemover.class);
         
         return router;
     }

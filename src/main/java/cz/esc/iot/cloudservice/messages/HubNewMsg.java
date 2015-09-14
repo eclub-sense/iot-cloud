@@ -18,9 +18,9 @@ public class HubNewMsg extends HubMessage {
 
 	@Override
 	public String getType() {
-		return type;
+		return "NEW";
 	}
-
+	
 	@Override
 	public String toString() {
 		return "HubNewMsg [type=" + type + ", uuid=" + uuid + "]";

@@ -6,21 +6,20 @@ import com.google.gson.annotations.Expose;
  * Class for LOGIN type messages used for verification of new hub
  * and its websocket connection.
  */
-public class HubLoginMsg extends HubMessage{
+public class HubLoginMsg extends HubMessage {
 
-	@Expose private static final String type = "LOGIN";
+	@Expose private final String type = "LOGIN";
 	@Expose private String email;
 	@Expose private String password;
 	
-	@Override
-	public String getType() {
-		return type;
-	}
 	public String getEmail() {
 		return email;
 	}
 	public String getPassword() {
 		return password;
 	}
-	
+	@Override
+	public String getType() {
+		return "LOGIN";
+	}
 }
