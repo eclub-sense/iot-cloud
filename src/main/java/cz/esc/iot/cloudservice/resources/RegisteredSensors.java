@@ -2,6 +2,7 @@ package cz.esc.iot.cloudservice.resources;
 
 import java.util.List;
 
+import org.restlet.Response;
 import org.restlet.data.Form;
 import org.restlet.data.Parameter;
 import org.restlet.data.Status;
@@ -71,7 +72,10 @@ public class RegisteredSensors extends ServerResource {
 			ret.setSensor(sensor);
 		} else if (userEntity != null && sensor.getAccess().equals("protected")) {
 			SensorAccessEntity access = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("sensor").equal(sensor).field("user").equal(userEntity).get();
-			if (access == null) return null;
+			if (access == null) {
+				getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+				return "";
+			}
 			ret.setSensor(sensor);
 			ret.setPermission(access.getPermission());
 		} else {

@@ -66,7 +66,7 @@ public class SensorRemover  extends ServerResource {
 			// delete sensor from database
 			MorfiaSetUp.getDatastore().delete(sensor);
 			
-			WebSocket socket = WebSocketRegistry.get(sensor.getUuid());
+			WebSocket socket = WebSocketRegistry.get(sensor.getHub().getUuid());
 			
 			// send message to hub
 			Postman.deleteSensor(socket, sensor);

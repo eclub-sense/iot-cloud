@@ -179,9 +179,10 @@ public class WebSocket extends WebSocketAdapter {
     			if (!hub.getUser().equals(dbUser)) {
     				getSession().close(3, "Forbidden");
     			}
-        		this.hubUuid = hubUuid;
-        		if(hubUuid.charAt(0) != 'm')
+        		if(hubUuid.charAt(0) != 'm') {
+        			this.hubUuid = hubUuid;
         			WebSocketRegistry.add(this);
+        		}
     			Postman.sendLoginAck(this, hubUuid);
         		try {
 					Postman.reregisterAllSensors(this, hubUuid);
