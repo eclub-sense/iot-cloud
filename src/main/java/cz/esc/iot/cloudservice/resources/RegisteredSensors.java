@@ -54,7 +54,7 @@ public class RegisteredSensors extends ServerResource {
 		switch (path) {
 		// returns all user's sensors
 		case "/registered_sensors" : return registeredSensors(gson, form, userEntity);
-		// returns only hub specified by its uuid
+		// returns only sensor specified by its uuid
 		default : return sensorAndData(gson, form, userEntity);
 		}
 	}
@@ -67,10 +67,13 @@ public class RegisteredSensors extends ServerResource {
 		SensorAndData ret = new SensorAndData();
 		if (sensor == null) {
 			return null;
-		} else if (userEntity != null && sensor.getAccess().equals("private") && sensor.getUser().getEmail().equals(userEntity.getEmail())) {
+		} else if (userEntity != null && sensor.getAccess().equals("private") && sensor.getUser().getId().equals(userEntity.getId())) {
 			ret.setSensor(sensor);
 		} else if (userEntity != null && sensor.getAccess().equals("protected")) {
-			// TODO verify permission
+			SensorAccessEntity access = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("sensor").equal(sensor).field("user").equal(userEntity).get();
+			if (access == null) return null;
+			ret.setSensor(sensor);
+			ret.setPermission(access.getPermission());
 		} else {
 			ret.setSensor(sensor);
 		}

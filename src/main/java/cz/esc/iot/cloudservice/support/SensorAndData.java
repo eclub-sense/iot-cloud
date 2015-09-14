@@ -13,9 +13,16 @@ import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
  */
 public class SensorAndData {
 
+	@Expose private String permission;
 	@Expose private SensorEntity sensor;
 	@Expose private List<DataList> measured = new LinkedList<>();
 	
+	public String getPermission() {
+		return permission;
+	}
+	public void setPermission(String permission) {
+		this.permission = permission;
+	}
 	public SensorEntity getSensor() {
 		return sensor;
 	}

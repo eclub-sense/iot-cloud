@@ -34,15 +34,7 @@ public class SensorAccessEntity {
     	this.owner = owner;
     	this.user = user;
     }
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
+    
     public UserEntity getOwner() {
 		return owner;
 	}
@@ -66,14 +58,6 @@ public class SensorAccessEntity {
 	public void setPermission(String permission) {
 		this.permission = permission;
 	}
-
-	public UserEntity getOwener() {
-        return owner;
-    }
-
-    public void setOwener(UserEntity owner) {
-        this.owner = owner;
-    }
 
     public SensorEntity getSensor() {
         return sensor;
