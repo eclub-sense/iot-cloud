@@ -49,7 +49,7 @@ public class RegisteredSensors extends ServerResource {
 			return "";
 		}
 		
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		Gson gson = new GsonBuilder().disableHtmlEscaping().excludeFieldsWithoutExposeAnnotation().create();
 		
 		String path = this.getRequest().getResourceRef().getPath();
 		switch (path) {
@@ -72,14 +72,19 @@ public class RegisteredSensors extends ServerResource {
 			ret.setSensor(sensor);
 			ret.setOrigin("my");
 		} else if (userEntity != null && sensor.getAccess().equals("protected")) {
-			SensorAccessEntity access = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("sensor").equal(sensor).field("user").equal(userEntity).get();
-			if (access == null) {
-				getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-				return "";
+			if (sensor.getUser().getId().equals(userEntity.getId())) {
+				ret.setSensor(sensor);
+				ret.setOrigin("my");
+			} else {
+				SensorAccessEntity access = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("sensor").equal(sensor).field("user").equal(userEntity).get();
+				if (access == null) {
+					getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+					return "";
+				}
+				ret.setSensor(sensor);
+				ret.setOrigin("borrowed");
+				ret.setPermission(access.getPermission());
 			}
-			ret.setSensor(sensor);
-			ret.setOrigin("borrowed");
-			ret.setPermission(access.getPermission());
 		} else if (sensor.getAccess().equals("public")) {
 			ret.setOrigin("public");
 			ret.setSensor(sensor);
