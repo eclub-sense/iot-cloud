@@ -1,6 +1,7 @@
 package cz.esc.iot.cloudservice.resources;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -17,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import cz.esc.iot.cloudservice.WebSocket;
+import cz.esc.iot.cloudservice.exceptions.NoHubConnectedException;
 import cz.esc.iot.cloudservice.messages.Postman;
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
@@ -93,26 +95,33 @@ public class SensorRegistrator extends ServerResource {
 				MorfiaSetUp.getDatastore().save(sensor);
 				if (socket != null)
 					Postman.registerSensor(socket, sensor);
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (NoHubConnectedException e) {
+				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+				System.out.println(e.getMessage());
 			}
 	    }
 	}
 	
 	/**
 	 * Chooses random hub with which new sensor will be associated.
-	 * @throws Exception 
+	 * @throws NoHubConnectedException
 	 */
-	private HubEntity chooseHubUuid(List<HubEntity> hubs) throws Exception {
+	private HubEntity chooseHubUuid(List<HubEntity> hubs) throws NoHubConnectedException {
+		List<HubEntity> edisons = new ArrayList<>();
+		for (HubEntity hub : hubs) {
+			if (hub.getUuid().charAt(0) != 'm')
+				edisons.add(hub);
+		}
+		
 		HubEntity[] entities = new HubEntity[hubs.size()];
 		entities = hubs.toArray(entities);
 		Random randomGenerator = new Random();
-		if (hubs.size() == 0) throw new Exception("No hub is connected. Can not connect new sensor anywhere.");
+		if (hubs.size() == 0) throw new NoHubConnectedException("No hub is connected. Can not connect new sensor anywhere.");
 		int random = randomGenerator.nextInt(hubs.size());
 		int first = random;
-		while (WebSocketRegistry.get(entities[random].getUuid()) == null || entities[random].getUuid().charAt(0) == 'm') {	
-			random = (random +1) % (WebSocketRegistry.size());
-			if (random == first) throw new Exception("No hub is connected. Can not connect new sensor anywhere.");
+		while ((entities[random].getUuid().charAt(0) == 'm') || (WebSocketRegistry.get(entities[random].getUuid()) == null)) {	
+			random = (random +1) % (hubs.size());
+			if (random == first) throw new NoHubConnectedException("No hub is connected. Can not connect new sensor anywhere.");
 		}
 		return entities[random];
 	}
