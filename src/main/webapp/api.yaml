@@ -142,33 +142,6 @@ paths:
         default:
           description: Unexpected error
 
-  /delete_sensor:
-    delete:
-      summary: Delete sensor.
-      description: |
-        Delete registered sensor according to given uuid..
-      parameters:
-        - name: access_token
-          in: query
-          description: Access token received from cloud previously.
-          required: true
-          type: string
-        - name: json
-          in: body
-          description: Sensor to be removed.
-          required: true
-          schema:
-            $ref: '#/definitions/DeleteSensorJson'
-      tags:
-        - Resource server
-      responses:
-        200:
-          description: Sensor has been deleted.
-        401:
-          description: Invalid access token or unregistered user.
-        default:
-          description: Unexpected error
-          
   /registered_sensors:
     get:
       summary: User's sensors.
@@ -231,7 +204,32 @@ paths:
           description: Invalid access token or unregistered user.
         default:
           description: Unexpected error
-  
+
+    delete:
+      summary: Delete sensor.
+      description: |
+        Delete registered sensor according to given uuid..
+      parameters:
+        - name: access_token
+          in: query
+          description: Access token received from cloud previously.
+          required: true
+          type: string
+        - name: json
+          in: path
+          description: Sensor to be removed.
+          required: true
+          type: string
+      tags:
+        - Resource server
+      responses:
+        200:
+          description: Sensor has been deleted.
+        401:
+          description: Invalid access token or unregistered user.
+        default:
+          description: Unexpected error
+        
   /share_sensor:
     post:
       summary: Shares sensor.
@@ -369,11 +367,6 @@ definitions:
         format: integer
       secret:
         type: string
-        
-  DeleteSensorJson:
-    properties:
-      uuid:
-       type: string
         
   ShareSensorJson:
     properties:

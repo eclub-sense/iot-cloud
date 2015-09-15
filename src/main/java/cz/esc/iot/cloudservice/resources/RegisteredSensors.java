@@ -1,16 +1,21 @@
 package cz.esc.iot.cloudservice.resources;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.restlet.data.Form;
 import org.restlet.data.Parameter;
 import org.restlet.data.Status;
+import org.restlet.representation.Representation;
+import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import cz.esc.iot.cloudservice.WebSocket;
+import cz.esc.iot.cloudservice.messages.Postman;
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
 import cz.esc.iot.cloudservice.persistance.model.Data;
@@ -23,11 +28,54 @@ import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 import cz.esc.iot.cloudservice.support.AllSensors;
 import cz.esc.iot.cloudservice.support.DataList;
 import cz.esc.iot.cloudservice.support.SensorAndData;
+import cz.esc.iot.cloudservice.support.WebSocketRegistry;
 
 /**
  * Return list of registered sensors. Only sensors owned by signed in user are returned.
  */
 public class RegisteredSensors extends ServerResource {
+	
+	@Delete
+	public void acceptRepresentation(Representation entity) throws IOException {
+		
+		// get access_token from url parameters
+		Form form = getRequest().getResourceRef().getQueryAsForm();
+		String access_token = form.getFirstValue("access_token");
+		if (access_token == null) {
+			getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+			return;
+		}
+			
+		// verify user
+		UserEntity user;
+		if ((user = OAuth2.findUserInDatabase(access_token)) == null) {
+			getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+			return;
+		}
+
+		String uuid = (String)this.getRequestAttributes().get("uuid");
+		
+		// finds sensor in database
+		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(uuid).get();
+
+		System.out.println("sensor: "+sensor);
+		
+		if ((sensor != null) && (!sensor.getUser().getId().equals(user.getId()))) {
+			getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+			return;
+		} else if (sensor == null) {
+			getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+			return;
+		}
+		
+		// delete sensor from database
+		MorfiaSetUp.getDatastore().delete(sensor);
+		
+		WebSocket socket = WebSocketRegistry.get(sensor.getHub().getUuid());
+		
+		// send message to hub
+		Postman.deleteSensor(socket, sensor);
+	}
 	
 	/**
 	 * Identifies user and return his sensors.

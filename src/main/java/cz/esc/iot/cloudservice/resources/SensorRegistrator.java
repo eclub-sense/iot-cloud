@@ -1,7 +1,6 @@
 package cz.esc.iot.cloudservice.resources;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -107,12 +106,6 @@ public class SensorRegistrator extends ServerResource {
 	 * @throws NoHubConnectedException
 	 */
 	private HubEntity chooseHubUuid(List<HubEntity> hubs) throws NoHubConnectedException {
-		List<HubEntity> edisons = new ArrayList<>();
-		for (HubEntity hub : hubs) {
-			if (hub.getUuid().charAt(0) != 'm')
-				edisons.add(hub);
-		}
-		
 		HubEntity[] entities = new HubEntity[hubs.size()];
 		entities = hubs.toArray(entities);
 		Random randomGenerator = new Random();
