@@ -35,6 +35,10 @@ import cz.esc.iot.cloudservice.support.WebSocketRegistry;
  */
 public class RegisteredSensors extends ServerResource {
 	
+	/**
+	 * Deletes registered sensor.
+	 * @throws IOException
+	 */
 	@Delete
 	public void acceptRepresentation(Representation entity) throws IOException {
 		
@@ -58,8 +62,6 @@ public class RegisteredSensors extends ServerResource {
 		// finds sensor in database
 		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(uuid).get();
 
-		System.out.println("sensor: "+sensor);
-		
 		if ((sensor != null) && (!sensor.getUser().getId().equals(user.getId()))) {
 			getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
 			return;
@@ -67,6 +69,10 @@ public class RegisteredSensors extends ServerResource {
 			getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
 			return;
 		}
+		
+		// delete access control list associated with sensor
+		List<SensorAccessEntity> list = MorfiaSetUp.getDatastore().find(SensorAccessEntity.class).field("sensor").equal(sensor).asList();
+		MorfiaSetUp.getDatastore().delete(list);
 		
 		// delete sensor from database
 		MorfiaSetUp.getDatastore().delete(sensor);

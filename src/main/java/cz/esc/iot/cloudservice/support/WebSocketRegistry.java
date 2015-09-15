@@ -29,6 +29,11 @@ public class WebSocketRegistry {
 		WebSocketRegistry.cloudSocket = cloudSocket;
 	}
 
+	public static void remove(String uuid) {
+		WebSocket s = WebSocketRegistry.get(uuid);
+		WebSocketRegistry.remove(s);
+	}
+	
 	public static WebSocket get(String uuid) {
 		for (WebSocket socket : sockets) {
 			if (socket.getHubUuid().equals(uuid)) {

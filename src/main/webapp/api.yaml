@@ -206,16 +206,16 @@ paths:
           description: Unexpected error
 
     delete:
-      summary: Delete sensor.
+      summary: Deletes sensor.
       description: |
-        Delete registered sensor according to given uuid..
+        Deletes registered sensor according to given uuid..
       parameters:
         - name: access_token
           in: query
           description: Access token received from cloud previously.
           required: true
           type: string
-        - name: json
+        - name: uuid
           in: path
           description: Sensor to be removed.
           required: true
@@ -310,6 +310,31 @@ paths:
         default:
           description: Unexpected error
 
+    delete:
+      summary: Deletes hub.
+      description: |
+        Deletes registered hub according to given uuid..
+      parameters:
+        - name: access_token
+          in: query
+          description: Access token received from cloud previously.
+          required: true
+          type: string
+        - name: uuid
+          in: path
+          description: Hub to be removed.
+          required: true
+          type: string
+      tags:
+        - Resource server
+      responses:
+        200:
+          description: Hub has been deleted.
+        401:
+          description: Invalid access token or unregistered user.
+        default:
+          description: Unexpected error
+    
 definitions:
 
   Token:
