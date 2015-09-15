@@ -72,8 +72,8 @@ public class RegisteredSensors extends ServerResource {
 		
 		// delete access control list associated with sensor
 		List<SensorAccessEntity> list = MorfiaSetUp.getDatastore().find(SensorAccessEntity.class).field("sensor").equal(sensor).asList();
-		System.out.println(list);
-		if (list != null)
+		System.out.println("LIST: "+list);
+		if (list.size() != 0)
 			MorfiaSetUp.getDatastore().delete(list);
 		
 		// delete sensor from database
