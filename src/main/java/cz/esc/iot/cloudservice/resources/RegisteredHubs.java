@@ -65,6 +65,9 @@ public class RegisteredHubs extends ServerResource {
 		WebSocketRegistry.remove(hub.getUuid());
 	}
 
+	/**
+	 * @return Returns list of registered hubs.
+	 */
 	@Get("json")
 	public String returnList() {
 		

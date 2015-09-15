@@ -75,7 +75,10 @@ public class ShareSensor extends ServerResource {
 	    	// public mode
     		} else if (access.equals("public")) {
     			SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(owner).field("uuid").equal(uuid).get();
-	    		if (sensor != null) {
+	    		
+    			if (sensor != null) {
+	    			if (sensor.getAccess().equals("protected"))
+	    				MorfiaSetUp.getDatastore().delete(MorfiaSetUp.getDatastore().find(SensorAccessEntity.class).field("sensor").equal(sensor));
 	    			MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).set("access", "public"));
 	    		}
     		}

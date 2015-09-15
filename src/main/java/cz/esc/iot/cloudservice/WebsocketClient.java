@@ -1,7 +1,6 @@
 package cz.esc.iot.cloudservice;
 import java.net.URI;
 import java.util.Map;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.websocket.ClientEndpointConfig;
