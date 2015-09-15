@@ -1,1 +1,1 @@
-curl -X POST http://mlha-139.sin.cvut.cz:8080/share_sensor?access_token=ya29.1QE9f-UqKLZd9TdkU19mIPLoW8xThxqBoPDTNoku3KUpc8kq8eaRHQbrnxFNDNmuhnedRw -H "Content-Type: application/json" -d '{"uuid":"'$1'","access":"public"}'
+curl -k -X POST https://mlha-139.sin.cvut.cz:8082/share_sensor?access_token="$2" -H "Content-Type: application/json" -d '{"uuid":"'$1'","access":"public"}'

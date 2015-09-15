@@ -2,7 +2,6 @@ package cz.esc.iot.cloudservice.resources;
 
 import java.util.List;
 
-import org.restlet.Response;
 import org.restlet.data.Form;
 import org.restlet.data.Parameter;
 import org.restlet.data.Status;

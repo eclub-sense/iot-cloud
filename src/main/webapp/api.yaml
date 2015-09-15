@@ -142,6 +142,33 @@ paths:
         default:
           description: Unexpected error
 
+  /delete_sensor:
+    delete:
+      summary: Delete sensor.
+      description: |
+        Delete registered sensor according to given uuid..
+      parameters:
+        - name: access_token
+          in: query
+          description: Access token received from cloud previously.
+          required: true
+          type: string
+        - name: json
+          in: body
+          description: Sensor to be removed.
+          required: true
+          schema:
+            $ref: '#/definitions/DeleteSensorJson'
+      tags:
+        - Resource server
+      responses:
+        200:
+          description: Sensor has been deleted.
+        401:
+          description: Invalid access token or unregistered user.
+        default:
+          description: Unexpected error
+          
   /registered_sensors:
     get:
       summary: User's sensors.
@@ -343,6 +370,11 @@ definitions:
       secret:
         type: string
         
+  DeleteSensorJson:
+    properties:
+      uuid:
+       type: string
+        
   ShareSensorJson:
     properties:
       uuid:
@@ -400,6 +432,12 @@ definitions:
         
   SensorAndData:
     properties:
+      origin:
+        type: string
+        description: my/borrowed/public
+      permission:
+        type: string
+        description: Only when sensor is protected.
       sensor:
         $ref: '#/definitions/Sensor'
       measured:
