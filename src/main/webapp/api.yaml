@@ -208,7 +208,7 @@ paths:
     delete:
       summary: Deletes sensor.
       description: |
-        Deletes registered sensor according to given uuid..
+        Deletes registered sensor according to given uuid.
       parameters:
         - name: access_token
           in: query
@@ -230,6 +230,37 @@ paths:
         default:
           description: Unexpected error
         
+    post:
+      summary: Writes into sensor.
+      description: |
+        Writes into registered sensor specified by given uuid.
+      parameters:
+        - name: access_token
+          in: query
+          description: Access token received from cloud previously.
+          required: true
+          type: string
+        - name: uuid
+          in: path
+          description: Writeable sensor.
+          required: true
+          type: string
+        - name: json
+          in: body
+          description: Json with defined action and it's parameters.
+          required: true
+          schema:
+            $ref: '#/definitions/WriteToSensorJson'
+      tags:
+        - Resource server
+      responses:
+        200:
+          description: Data was written into sensor.
+        401:
+          description: Invalid access token or unregistered user.
+        default:
+          description: Unexpected error
+
   /share_sensor:
     post:
       summary: Shares sensor.
@@ -337,6 +368,40 @@ paths:
     
 definitions:
 
+  WriteToSensorJson:
+    properties:
+      name:
+        type: string
+      fields:
+        type: array
+        items:
+          $ref: '#/definitions/Argument'
+  
+  PossibleAction:
+    properties:
+      name:
+        type: string
+      fields:
+        type: array
+        items:
+          $ref: '#/definitions/Parameter'
+          
+  Argument:
+    properties:
+      name:
+        type: string
+      value:
+        type: string
+  
+  Parameter:
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+      value:
+        type: string
+        
   Token:
     properties:
       access_token:
@@ -458,6 +523,10 @@ definitions:
         description: Only when sensor is protected.
       sensor:
         $ref: '#/definitions/Sensor'
+      actions:
+        type: array
+        items:
+          $ref: '#/definitions/PossibleAction'
       measured:
         type: array
         items:
@@ -466,6 +535,8 @@ definitions:
   DataList:
     properties:
       name:
+        type: string
+      websocket:
         type: string
       items:
         type: array

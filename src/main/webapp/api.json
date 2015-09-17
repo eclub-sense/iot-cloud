@@ -278,7 +278,7 @@
             },
             "delete": {
                 "summary": "Deletes sensor.",
-                "description": "Deletes registered sensor according to given uuid..\n",
+                "description": "Deletes registered sensor according to given uuid.\n",
                 "parameters": [
                     {
                         "name": "access_token",
@@ -301,6 +301,49 @@
                 "responses": {
                     "200": {
                         "description": "Sensor has been deleted."
+                    },
+                    "401": {
+                        "description": "Invalid access token or unregistered user."
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Writes into sensor.",
+                "description": "Writes into registered sensor specified by given uuid.\n",
+                "parameters": [
+                    {
+                        "name": "access_token",
+                        "in": "query",
+                        "description": "Access token received from cloud previously.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "Writeable sensor.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "json",
+                        "in": "body",
+                        "description": "Json with defined action and it's parameters.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/WriteToSensorJson"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Resource server"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data was written into sensor."
                     },
                     "401": {
                         "description": "Invalid access token or unregistered user."
@@ -459,6 +502,55 @@
         }
     },
     "definitions": {
+        "WriteToSensorJson": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "fields": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Argument"
+                    }
+                }
+            }
+        },
+        "PossibleAction": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "fields": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Parameter"
+                    }
+                }
+            }
+        },
+        "Argument": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "Parameter": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
         "Token": {
             "properties": {
                 "access_token": {
@@ -625,6 +717,12 @@
                 "sensor": {
                     "$ref": "#/definitions/Sensor"
                 },
+                "actions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PossibleAction"
+                    }
+                },
                 "measured": {
                     "type": "array",
                     "items": {
@@ -636,6 +734,9 @@
         "DataList": {
             "properties": {
                 "name": {
+                    "type": "string"
+                },
+                "websocket": {
                     "type": "string"
                 },
                 "items": {

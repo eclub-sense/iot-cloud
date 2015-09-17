@@ -13,6 +13,7 @@ import cz.esc.iot.cloudservice.persistance.model.SensorTypeInfo;
 public class SensorInfoAdder {
 
 	public static void main(String[] args) {
+
 		// A_LEDS
 		List<MeasureValue> list2 = new LinkedList<>();
 		list2.add(new MeasureValue("temperature", "°C"));
@@ -161,16 +162,31 @@ public class SensorInfoAdder {
 		System.out.println(MorfiaSetUp.getDatastore());
 		MorfiaSetUp.getDatastore().save(info2);
 		
-		/*// pir
+		// esc_accel
 		list2.clear();
-		list2.add(new MeasureValue("temperature", "°C"));
-		list2.add(new MeasureValue("humudity", "%"));
-		list2.add(new MeasureValue("pressure", "Pa"));
+		list2.add(new MeasureValue("accX", null));
+		list2.add(new MeasureValue("accY", null));
+		list2.add(new MeasureValue("accZ", null));
 		list2.add(new MeasureValue("increment", null));
+		list2.add(new MeasureValue("vbat", "mV"));
+		info2 = new SensorTypeInfo(89, "esc_accelerometer", list2, "esc_accelerometer-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
+		
+		// esc_pir
+		list2.clear();
+		list2.add(new MeasureValue("pir", null));
 		list2.add(new MeasureValue("vbat", "mV"));
 		list2.add(new MeasureValue("rssi", "dBm"));
 		info2 = new SensorTypeInfo(129, "esc_pir", list2, "esc_pir-driver");
 		System.out.println(MorfiaSetUp.getDatastore());
-		MorfiaSetUp.getDatastore().save(info2);*/
+		MorfiaSetUp.getDatastore().save(info2);
+		
+		// esc_lcd
+		list2.clear();		
+		list2.add(new MeasureValue("state", null));
+		info2 = new SensorTypeInfo(123, "esc_lcd", list2, "esc_lcd-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
 	}
 }

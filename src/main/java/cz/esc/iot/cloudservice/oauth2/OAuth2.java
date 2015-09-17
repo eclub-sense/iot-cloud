@@ -61,7 +61,6 @@ public class OAuth2 {
 		return token.getUser();
 	}
 	
-	
 	public static GoogleIdToken.Payload getGoogleUserFromIdToken(String idToken) {
 	      Checker checker = new Checker(new String[]{clientID}, clientID);
 	      GoogleIdToken.Payload jwt = checker.check(idToken);
