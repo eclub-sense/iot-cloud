@@ -217,6 +217,14 @@
                         "description": "Values can be my, borrowed or public.",
                         "required": false,
                         "type": "string"
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Sensor type.",
+                        "required": false,
+                        "type": "number",
+                        "format": "integer"
                     }
                 ],
                 "tags": [
@@ -241,7 +249,7 @@
         "/registered_sensors/{uuid}": {
             "get": {
                 "summary": "Concrete sensor and it's measured data.",
-                "description": "Returns information about sensor with given uuid and it's measured values. In future, parameter enabling filtering data according to age should be added.\n",
+                "description": "Returns information about sensor with given uuid and it's measured values.\n",
                 "parameters": [
                     {
                         "name": "access_token",
@@ -255,6 +263,20 @@
                         "in": "path",
                         "description": "Uuid of choosen sensor.",
                         "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "Lower bound of time interval. Date is in format \"yyyy-MM-dd'T'HH:mm\".",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "Upper bound of time interval. Date is in format \"yyyy-MM-dd'T'HH:mm\".",
+                        "required": false,
                         "type": "string"
                     }
                 ],

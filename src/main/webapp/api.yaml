@@ -160,11 +160,17 @@ paths:
           description: Only sensors associated with given hub's uuid are returned.
           required: false
           type: string
-        - name: access
+        - name: origin
           in: query
           description: Values can be my, borrowed or public.
           required: false
           type: string
+        - name: type
+          in: query
+          description: Sensor type.
+          required: false
+          type: number
+          format: integer
       tags:
         - Resource server
       responses:
@@ -181,7 +187,7 @@ paths:
     get:
       summary: Concrete sensor and it's measured data.
       description: |
-        Returns information about sensor with given uuid and it's measured values. In future, parameter enabling filtering data according to age should be added.
+        Returns information about sensor with given uuid and it's measured values.
       parameters:
         - name: access_token
           in: query
@@ -192,6 +198,16 @@ paths:
           in: path
           description: Uuid of choosen sensor.
           required: true
+          type: string
+        - name: from
+          in: query
+          description: Lower bound of time interval. Date is in format "yyyy-MM-dd'T'HH:mm".
+          required: false
+          type: string
+        - name: from
+          in: query
+          description: Upper bound of time interval. Date is in format "yyyy-MM-dd'T'HH:mm".
+          required: false
           type: string
       tags:
         - Resource server

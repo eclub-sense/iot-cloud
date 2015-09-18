@@ -1,8 +1,12 @@
 package cz.esc.iot.cloudservice.resources;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import org.mongodb.morphia.query.Query;
 import org.restlet.data.Form;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -139,9 +143,10 @@ public class RegisteredSensors extends ServerResource {
 	/**
 	 * Identifies user and return his sensors.
 	 * @throws IOException 
+	 * @throws ParseException 
 	 */
 	@Get("json")
-	public String returnList() throws IOException {
+	public String returnList() throws IOException, ParseException {
 		
 		// get access_token from url parameters
 		Form form = getRequest().getResourceRef().getQueryAsForm();
@@ -170,8 +175,27 @@ public class RegisteredSensors extends ServerResource {
 	/**
 	 * @return Returns JSON where is info about sensor and it's measured data.
 	 * @throws IOException 
+	 * @throws ParseException 
 	 */
-	private String sensorAndData(Gson gson, Form form, UserEntity userEntity) throws IOException {
+	private String sensorAndData(Gson gson, Form form, UserEntity userEntity) throws IOException, ParseException {
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+		Date current = new Date();
+		Date from = new Date(0);
+		Date to = current;
+		
+		for (org.restlet.data.Parameter parameter : form) {
+			if (parameter.getName().equals("from")) {
+				if (parameter.getValue().equals("now"))
+					from = current;
+				else {
+					from = formatter.parse(parameter.getValue());
+				}
+			} else if (parameter.getName().equals("to")) {
+				from = formatter.parse(parameter.getValue());
+			}
+		}
+		
 		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(this.getRequestAttributes().get("uuid")).get();
 		SensorAndData ret = new SensorAndData();
 		
@@ -213,7 +237,7 @@ public class RegisteredSensors extends ServerResource {
 		// TODO get measuring values from siren not from database
 		SensorTypeInfo info = MorfiaSetUp.getDatastore().createQuery(SensorTypeInfo.class).field("type").equal(sensor.getType()).get();
 		for (MeasureValue value : info.getValues()) {
-			List<Data> list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).asList();
+			List<Data> list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).field("time").greaterThanOrEq(from).field("time").lessThanOrEq(to).asList();
 			String ws = "ws://mlha-139.sin.cvut.cz:1337/servers/" + sensor.getHub().getUuid() + "/" + "events?topic=" + sensor.getType() + "%2F" + sensor.getUuid() + "%2F" + value.getName();
 			ret.addDataList(new DataList(value.getName(), list, ws));
 		}
@@ -225,15 +249,11 @@ public class RegisteredSensors extends ServerResource {
 	 * Reads parameters and filter result according to them.
 	 */
 	private String registeredSensors(Gson gson, Form form, UserEntity userEntity) {
-		if (userEntity == null) {
-			AllSensors sensors = new AllSensors();
-			List<SensorEntity> _public = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").asList();
-			sensors.set_public(_public);
-			return gson.toJson(sensors);
-		}
 		
 		String hubID = null;
 		String origin = null;
+		int type = -1;
+		
 		HubEntity hub = null;
 		
 		for (org.restlet.data.Parameter parameter : form) {
@@ -242,63 +262,68 @@ public class RegisteredSensors extends ServerResource {
 				hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(userEntity).field("uuid").equal(hubID).get();
 			} else if (parameter.getName().equals("origin")) {
 				origin = parameter.getValue();
+			} else if (parameter.getName().equals("type")) {
+				type = Integer.parseInt(parameter.getValue());
 			}
 		}
 		
 		AllSensors sensors = new AllSensors();
-		if (origin != null) {
-			if (origin.equals("my"))
-				sensors.setMy(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("hub").equal(hub).asList());
-			else if (origin.equals("borrowed"))
-				sensors.setBorrowed(MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("user").equal(userEntity).asList());
-			else if (origin.equals("public"))
-				sensors.set_public(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity).asList());
-		} else {
-			List<SensorEntity> my = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("hub").equal(hub).asList();
-			List<SensorAccessEntity> borrowed = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("user").equal(userEntity).asList();
-			List<SensorEntity> _public = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity).asList();
-			sensors.setMy(my);
-			sensors.setBorrowed(borrowed);
-			sensors.set_public(_public);
-		}
-		return gson.toJson(sensors);
-		
-		
-/*
-		// without parameter
-		if (origin == null && hubID == null) {
-			AllSensors sensors = new AllSensors();
-			List<SensorEntity> my = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).asList();
-			List<SensorAccessEntity> borrowed = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("user").equal(userEntity).asList();
-			List<SensorEntity> _public = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").asList();
-			sensors.setMy(my);
-			sensors.setBorrowed(borrowed);
+		if (userEntity == null) {
+			List<SensorEntity> _public = publicQuery(hub, userEntity, type).asList();
 			sensors.set_public(_public);
 			return gson.toJson(sensors);
-			
-		// parameter hubID
-		} else if (origin == null) {
-			HubEntity hubEntity = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(userEntity).field("uuid").equal(hubID).get();
-			if (hubEntity == null) {
-				return "[]";
-			} else {
-				return gson.toJson(MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("hub").equal(hubEntity).asList());
-			}
-			
-		// parameter access
-		} else if (hubID == null) {
-			if (origin.equals("my")) {
-				return gson.toJson(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).asList());
-			} else if (origin.equals("borrowed")) {
-				return gson.toJson(MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("user").equal(userEntity).asList());
-			}
-			
-		// parameters access and hubID
-		} else {
-			// TODO
-			return null;
 		}
-		*/
-		//return null;
+		if (origin != null) {
+			if (origin.equals("my"))
+				sensors.setMy(myQuery(hub, userEntity, type).asList());
+			else if (origin.equals("borrowed"))
+				sensors.setBorrowed(borrowedQuery(hub, userEntity, type).asList());
+			else if (origin.equals("public"))
+				sensors.set_public(publicQuery(hub, userEntity, type).asList());
+		} else {
+			sensors.setMy(myQuery(hub, userEntity, type).asList());
+			sensors.setBorrowed(borrowedQuery(hub, userEntity, type).asList());
+			sensors.set_public(publicQuery(hub, userEntity, type).asList());
+		}
+		return gson.toJson(sensors);
+	}
+	
+	private Query<SensorEntity> myQuery(HubEntity hub, UserEntity userEntity, int type) {
+		Query<SensorEntity> myQuery = null;
+		if (hub == null && type == -1)
+			myQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity);
+		else if (hub != null && type == -1)
+			myQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("hub").equal(hub);
+		else if (hub == null && type != -1)
+			myQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("type").equal(type);
+		else
+			myQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("type").equal(type).field("hub").equal(hub);
+		return myQuery;
+	}
+	
+	private Query<SensorAccessEntity> borrowedQuery(HubEntity hub, UserEntity userEntity, int type) {
+		List<SensorEntity> protectedSensors = null;
+		if (hub == null && type == -1)
+			protectedSensors = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("protected").asList();
+		else if (hub != null && type == -1)
+			protectedSensors = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("protected").field("hub").equal(hub).asList();
+		else if (hub == null && type != -1)
+			protectedSensors = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("protected").field("type").equal(type).asList();
+		else
+			protectedSensors = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("protected").field("type").equal(type).field("hub").equal(hub).asList();
+		return MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("user").equal(userEntity).field("sensor").in(protectedSensors);
+	}
+	
+	private Query<SensorEntity> publicQuery(HubEntity hub, UserEntity userEntity, int type) {
+		Query<SensorEntity> publicQuery = null;
+		if (hub == null && type == -1)
+			publicQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity);
+		else if (hub != null && type == -1)
+			publicQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity).field("hub").equal(hub);
+		else if (hub == null && type != -1)
+			publicQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity).field("type").equal(type);
+		else
+			publicQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity).field("type").equal(type).field("hub").equal(hub);
+		return publicQuery;
 	}
 }
