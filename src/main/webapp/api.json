@@ -268,12 +268,12 @@
                     {
                         "name": "from",
                         "in": "query",
-                        "description": "Lower bound of time interval. Date is in format \"yyyy-MM-dd'T'HH:mm\".",
+                        "description": "Either lower bound of time interval (in format \"yyyy-MM-dd'T'HH:mm\") or \"-time in miliseconds\".",
                         "required": false,
                         "type": "string"
                     },
                     {
-                        "name": "from",
+                        "name": "to",
                         "in": "query",
                         "description": "Upper bound of time interval. Date is in format \"yyyy-MM-dd'T'HH:mm\".",
                         "required": false,

@@ -185,9 +185,12 @@ public class RegisteredSensors extends ServerResource {
 		Date to = current;
 		
 		for (org.restlet.data.Parameter parameter : form) {
-			if (parameter.getName().equals("from")) 
-				from = formatter.parse(parameter.getValue());
-			else if (parameter.getName().equals("to")) {
+			if (parameter.getName().equals("from")) {
+				if (parameter.getValue().charAt(0) == '-')
+					from = new Date(current.getTime() + Long.parseLong(parameter.getValue()));
+				else
+					from = formatter.parse(parameter.getValue());
+			} else if (parameter.getName().equals("to")) {
 				to = formatter.parse(parameter.getValue());
 			}
 		}
@@ -259,6 +262,10 @@ public class RegisteredSensors extends ServerResource {
 			if (parameter.getName().equals("hubID")) {
 				hubID = parameter.getValue();
 				hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(userEntity).field("uuid").equal(hubID).get();
+				if (hubID == null) {
+					getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+					return "";
+				}
 			} else if (parameter.getName().equals("origin")) {
 				origin = parameter.getValue();
 			} else if (parameter.getName().equals("type")) {
