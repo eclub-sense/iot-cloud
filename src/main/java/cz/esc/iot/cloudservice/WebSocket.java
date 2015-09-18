@@ -90,11 +90,13 @@ public class WebSocket extends WebSocketAdapter {
     	SensorTypeInfo typeInfo = MorfiaSetUp.getDatastore().createQuery(SensorTypeInfo.class).field("type").equal(sensor.getType()).get();
     	//System.out.println("info: "+typeInfo);
     	// example url: "ws://127.0.0.1:1337/servers/1111/events?topic=photocell%2F3afc5cd4-755f-422d-8585-c8d526af8e85%2Fintensity"
+    	
+    	// TODO get first values without ws
+    	// TODO get measuring values from siren not from database
     	for (MeasureValue value : typeInfo.getValues()) {
     		System.out.println(value);
     		String url = "ws://127.0.0.1:1337/servers/" + message.getUuid() + "/" +"events?topic=" 
     		    + sensor.getType() + "%2F" + message.getSensorId() + "%2F" + value.getName();
-    		// TODO get first values without ws
     		System.out.println(url);
     		System.out.println("local: " + this.getSession().getLocalAddress().getHostString());
     		System.out.println("remote: " + this.getSession().getRemoteAddress().getHostString());

@@ -1,7 +1,6 @@
 package cz.esc.iot.cloudservice.resources;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.restlet.data.Form;
 import org.restlet.data.Status;
@@ -92,12 +91,7 @@ public class RegisteredHubs extends ServerResource {
 		
 		switch (path) {
 		// returns all user's hubs
-		case "/registered_hubs" : 
-			List<HubEntity> hubs = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(user).asList();
-			if (hubs.size() == 0)
-				return "no hub";
-			else
-				return gson.toJson(hubs);
+		case "/registered_hubs" : return gson.toJson(MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(user).asList());
 		// returns only hub specified by its uuid
 		default : return gson.toJson(MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(user).field("uuid").equal(this.getRequestAttributes().get("uuid")).get());
 		}

@@ -82,7 +82,7 @@ public class RegisteredSensors extends ServerResource {
 		// do the action
 		ClientResource client = new ClientResource("http://127.0.0.1:1337/servers/" + sensor.getHub().getUuid() + "/devices/" + sensor.getUuid());
 		Form formular = new Form();
-		formular.set("action", action.getName());
+		//formular.set("action", action.getName());
 		for (Parameter param : action.getFields()) {
 			formular.set(param.getName(), param.getValue());
 		}
@@ -174,14 +174,12 @@ public class RegisteredSensors extends ServerResource {
 	private String sensorAndData(Gson gson, Form form, UserEntity userEntity) throws IOException {
 		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(this.getRequestAttributes().get("uuid")).get();
 		SensorAndData ret = new SensorAndData();
-		boolean setData = false;
 		
 		if (sensor == null) {
 			return null;
 		} else if (userEntity != null && sensor.getAccess().equals("private") && sensor.getUser().getId().equals(userEntity.getId())) {
 			ret.setSensor(sensor);
 			ret.setOrigin("my");
-			setData = true;
 		} else if (userEntity != null && sensor.getAccess().equals("protected")) {
 			if (sensor.getUser().getId().equals(userEntity.getId())) {
 				ret.setSensor(sensor);
@@ -196,29 +194,30 @@ public class RegisteredSensors extends ServerResource {
 				ret.setOrigin("borrowed");
 				ret.setPermission(access.getPermission());
 			}
-			setData = true;
 		} else if (sensor.getAccess().equals("public")) {
 			ret.setOrigin("public");
 			ret.setSensor(sensor);
-			setData = true;
+		} else {
+			getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+			return "";
 		}
 		
-		if (setData) {
-			// set possible actions
-			ClientResource client = new ClientResource("http://127.0.0.1:1337/servers/" + sensor.getHub().getUuid() + "/devices/" + sensor.getUuid());
-			Representation rep = client.get();
-			String siren = rep.getText();
-			Actions actions = gson.fromJson(siren, Actions.class);
-			ret.setActions(actions.getActions());
-			
-			// set measured values
-			SensorTypeInfo info = MorfiaSetUp.getDatastore().createQuery(SensorTypeInfo.class).field("type").equal(sensor.getType()).get();
-			for (MeasureValue value : info.getValues()) {
-				List<Data> list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).asList();
-				String ws = "ws://mlha-139.sin.cvut.cz:1337/servers/" + sensor.getHub().getUuid() + "/" + "events?topic=" + sensor.getType() + "%2F" + sensor.getUuid() + "%2F" + value.getName();
-				ret.addDataList(new DataList(value.getName(), list, ws));
-			}
+		// set possible actions
+		ClientResource client = new ClientResource("http://127.0.0.1:1337/servers/" + sensor.getHub().getUuid() + "/devices/" + sensor.getUuid());
+		Representation rep = client.get();
+		String siren = rep.getText();
+		Actions actions = gson.fromJson(siren, Actions.class);
+		ret.setActions(actions.getActions());
+		
+		// set measured values
+		// TODO get measuring values from siren not from database
+		SensorTypeInfo info = MorfiaSetUp.getDatastore().createQuery(SensorTypeInfo.class).field("type").equal(sensor.getType()).get();
+		for (MeasureValue value : info.getValues()) {
+			List<Data> list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).asList();
+			String ws = "ws://mlha-139.sin.cvut.cz:1337/servers/" + sensor.getHub().getUuid() + "/" + "events?topic=" + sensor.getType() + "%2F" + sensor.getUuid() + "%2F" + value.getName();
+			ret.addDataList(new DataList(value.getName(), list, ws));
 		}
+
 		return gson.toJson(ret);
 	}
 	
@@ -234,17 +233,38 @@ public class RegisteredSensors extends ServerResource {
 		}
 		
 		String hubID = null;
-		String access = null;
+		String origin = null;
+		
 		for (org.restlet.data.Parameter parameter : form) {
 			if (parameter.getName().equals("hubID")) {
 				hubID = parameter.getValue();
 			} else if (parameter.getName().equals("access")) {
-				access = parameter.getValue();
+				origin = parameter.getValue();
 			}
 		}
-
+		
+		AllSensors sensors = new AllSensors();
+		if (origin != null) {
+			if (origin.equals("my"))
+				sensors.setMy(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("hub.uuid").equal(hubID).asList());
+			else if (origin.equals("borrowed"))
+				sensors.setBorrowed(MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("user").equal(userEntity).asList());
+			else if (origin.equals("public"))
+				sensors.set_public(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity).asList());
+		} else {
+			List<SensorEntity> my = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("hub.uuid").equal(hubID).asList();
+			List<SensorAccessEntity> borrowed = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("user").equal(userEntity).asList();
+			List<SensorEntity> _public = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity).asList();
+			sensors.setMy(my);
+			sensors.setBorrowed(borrowed);
+			sensors.set_public(_public);
+		}
+		return gson.toJson(sensors);
+		
+		
+/*
 		// without parameter
-		if (access == null && hubID == null) {
+		if (origin == null && hubID == null) {
 			AllSensors sensors = new AllSensors();
 			List<SensorEntity> my = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).asList();
 			List<SensorAccessEntity> borrowed = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("user").equal(userEntity).asList();
@@ -255,7 +275,7 @@ public class RegisteredSensors extends ServerResource {
 			return gson.toJson(sensors);
 			
 		// parameter hubID
-		} else if (access == null) {
+		} else if (origin == null) {
 			HubEntity hubEntity = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(userEntity).field("uuid").equal(hubID).get();
 			if (hubEntity == null) {
 				return "[]";
@@ -265,9 +285,9 @@ public class RegisteredSensors extends ServerResource {
 			
 		// parameter access
 		} else if (hubID == null) {
-			if (access.equals("my")) {
+			if (origin.equals("my")) {
 				return gson.toJson(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).asList());
-			} else if (access.equals("borrowed")) {
+			} else if (origin.equals("borrowed")) {
 				return gson.toJson(MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("user").equal(userEntity).asList());
 			}
 			
@@ -276,6 +296,7 @@ public class RegisteredSensors extends ServerResource {
 			// TODO
 			return null;
 		}
-		return null;
+		*/
+		//return null;
 	}
 }
