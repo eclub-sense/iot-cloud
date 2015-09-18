@@ -185,14 +185,10 @@ public class RegisteredSensors extends ServerResource {
 		Date to = current;
 		
 		for (org.restlet.data.Parameter parameter : form) {
-			if (parameter.getName().equals("from")) {
-				if (parameter.getValue().equals("now"))
-					from = current;
-				else {
-					from = formatter.parse(parameter.getValue());
-				}
-			} else if (parameter.getName().equals("to")) {
+			if (parameter.getName().equals("from")) 
 				from = formatter.parse(parameter.getValue());
+			else if (parameter.getName().equals("to")) {
+				to = formatter.parse(parameter.getValue());
 			}
 		}
 		
@@ -226,12 +222,15 @@ public class RegisteredSensors extends ServerResource {
 			return "";
 		}
 		
-		// set possible actions
-		ClientResource client = new ClientResource("http://127.0.0.1:1337/servers/" + sensor.getHub().getUuid() + "/devices/" + sensor.getUuid());
-		Representation rep = client.get();
-		String siren = rep.getText();
-		Actions actions = gson.fromJson(siren, Actions.class);
-		ret.setActions(actions.getActions());
+		WebSocket socket = WebSocketRegistry.get(sensor.getHub().getUuid());
+		if (socket != null) {
+			// set possible actions
+			ClientResource client = new ClientResource("http://127.0.0.1:1337/servers/" + sensor.getHub().getUuid() + "/devices/" + sensor.getUuid());
+			Representation rep = client.get();
+			String siren = rep.getText();
+			Actions actions = gson.fromJson(siren, Actions.class);
+			ret.setActions(actions.getActions());
+		}
 		
 		// set measured values
 		// TODO get measuring values from siren not from database
