@@ -234,11 +234,13 @@ public class RegisteredSensors extends ServerResource {
 		
 		String hubID = null;
 		String origin = null;
+		HubEntity hub = null;
 		
 		for (org.restlet.data.Parameter parameter : form) {
 			if (parameter.getName().equals("hubID")) {
 				hubID = parameter.getValue();
-			} else if (parameter.getName().equals("access")) {
+				hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(userEntity).field("uuid").equal(hubID).get();
+			} else if (parameter.getName().equals("origin")) {
 				origin = parameter.getValue();
 			}
 		}
@@ -246,13 +248,13 @@ public class RegisteredSensors extends ServerResource {
 		AllSensors sensors = new AllSensors();
 		if (origin != null) {
 			if (origin.equals("my"))
-				sensors.setMy(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("hub.uuid").equal(hubID).asList());
+				sensors.setMy(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("hub").equal(hub).asList());
 			else if (origin.equals("borrowed"))
 				sensors.setBorrowed(MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("user").equal(userEntity).asList());
 			else if (origin.equals("public"))
 				sensors.set_public(MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity).asList());
 		} else {
-			List<SensorEntity> my = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("hub.uuid").equal(hubID).asList();
+			List<SensorEntity> my = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").equal(userEntity).field("hub").equal(hub).asList();
 			List<SensorAccessEntity> borrowed = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("user").equal(userEntity).asList();
 			List<SensorEntity> _public = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity).asList();
 			sensors.setMy(my);

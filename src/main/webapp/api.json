@@ -212,7 +212,7 @@
                         "type": "string"
                     },
                     {
-                        "name": "access",
+                        "name": "origin",
                         "in": "query",
                         "description": "Values can be my, borrowed or public.",
                         "required": false,
