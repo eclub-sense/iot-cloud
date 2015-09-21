@@ -19,6 +19,7 @@ public class HubEntity {
     private ObjectId id;
     @Indexed(unique = true)
     @Expose private String uuid;
+    @Expose private String status;
     @Reference
     private UserEntity user;
 
@@ -30,7 +31,15 @@ public class HubEntity {
         return id;
     }
 
-    public UserEntity getUser() {
+    public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public UserEntity getUser() {
 		return user;
 	}
 

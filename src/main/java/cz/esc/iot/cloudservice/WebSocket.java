@@ -127,25 +127,16 @@ public class WebSocket extends WebSocketAdapter {
      * Verifying user after LOGIN message was obtained.
      */
     private void verifyConnection(HubMessage message) {
-    	//System.out.println(message);
     	String hubMail = ((HubLoginMsg)message).getEmail();
-    	//String hubAccessToken = ((HubLoginMsg)message).getAccess_token();
     	String hubUuid = ((HubLoginMsg)message).getUuid();
     	String hubPassword = ((HubLoginMsg)message).getPassword();
-		
-    	// verify user
-		/*GoogleUserInfo googleUser = null;
-		try {
-			googleUser = OAuth2.getGoogleUser(hubAccessToken);
-		} catch (JsonSyntaxException | IOException e1) {
-			getSession().close(3, "Forbidden");
-		}*/
-    	
+
     	if (hubMail.equals("admin") && WebSocketRegistry.getCloudSocket() == null) {
 			HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hubUuid).get();
 			if (hub == null) {
 				hub = new HubEntity();
 				hub.setUuid(hubUuid);
+				hub.setStatus("connected");
 				MorfiaSetUp.getDatastore().save(hub);
 			}
     		this.hubUuid = hubUuid;
@@ -168,8 +159,8 @@ public class WebSocket extends WebSocketAdapter {
     			hub = new HubEntity();
     			hub.setUuid(hubUuid);
     			hub.setUser(dbUser);
+    			hub.setStatus("connected");
     			MorfiaSetUp.getDatastore().save(hub);
-        		//MorfiaSetUp.getDatastore().update(dbUser, MorfiaSetUp.getDatastore().createUpdateOperations(UserEntity.class).add("hubEntities", hub, true));
         		this.hubUuid = hubUuid;
         		if (hubUuid.charAt(0) != 'm') {
         			WebSocketRegistry.add(this);
@@ -181,6 +172,7 @@ public class WebSocket extends WebSocketAdapter {
     			if (!hub.getUser().equals(dbUser)) {
     				getSession().close(3, "Forbidden");
     			}
+    			MorfiaSetUp.getDatastore().update(hub, MorfiaSetUp.getDatastore().createUpdateOperations(HubEntity.class).set("status", "connected"));
         		if(hubUuid.charAt(0) != 'm') {
         			this.hubUuid = hubUuid;
         			WebSocketRegistry.add(this);
@@ -202,10 +194,12 @@ public class WebSocket extends WebSocketAdapter {
     
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
+    	HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(this.hubUuid).get();
     	if (this.hubUuid.equals("00000000"))
     		WebSocketRegistry.setCloudSocket(null);
     	else
     		WebSocketRegistry.remove(this);
+    	MorfiaSetUp.getDatastore().update(hub, MorfiaSetUp.getDatastore().createUpdateOperations(HubEntity.class).set("status", "disconnected"));
         map.remove(this.hubUuid);
         super.onWebSocketClose(statusCode,reason);
         System.out.println("Socket Closed: [" + statusCode + "] " + reason);
