@@ -452,7 +452,7 @@
         "/registered_hubs/{uuid}": {
             "get": {
                 "summary": "Concrete hub.",
-                "description": "Returns info about hub with given uuid. Now it returns only uuid (it's for nothing), later there will be also at least status (online/offline).\n",
+                "description": "Returns info about hub with given uuid.\n",
                 "parameters": [
                     {
                         "name": "access_token",
@@ -672,6 +672,10 @@
             "properties": {
                 "uuid": {
                     "type": "string"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Either \"connected\" or \"disconnected\"."
                 }
             }
         },
