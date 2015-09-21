@@ -140,6 +140,7 @@ public class WebSocket extends WebSocketAdapter {
 				MorfiaSetUp.getDatastore().save(hub);
 			}
     		this.hubUuid = hubUuid;
+    		MorfiaSetUp.getDatastore().update(hub, MorfiaSetUp.getDatastore().createUpdateOperations(HubEntity.class).set("status", "connected"));
     		WebSocketRegistry.setCloudSocket(this);
     		Postman.sendLoginAck(this, hubUuid);
     		verified = true;
