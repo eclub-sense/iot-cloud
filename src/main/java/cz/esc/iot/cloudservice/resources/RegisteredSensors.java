@@ -233,8 +233,8 @@ public class RegisteredSensors extends ServerResource {
 			String siren = rep.getText();
 			Actions actions = gson.fromJson(siren, Actions.class);
 			ret.setActions(actions.getActions());
-		}
-		
+		} else 
+			ret.setActions(null);
 		// set measured values
 		// TODO get measuring values from siren not from database
 		SensorTypeInfo info = MorfiaSetUp.getDatastore().createQuery(SensorTypeInfo.class).field("type").equal(sensor.getType()).get();
