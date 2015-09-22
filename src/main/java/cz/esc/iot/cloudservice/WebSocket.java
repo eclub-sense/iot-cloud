@@ -63,13 +63,7 @@ public class WebSocket extends WebSocketAdapter {
 		// Continue according to message type...
 		
         if (message.getType().equals("DATA") && verified == true) {
-        	/*List<SensorEntity> sensors = ((HubDataMsg)message).getData();
-        	for (SensorEntity s : sensors) {
-        		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(s.getUuid()).get();
-        		System.out.println(sensor);
-        		MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).unset("measured"));
-        		MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).addAll("measured", s.getData(), true));
-        	}*/
+        	// UNSUPPORTED
         } else if (message.getType().equals("LOGIN")) {
         	verifyConnection(message);
         } else if (message.getType().equals("DISCOVERED") && verified == true) {
@@ -86,9 +80,8 @@ public class WebSocket extends WebSocketAdapter {
      */
     private void startStoringIntoDb(HubDiscoveredMsg message) {
     	SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(message.getSensorUuid()).get();
-    	//System.out.println("sen: "+sensor);
     	SensorTypeInfo typeInfo = MorfiaSetUp.getDatastore().createQuery(SensorTypeInfo.class).field("type").equal(sensor.getType()).get();
-    	//System.out.println("info: "+typeInfo);
+    	
     	// example url: "ws://127.0.0.1:1337/servers/1111/events?topic=photocell%2F3afc5cd4-755f-422d-8585-c8d526af8e85%2Fintensity"
     	
     	// TODO get first values without ws
@@ -98,8 +91,6 @@ public class WebSocket extends WebSocketAdapter {
     		String url = "ws://127.0.0.1:1337/servers/" + message.getUuid() + "/" +"events?topic=" 
     		    + sensor.getType() + "%2F" + message.getSensorId() + "%2F" + value.getName();
     		System.out.println(url);
-    		System.out.println("local: " + this.getSession().getLocalAddress().getHostString());
-    		System.out.println("remote: " + this.getSession().getRemoteAddress().getHostString());
     		try {
                 WebsocketClient clientEndPoint = new WebsocketClient(new URI(url));
                 clientEndPoint.addMsgHandler(new WebsocketClient.MsgHandler() {
@@ -112,9 +103,8 @@ public class WebSocket extends WebSocketAdapter {
                     	data.setValue(measured);
                     	data.setTime(new Date());
                     	data.setSensor(sensor);
-                    	System.out.println(data);
+                    	//System.out.println(data);
                     	MorfiaSetUp.getDatastore().save(data);
-                    	//MorfiaSetUp.getDatastore().update(sensor, MorfiaSetUp.getDatastore().createUpdateOperations(SensorEntity.class).add("measured", data));
                     }
                 });
             } catch (URISyntaxException ex) {
@@ -131,7 +121,7 @@ public class WebSocket extends WebSocketAdapter {
     	String hubUuid = ((HubLoginMsg)message).getUuid();
     	String hubPassword = ((HubLoginMsg)message).getPassword();
 
-    	if (hubMail.equals("admin") && WebSocketRegistry.getCloudSocket() == null) {
+    	if (hubMail.equals("admin") && hubPassword.equals("") && WebSocketRegistry.getCloudSocket() == null) {
 			HubEntity hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hubUuid).get();
 			if (hub == null) {
 				hub = new HubEntity();
@@ -147,7 +137,7 @@ public class WebSocket extends WebSocketAdapter {
     		return;
     	}
 		UserEntity dbUser = MorfiaSetUp.getDatastore().createQuery(UserEntity.class).field("email").equal(hubMail).field("password").equal(hubPassword).get();
-		System.out.println(dbUser);
+		System.out.println("User: " + dbUser);
 		if (dbUser == null) {
 			getSession().close(3, "Forbidden");
 		}
@@ -204,7 +194,6 @@ public class WebSocket extends WebSocketAdapter {
         map.remove(this.hubUuid);
         super.onWebSocketClose(statusCode,reason);
         System.out.println("Socket Closed: [" + statusCode + "] " + reason);
-        System.out.println("len: "+WebSocketRegistry.size());
     }    
 	
     @Override
