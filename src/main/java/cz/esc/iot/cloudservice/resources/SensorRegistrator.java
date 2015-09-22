@@ -80,8 +80,13 @@ public class SensorRegistrator extends ServerResource {
 					
 				// hub has been chosen by user - hub is smartphone
 				} else {
-					hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(user).field("uuid").equal(hub_uuid).get();
-					if (hub == null)
+					if (hub_uuid.equals("00000000")) {
+						hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("uuid").equal(hub_uuid).get();
+						sensor.setAccess("public");
+					} else
+						hub = MorfiaSetUp.getDatastore().createQuery(HubEntity.class).field("user").equal(user).field("uuid").equal(hub_uuid).get();
+					
+					if (hub == null )
 						throw new NoHubConnectedException("Hub's uuid not registered.");
 					if (((String)hub_uuid).charAt(0) == 'm')
 						socket = WebSocketRegistry.getCloudSocket();

@@ -206,5 +206,14 @@ public class SensorInfoAdder {
 		info2 = new SensorTypeInfo(130, "esc_beacon", list2, "esc_beacon-driver");
 		System.out.println(MorfiaSetUp.getDatastore());
 		MorfiaSetUp.getDatastore().save(info2);
+		
+		// esc_easy_button
+		list2.clear();
+		list2.add(new MeasureValue("rssi", "dBm"));
+		list2.add(new MeasureValue("state", null));
+		list2.add(new MeasureValue("vbat", "mV"));
+		info2 = new SensorTypeInfo(200, "esc_easy_button", list2, "esc_easy_button-driver");
+		System.out.println(MorfiaSetUp.getDatastore());
+		MorfiaSetUp.getDatastore().save(info2);
 	}
 }

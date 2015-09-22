@@ -323,13 +323,13 @@ public class RegisteredSensors extends ServerResource {
 	private Query<SensorEntity> publicQuery(HubEntity hub, UserEntity userEntity, int type) {
 		Query<SensorEntity> publicQuery = null;
 		if (hub == null && type == -1)
-			publicQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity);
+			publicQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").notEqual(userEntity).field("access").equal("public");
 		else if (hub != null && type == -1)
-			publicQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity).field("hub").equal(hub);
+			publicQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").notEqual(userEntity).field("access").equal("public").field("hub").equal(hub);
 		else if (hub == null && type != -1)
-			publicQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity).field("type").equal(type);
+			publicQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").notEqual(userEntity).field("access").equal("public").field("type").equal(type);
 		else
-			publicQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("access").equal("public").field("user").notEqual(userEntity).field("type").equal(type).field("hub").equal(hub);
+			publicQuery = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("user").notEqual(userEntity).field("access").equal("public").field("type").equal(type).field("hub").equal(hub);
 		return publicQuery;
 	}
 }
