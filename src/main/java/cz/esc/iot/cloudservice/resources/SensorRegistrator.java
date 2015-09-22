@@ -88,7 +88,7 @@ public class SensorRegistrator extends ServerResource {
 					
 					if (hub == null )
 						throw new NoHubConnectedException("Hub's uuid not registered.");
-					if (((String)hub_uuid).charAt(0) == 'm')
+					if (((String)hub_uuid).charAt(0) == 'm' || hub_uuid.equals("00000000"))
 						socket = WebSocketRegistry.getCloudSocket();
 					else
 						socket = WebSocketRegistry.get((String)hub_uuid);
