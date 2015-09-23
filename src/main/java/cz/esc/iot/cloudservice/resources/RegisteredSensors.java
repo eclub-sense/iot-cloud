@@ -182,6 +182,7 @@ public class RegisteredSensors extends ServerResource {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 		Date from = null;
 		Date to = null;
+		int limit = -1;
 		
 		for (org.restlet.data.Parameter parameter : form) {
 			if (parameter.getName().equals("from")) {
@@ -191,6 +192,8 @@ public class RegisteredSensors extends ServerResource {
 					from = formatter.parse(parameter.getValue());
 			} else if (parameter.getName().equals("to")) {
 				to = formatter.parse(parameter.getValue());
+			} else if (parameter.getName().equals("limit")) {
+				limit = Integer.parseInt(parameter.getValue());
 			}
 		}
 		
@@ -240,7 +243,9 @@ public class RegisteredSensors extends ServerResource {
 		for (MeasureValue value : info.getValues()) {
 			
 			List<Data> list;
-			if (from != null && to != null)
+			if (limit != -1)
+				list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).limit(limit).order("-time").asList();
+			else if (from != null && to != null)
 				list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).field("time").greaterThanOrEq(from).field("time").lessThanOrEq(to).asList();
 			else if (from != null)
 				list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).field("time").greaterThanOrEq(from).asList();

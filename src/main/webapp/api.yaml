@@ -31,7 +31,7 @@ paths:
         - Authorization server
       responses:
         200:
-          description: User is registrated and access token is returned.
+          description: User is registered and access token is returned.
           schema:
             $ref: '#/definitions/Token'
         400:
@@ -209,6 +209,12 @@ paths:
           description: Upper bound of time interval. Date is in format "yyyy-MM-dd'T'HH:mm".
           required: false
           type: string
+        - name: limit
+          in: query
+          description: Returns n newest items, where n is defined in limit parameter.
+          required: false
+          type: number
+          format: integer
       tags:
         - Resource server
       responses:
