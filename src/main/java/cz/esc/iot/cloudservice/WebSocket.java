@@ -133,6 +133,11 @@ public class WebSocket extends WebSocketAdapter {
     		MorfiaSetUp.getDatastore().update(hub, MorfiaSetUp.getDatastore().createUpdateOperations(HubEntity.class).set("status", "connected"));
     		WebSocketRegistry.setCloudSocket(this);
     		Postman.sendLoginAck(this, hubUuid);
+    		try {
+				Postman.reregisterAllSensors(this, hubUuid);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
     		verified = true;
     		return;
     	}

@@ -201,8 +201,7 @@ public class SensorInfoAdder {
 		
 		// esc_beacon
 		list2.clear();
-		list2.add(new MeasureValue("rssi", "dBm"));
-		list2.add(new MeasureValue("email", "string"));
+		list2.add(new MeasureValue("device", "string"));
 		info2 = new SensorTypeInfo(130, "esc_beacon", list2, "esc_beacon-driver");
 		System.out.println(MorfiaSetUp.getDatastore());
 		MorfiaSetUp.getDatastore().save(info2);
