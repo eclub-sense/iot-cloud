@@ -180,14 +180,13 @@ public class RegisteredSensors extends ServerResource {
 	private String sensorAndData(Gson gson, Form form, UserEntity userEntity) throws IOException, ParseException {
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-		Date current = new Date();
-		Date from = new Date(0);
-		Date to = current;
+		Date from = null;
+		Date to = null;
 		
 		for (org.restlet.data.Parameter parameter : form) {
 			if (parameter.getName().equals("from")) {
 				if (parameter.getValue().charAt(0) == '-')
-					from = new Date(current.getTime() + Long.parseLong(parameter.getValue()));
+					from = new Date(new Date().getTime() + Long.parseLong(parameter.getValue()));
 				else
 					from = formatter.parse(parameter.getValue());
 			} else if (parameter.getName().equals("to")) {
@@ -239,7 +238,17 @@ public class RegisteredSensors extends ServerResource {
 		// TODO get measuring values from siren not from database
 		SensorTypeInfo info = MorfiaSetUp.getDatastore().createQuery(SensorTypeInfo.class).field("type").equal(sensor.getType()).get();
 		for (MeasureValue value : info.getValues()) {
-			List<Data> list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).field("time").greaterThanOrEq(from).field("time").lessThanOrEq(to).asList();
+			
+			List<Data> list;
+			if (from != null && to != null)
+				list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).field("time").greaterThanOrEq(from).field("time").lessThanOrEq(to).asList();
+			else if (from != null)
+				list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).field("time").greaterThanOrEq(from).asList();
+			else if (to != null)
+				list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).field("time").lessThanOrEq(to).asList();
+			else
+				list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).asList();
+				
 			String ws = "ws://mlha-139.sin.cvut.cz:1337/servers/" + sensor.getHub().getUuid() + "/" + "events?topic=" + sensor.getType() + "%2F" + sensor.getUuid() + "%2F" + value.getName();
 			ret.addDataList(new DataList(value.getName(), list, ws));
 		}
