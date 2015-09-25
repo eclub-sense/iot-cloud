@@ -13,7 +13,7 @@ import com.google.api.client.json.gson.GsonFactory;
 
 public class Checker {
 
-    private final List mClientIDs;
+    private final List<String> mClientIDs;
     private final String mAudience;
     private final GoogleIdTokenVerifier mVerifier;
     private final JsonFactory mJFactory;

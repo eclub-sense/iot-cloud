@@ -23,18 +23,18 @@ import cz.esc.iot.cloudservice.WebSocket;
 import cz.esc.iot.cloudservice.messages.Postman;
 import cz.esc.iot.cloudservice.oauth2.OAuth2;
 import cz.esc.iot.cloudservice.persistance.dao.MorfiaSetUp;
-import cz.esc.iot.cloudservice.persistance.model.Action;
 import cz.esc.iot.cloudservice.persistance.model.Data;
 import cz.esc.iot.cloudservice.persistance.model.HubEntity;
 import cz.esc.iot.cloudservice.persistance.model.MeasureValue;
-import cz.esc.iot.cloudservice.persistance.model.Parameter;
 import cz.esc.iot.cloudservice.persistance.model.SensorAccessEntity;
 import cz.esc.iot.cloudservice.persistance.model.SensorEntity;
 import cz.esc.iot.cloudservice.persistance.model.SensorTypeInfo;
 import cz.esc.iot.cloudservice.persistance.model.UserEntity;
 import cz.esc.iot.cloudservice.siren.Actions;
+import cz.esc.iot.cloudservice.support.Action;
 import cz.esc.iot.cloudservice.support.AllSensors;
 import cz.esc.iot.cloudservice.support.DataList;
+import cz.esc.iot.cloudservice.support.Parameter;
 import cz.esc.iot.cloudservice.support.SensorAndData;
 import cz.esc.iot.cloudservice.support.WebSocketRegistry;
 
@@ -44,11 +44,11 @@ import cz.esc.iot.cloudservice.support.WebSocketRegistry;
 public class RegisteredSensors extends ServerResource {
 	
 	/**
-	 * Writes to sensor.
+	 * Writes into actuator.
 	 * @throws IOException
 	 */
 	@Post
-	public void writeToSensor(Representation entity) throws IOException {
+	public void writeIntoActuator(Representation entity) throws IOException {
 		
 		// get access_token from url parameters
 		Form form = getRequest().getResourceRef().getQueryAsForm();
@@ -71,8 +71,12 @@ public class RegisteredSensors extends ServerResource {
 		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(uuid).get();
 
 		if ((sensor != null) && (!sensor.getUser().getId().equals(user.getId()))) {
-			getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			return;
+			// check whether the sensor is shared with user
+			SensorAccessEntity accessEntity = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("sensor").equal(sensor).field("user").equal(user).get();
+			if ((accessEntity == null) || (!accessEntity.getPermission().equals("write"))) {
+				getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+				return;
+			}
 		} else if (sensor == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
 			return;
@@ -98,7 +102,7 @@ public class RegisteredSensors extends ServerResource {
 	 * @throws IOException
 	 */
 	@Delete
-	public void acceptRepresentation(Representation entity) throws IOException {
+	public void deleteSensor(Representation entity) throws IOException {
 		
 		// get access_token from url parameters
 		Form form = getRequest().getResourceRef().getQueryAsForm();
@@ -146,7 +150,7 @@ public class RegisteredSensors extends ServerResource {
 	 * @throws ParseException 
 	 */
 	@Get("json")
-	public String returnList() throws IOException, ParseException {
+	public String returnSensor() throws IOException, ParseException {
 		
 		// get access_token from url parameters
 		Form form = getRequest().getResourceRef().getQueryAsForm();
@@ -202,9 +206,11 @@ public class RegisteredSensors extends ServerResource {
 		
 		if (sensor == null) {
 			return null;
+		// private mode
 		} else if (userEntity != null && sensor.getAccess().equals("private") && sensor.getUser().getId().equals(userEntity.getId())) {
 			ret.setSensor(sensor);
 			ret.setOrigin("my");
+		// protected mode
 		} else if (userEntity != null && sensor.getAccess().equals("protected")) {
 			if (sensor.getUser().getId().equals(userEntity.getId())) {
 				ret.setSensor(sensor);
@@ -212,13 +218,14 @@ public class RegisteredSensors extends ServerResource {
 			} else {
 				SensorAccessEntity access = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("sensor").equal(sensor).field("user").equal(userEntity).get();
 				if (access == null) {
-					getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+					getResponse().setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
 					return "";
 				}
 				ret.setSensor(sensor);
 				ret.setOrigin("borrowed");
 				ret.setPermission(access.getPermission());
 			}
+		// public mode
 		} else if (sensor.getAccess().equals("public")) {
 			ret.setOrigin("public");
 			ret.setSensor(sensor);

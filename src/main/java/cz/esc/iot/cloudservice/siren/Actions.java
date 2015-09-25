@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-import cz.esc.iot.cloudservice.persistance.model.Action;
+import cz.esc.iot.cloudservice.support.Action;
 
 public class Actions {
 

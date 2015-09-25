@@ -20,6 +20,11 @@ import cz.esc.iot.cloudservice.support.ErrorJson;
  */
 public class TokenRefresher extends ServerResource {
 
+	/**
+	 * Controls given refresh token. When it is valid generates and
+	 * returns new token.
+	 * @return Returns new access and refresh token.
+	 */
 	@Get("json")
 	public String refresh_token() {
 		

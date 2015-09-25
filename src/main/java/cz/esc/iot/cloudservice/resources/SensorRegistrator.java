@@ -31,8 +31,12 @@ import cz.esc.iot.cloudservice.support.WebSocketRegistry;
  */
 public class SensorRegistrator extends ServerResource {
 	
+	/**
+	 * Registers sensor.
+	 * @throws IOException
+	 */
 	@Post
-	public void acceptRepresentation(Representation entity) throws IOException {
+	public void registerSensor(Representation entity) throws IOException {
 		if (entity.getMediaType().isCompatible(MediaType.APPLICATION_JSON)) {
 			
 			// get access_token from url parameters

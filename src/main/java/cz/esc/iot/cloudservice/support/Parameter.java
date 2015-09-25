@@ -1,4 +1,4 @@
-package cz.esc.iot.cloudservice.persistance.model;
+package cz.esc.iot.cloudservice.support;
 
 import com.google.gson.annotations.Expose;
 

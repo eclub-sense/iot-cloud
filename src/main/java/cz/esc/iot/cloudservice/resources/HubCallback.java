@@ -8,7 +8,7 @@ import org.restlet.resource.ServerResource;
 public class HubCallback extends ServerResource {
 
 	@Get
-	public void code() {
+	public void redirect() {
 
 		// get code and state from url parameters
 		Form form = getRequest().getResourceRef().getQueryAsForm();
@@ -18,6 +18,7 @@ public class HubCallback extends ServerResource {
 		if (code == null || state == null)
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 		
+		// redirection to uri defined in state parameter
 		getResponse().redirectPermanent(state + "?code=" + code);
 	}
 }
