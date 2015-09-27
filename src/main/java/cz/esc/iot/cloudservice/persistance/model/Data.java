@@ -22,7 +22,8 @@ import com.google.gson.annotations.Expose;
 	@Index(
 		options = @IndexOptions(unique = true),
 		fields = {
-			@Field(value = "name, -time")
+			@Field(value = "name"),
+			@Field(value = "-time")
 	})
 })
 public class Data {
