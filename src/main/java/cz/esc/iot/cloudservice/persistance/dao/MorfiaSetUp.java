@@ -24,7 +24,7 @@ public class MorfiaSetUp {
     }
 
     //*
-    static MongoClient mongoClient = new MongoClient(asList(new ServerAddress("147.32.107.139:27017")),
+    static MongoClient mongoClient = new MongoClient(asList(new ServerAddress("147.32.110.50:27017")),
             Arrays.asList(MongoCredential.createCredential("pauliada",
                             "zettor",
                             "j7dpxrIfYjbZIfFtdS1Y".toCharArray())),
