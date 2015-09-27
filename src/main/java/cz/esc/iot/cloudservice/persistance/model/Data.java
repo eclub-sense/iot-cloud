@@ -9,6 +9,7 @@ import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
+import org.mongodb.morphia.utils.IndexType;
 import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Reference;
 
@@ -23,7 +24,7 @@ import com.google.gson.annotations.Expose;
 		options = @IndexOptions(unique = true),
 		fields = {
 			@Field(value = "name"),
-			@Field(value = "-time")
+			@Field(value = "time", type = IndexType.DESC)
 	})
 })
 public class Data {
