@@ -20,7 +20,8 @@ public class WebsocketClient extends Endpoint {
 	
     Session userSession = null;
     private MsgHandler messageHandler;
-
+    private long lastTimestamp = 0;
+    
     public WebsocketClient(URI endpointURI) {
         try {
         	ClientEndpointConfig.Configurator configurator = new ClientEndpointConfig.Configurator() {
@@ -73,7 +74,15 @@ public class WebsocketClient extends Endpoint {
         this.messageHandler = msgHandler;
     }
 
-    public void sendMessage(String message) {
+    public long getLastTimestamp() {
+		return lastTimestamp;
+	}
+
+	public void setLastTimestamp(long lastTimestamp) {
+		this.lastTimestamp = lastTimestamp;
+	}
+
+	public void sendMessage(String message) {
         this.userSession.getAsyncRemote().sendText(message);
     }
 

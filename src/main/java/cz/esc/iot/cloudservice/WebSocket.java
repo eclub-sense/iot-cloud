@@ -98,13 +98,18 @@ public class WebSocket extends WebSocketAdapter {
                     	Gson gson = new Gson();
                     	ZettaMessage zettaMsg = gson.fromJson(message, ZettaMessage.class);
                     	String measured = zettaMsg.getData();
-                    	Data data = new Data();
-                    	data.setName(value.getName());
-                    	data.setValue(measured);
-                    	data.setTime(new Date());
-                    	data.setSensor(sensor);
-                    	//System.out.println(data);
-                    	MorfiaSetUp.getDatastore().save(data);
+                    	long timestamp = zettaMsg.getTimestamp();
+                    	
+                    	if (timestamp - clientEndPoint.getLastTimestamp() >= 10) {
+                    		clientEndPoint.setLastTimestamp(timestamp);
+                    		Data data = new Data();
+	                    	data.setName(value.getName());
+	                    	data.setValue(measured);
+	                    	data.setTime(new Date(timestamp));
+	                    	data.setSensor(sensor);
+	                    	//System.out.println(data);
+	                    	MorfiaSetUp.getDatastore().save(data);
+                    	}
                     }
                 });
             } catch (URISyntaxException ex) {

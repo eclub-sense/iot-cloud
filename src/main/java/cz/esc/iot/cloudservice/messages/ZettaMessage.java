@@ -6,14 +6,14 @@ package cz.esc.iot.cloudservice.messages;
 public class ZettaMessage {
 
 	private String topic;
-	private String timestamp;
+	private long timestamp;
 	private String data;
 
 	public String getTopic() {
 		return topic;
 	}
 
-	public String getTimestamp() {
+	public long getTimestamp() {
 		return timestamp;
 	}
 

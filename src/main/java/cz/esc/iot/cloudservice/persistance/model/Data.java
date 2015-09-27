@@ -21,8 +21,9 @@ import com.google.gson.annotations.Expose;
 @Entity
 @Indexes({
 	@Index(
-		options = @IndexOptions(unique = true),
+		//options = @IndexOptions(unique = true),
 		fields = {
+			@Field(value = "sensor"),
 			@Field(value = "name"),
 			@Field(value = "time", type = IndexType.DESC)
 	})
