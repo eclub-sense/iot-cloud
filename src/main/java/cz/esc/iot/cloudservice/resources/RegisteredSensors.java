@@ -263,6 +263,14 @@ public class RegisteredSensors extends ServerResource {
 				
 			String ws = "ws://mlha-139.sin.cvut.cz:1337/servers/" + sensor.getHub().getUuid() + "/" + "events?topic=" + sensor.getType() + "%2F" + sensor.getUuid() + "%2F" + value.getName();
 			ret.addDataList(new DataList(value.getName(), list, ws));
+			
+			// for debug -----
+			System.out.println("TIMESTAMPS:");
+			for (Data d : list) {
+				System.out.println(d.getTime().getTime());
+			}
+			System.out.println();
+			// ---------------
 		}
 
 		return gson.toJson(ret);

@@ -4,7 +4,7 @@
         "title": "eClub IoT Cloud API",
         "version": "1.0.0"
     },
-    "host": "mlha-139.sin.cvut.cz:8082",
+    "host": "zettor.sin.cvut.cz:8082",
     "schemes": [
         "https"
     ],
@@ -284,8 +284,7 @@
                         "in": "query",
                         "description": "Returns n newest items, where n is defined in limit parameter.",
                         "required": false,
-                        "type": "number",
-                        "format": "integer"
+                        "type": "integer"
                     }
                 ],
                 "tags": [

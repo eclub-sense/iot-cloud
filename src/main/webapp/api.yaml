@@ -5,7 +5,7 @@ info:
   title: eClub IoT Cloud API
   version: "1.0.0"
 # the domain of the service
-host: mlha-139.sin.cvut.cz:8082
+host: zettor.sin.cvut.cz:8082
 # array of all schemes that your API supports
 schemes:
   - https
@@ -213,8 +213,7 @@ paths:
           in: query
           description: Returns n newest items, where n is defined in limit parameter.
           required: false
-          type: number
-          format: integer
+          type: integer
       tags:
         - Resource server
       responses:
