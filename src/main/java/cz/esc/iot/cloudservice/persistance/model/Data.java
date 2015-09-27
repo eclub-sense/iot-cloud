@@ -9,6 +9,7 @@ import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Reference;
 
 import com.google.gson.annotations.Expose;
@@ -17,7 +18,13 @@ import com.google.gson.annotations.Expose;
  * Morfia's entity representing one measured value.
  */
 @Entity
-@Indexes(@Index(options = @IndexOptions(name = "name, -time", unique = true)))
+@Indexes({
+	@Index(
+		options = @IndexOptions(unique = true),
+		fields = {
+			@Field(value = "name, -time")
+	})
+})
 public class Data {
 	
     @Id
