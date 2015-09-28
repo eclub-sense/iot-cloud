@@ -107,10 +107,10 @@ public class OAuth2 {
 			callback = "postmessage";
 			break;
 		case "michal":
-			callback = "https://mlha-139.sin.cvut.cz:8082/callback_hub";
+			callback = "https://zettor.sin.cvut.cz:8082/callback_hub";
 			break;
 		case "login":
-			callback = "https://mlha-139.sin.cvut.cz:8082/callback";
+			callback = "https://zettor.sin.cvut.cz:8082/callback";
 		}
 		
 		//https://accounts.google.com/o/oauth2/token
