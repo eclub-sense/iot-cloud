@@ -70,7 +70,7 @@ public class RegisteredSensors extends ServerResource {
 		// finds sensor in database
 		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(uuid).get();
 
-		if ((sensor != null) && (!sensor.getUser().getId().equals(user.getId()))) {
+		if ((sensor != null) && (!sensor.getAccess().equals("public")) && (!sensor.getUser().getId().equals(user.getId()))) {
 			// check whether the sensor is shared with user
 			SensorAccessEntity accessEntity = MorfiaSetUp.getDatastore().createQuery(SensorAccessEntity.class).field("sensor").equal(sensor).field("user").equal(user).get();
 			if ((accessEntity == null) || (!accessEntity.getPermission().equals("write"))) {
@@ -261,16 +261,8 @@ public class RegisteredSensors extends ServerResource {
 			else
 				list = MorfiaSetUp.getDatastore().createQuery(Data.class).field("sensor").equal(sensor).field("name").equal(value.getName()).asList();
 				
-			String ws = "ws://mlha-139.sin.cvut.cz:1337/servers/" + sensor.getHub().getUuid() + "/" + "events?topic=" + sensor.getType() + "%2F" + sensor.getUuid() + "%2F" + value.getName();
+			String ws = "ws://zettor.sin.cvut.cz:1337/servers/" + sensor.getHub().getUuid() + "/" + "events?topic=" + sensor.getType() + "%2F" + sensor.getUuid() + "%2F" + value.getName();
 			ret.addDataList(new DataList(value.getName(), list, ws));
-			
-			// for debug -----
-			System.out.println("TIMESTAMPS:");
-			for (Data d : list) {
-				System.out.println(d.getTime().getTime());
-			}
-			System.out.println();
-			// ---------------
 		}
 
 		return gson.toJson(ret);

@@ -1,3 +1,3 @@
 {"type":"LOGIN","email":"mapaclik@gmail.com","password":"abc","uuid":"111"}
 
-{"type":"DISCOVERED","uuid":"111","sensor_id":"3f650b6a-b794-4af5-860c-708a9a3c6801","sensor_uuid":"3f650b6a-b794-4af5-860c-708a9a3c6801"}
+{"type":"DISCOVERED","uuid":"111","sensor_id":"20202002","sensor_uuid":"20202002"}
