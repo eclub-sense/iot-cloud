@@ -34,7 +34,7 @@ public class Data {
     private ObjectId id;
 	private String name;
 	@Expose private String value;
-	@Indexed(expireAfterSeconds = 24*3600) // data are stored for one day
+	@Indexed(expireAfterSeconds = 21*24*3600) // data are stored for three weeks
 	@Expose private Date time;
 	@Reference
 	private SensorEntity sensor;
