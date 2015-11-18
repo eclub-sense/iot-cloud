@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.jetty.util.log.Log;
+import org.eclipse.jetty.util.log.Logger;
 import org.mongodb.morphia.query.Query;
 import org.restlet.data.Form;
 import org.restlet.data.Status;
@@ -42,7 +44,9 @@ import cz.esc.iot.cloudservice.support.WebSocketRegistry;
  * Return list of registered sensors. Only sensors owned by signed in user are returned.
  */
 public class RegisteredSensors extends ServerResource {
-	
+
+	public static Logger Logger = Log.getLogger(RegisteredSensors.class);
+
 	/**
 	 * Writes into actuator.
 	 * @throws IOException
@@ -187,7 +191,7 @@ public class RegisteredSensors extends ServerResource {
 		Date from = null;
 		Date to = null;
 		int limit = -1;
-		
+
 		for (org.restlet.data.Parameter parameter : form) {
 			if (parameter.getName().equals("from")) {
 				if (parameter.getValue().charAt(0) == '-')
@@ -200,7 +204,7 @@ public class RegisteredSensors extends ServerResource {
 				limit = Integer.parseInt(parameter.getValue());
 			}
 		}
-		
+
 		SensorEntity sensor = MorfiaSetUp.getDatastore().createQuery(SensorEntity.class).field("uuid").equal(this.getRequestAttributes().get("uuid")).get();
 		SensorAndData ret = new SensorAndData();
 		
@@ -236,12 +240,18 @@ public class RegisteredSensors extends ServerResource {
 		
 		WebSocket socket = WebSocketRegistry.get(sensor.getHub().getUuid());
 		if (socket != null) {
-			// set possible actions
-			ClientResource client = new ClientResource("http://127.0.0.1:1337/servers/" + sensor.getHub().getUuid() + "/devices/" + sensor.getUuid());
-			Representation rep = client.get();
-			String siren = rep.getText();
-			Actions actions = gson.fromJson(siren, Actions.class);
-			ret.setActions(actions.getActions());
+			try {
+				// set possible actions
+				ClientResource client = new ClientResource("http://127.0.0.1:1337/servers/" + sensor.getHub().getUuid() + "/devices/" + sensor.getUuid());
+				client.getContext().getParameters().add("idleTimeout", "5000");
+				Representation rep = client.get();
+				String siren = rep.getText();
+				Actions actions = gson.fromJson(siren, Actions.class);
+				ret.setActions(actions.getActions());
+			} catch (Throwable ex) {
+				ex.printStackTrace();
+				ret.setActions(null);
+			}
 		} else 
 			ret.setActions(null);
 		// set measured values
