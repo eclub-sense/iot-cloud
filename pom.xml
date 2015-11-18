@@ -142,12 +142,6 @@
             <version>9.3.0.v20150612</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-util</artifactId>
-            <version>9.3.0.v20150612</version>
-        </dependency>
-
         <!-- Gson: Java to Json conversion -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
